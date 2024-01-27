@@ -9,17 +9,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ShipmentRepo extends JpaRepository<Shipment, Long> {
 
-    @EntityGraph(attributePaths={"shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
-    Shipment findByShipmentNumber(String shipmentNumber);
-
-    @EntityGraph(attributePaths={"shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
-    Shipment findByOrderNumber(String orderNumber);
-
-    @EntityGraph(attributePaths={"shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
-    Shipment findByDriverName(String driverName);
-
-    @EntityGraph(attributePaths={"shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
-    Shipment findByCustomerName(String customerName);
+//    Shipment findByShipmentNumber(String shipmentNumber);
+//
+//    Shipment findByOrderNumber(String orderNumber);
+//
+//    Shipment findByDriverName(String driverName);
+//
+//    Shipment findByCustomerName(String customerName);
 
 
 }

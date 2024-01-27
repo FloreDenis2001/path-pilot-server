@@ -49,7 +49,7 @@ public class User {
 
     @Override
     public String toString() {
-       String text = "Email :"+email+" Username :"+username+" Role :"+role;
+       String text = "Email : "+email+" Username : "+username+" Role : "+role;
          return text;
     }
 

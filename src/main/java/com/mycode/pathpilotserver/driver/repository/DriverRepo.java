@@ -8,11 +8,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DriverRepo extends JpaRepository<Driver, Long> {
 
-    @EntityGraph(attributePaths = {"user", "shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(attributePaths = {"user","shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
     Driver findByName(String name);
 
-    @EntityGraph(attributePaths = {"user", "shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(attributePaths = {"user","shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
     Driver findByUserEmail(String email);
-
 
 }

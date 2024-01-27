@@ -6,17 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OrderRepo extends JpaRepository<Order, Long> {
 
-
-    @EntityGraph(attributePaths={"customer","driver"}, type = EntityGraph.EntityGraphType.LOAD)
-    Order findByOrderNumber(String orderNumber);
-
-    @EntityGraph(attributePaths={"customer","driver"}, type = EntityGraph.EntityGraphType.LOAD)
-    Order findByCustomerName(String customerName);
-
-    @EntityGraph(attributePaths={"customer","driver"}, type = EntityGraph.EntityGraphType.LOAD)
-    Order findByDriverName(String driverName);
-
-    @EntityGraph(attributePaths={"customer","driver"}, type = EntityGraph.EntityGraphType.LOAD)
-    Order findByCustomerEmail(String customerEmail);
+//
+//    Order findByOrderNumber(String orderNumber);
+//
+//    Order findByCustomerName(String customerName);
+//
+//    Order findByDriverName(String driverName);
+//
+//    Order findByCustomerEmail(String customerEmail);
 
 }

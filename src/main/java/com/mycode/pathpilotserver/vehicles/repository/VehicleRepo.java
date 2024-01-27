@@ -8,8 +8,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface VehicleRepo extends JpaRepository<Vehicle, Long> {
 
-    @EntityGraph(attributePaths={"shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
-    Vehicle findByVehicleNumber(String vehicleNumber);
+//    Vehicle findByRegistrationNumber(String registrationNumber);
 
 
 
