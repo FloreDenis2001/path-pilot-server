@@ -38,6 +38,12 @@ public class Vehicle {
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ShipmentDetail> shipmentDetails;
 
+    public Vehicle(String vehicleType, String registrationNumber, int capacity) {
+        this.type = vehicleType;
+        this.registrationNumber = registrationNumber;
+        this.capacity = capacity;
+    }
+
     @Override
     public String toString() {
         String text = "Registration Number :"+registrationNumber+" Type :"+type+" Capacity :"+capacity;

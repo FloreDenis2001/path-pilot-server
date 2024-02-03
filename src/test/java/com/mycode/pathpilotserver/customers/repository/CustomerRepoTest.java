@@ -4,6 +4,7 @@ import com.mycode.pathpilotserver.PathPilotServerApplication;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = PathPilotServerApplication.class)
+@Transactional
 class CustomerRepoTest {
 
 
@@ -51,7 +53,7 @@ class CustomerRepoTest {
         customer.setName("Name Test");
         customerRepo.saveAndFlush(customer);
 
-        Customer customer1 = customerRepo.findByName("Name Test");
+        Customer customer1 = customerRepo.findByName("Name Test").get();
         assertEquals(customer1.getName(), customer.getName());
     }
 
@@ -75,7 +77,7 @@ class CustomerRepoTest {
         customer.setName("Name Test");
         customerRepo.saveAndFlush(customer);
 
-        Customer customer1 = customerRepo.findByUserEmail(" Email Test");
+        Customer customer1 = customerRepo.findByUserEmail(" Email Test").get();
         assertEquals(customer1.getUser().getEmail(), customer.getUser().getEmail());
     }
 

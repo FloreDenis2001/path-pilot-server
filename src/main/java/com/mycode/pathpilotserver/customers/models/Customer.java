@@ -3,10 +3,7 @@ package com.mycode.pathpilotserver.customers.models;
 import com.mycode.pathpilotserver.orders.models.Order;
 import com.mycode.pathpilotserver.user.models.User;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Set;
@@ -16,6 +13,7 @@ import java.util.Set;
 @Setter
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 @SuperBuilder
 @Data
 public class Customer {
@@ -42,6 +40,13 @@ public class Customer {
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Order> orders;
+
+    public Customer(String name, String address, String phone, User user) {
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
+        this.user = user;
+    }
 
     @Override
     public String toString() {

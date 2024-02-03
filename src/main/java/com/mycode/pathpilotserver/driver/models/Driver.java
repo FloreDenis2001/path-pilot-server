@@ -44,6 +44,13 @@ public class Driver {
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ShipmentDetail> shipmentDetails;
 
+    public Driver(String driverName, String number, String license123, User user) {
+        this.name = driverName;
+        this.phone = number;
+        this.licenseNumber = license123;
+        this.user = user;
+    }
+
 
     @Override
     public String toString() {

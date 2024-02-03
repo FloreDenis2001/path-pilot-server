@@ -38,7 +38,7 @@ public class PathPilotServerApplication {
             user.setId(1L);
             userRepo.saveAndFlush(user);
 
-           User x=  userRepo.findByEmail(" Email Test");
+           User x=  userRepo.findByEmail(" Email Test").get();
            System.out.println(x.toString());
 
         };

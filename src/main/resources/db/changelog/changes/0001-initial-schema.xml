@@ -135,7 +135,7 @@
             <column name="shipment_id" type="bigint"/>
             <column name="vehicle_id" type="bigint"/>
             <column name="driver_id" type="bigint"/>
-            <column name="departure_time" type="datetime(6)"/>
+            <column name="departure_date" type="datetime(6)"/>
             <column name="arrival_time" type="datetime(6)"/>
         </createTable>
 

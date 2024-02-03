@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import java.time.LocalDateTime;
 
@@ -45,9 +47,17 @@ public class ShipmentDetail {
     @Column(name="arrival_time", nullable = false)
     private LocalDateTime arrivalTime;
 
+    public ShipmentDetail(Shipment shipment, Driver driver, Vehicle vehicle, LocalDateTime now, LocalDateTime localDateTime) {
+        this.shipment = shipment;
+        this.driver = driver;
+        this.vehicle = vehicle;
+        this.departureDate = now;
+        this.arrivalTime = localDateTime;
+    }
+
     @Override
     public String toString() {
-        String text = "Shipment Id :"+shipment.getId()+" Vehicle Id :"+vehicle.getId()+" Driver Id :"+driver.getId()+" Departure Date :"+departureDate+" Arrival Time :"+arrivalTime;
+        String text = "Id:"+ shipment.getId()+"Shipment Id :"+shipment.getId()+" Vehicle Id :"+vehicle.getId()+" Driver Id :"+driver.getId()+" Departure Date :"+departureDate+" Arrival Time :"+arrivalTime;
         return text;
     }
 

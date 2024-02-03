@@ -5,13 +5,16 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface DriverRepo extends JpaRepository<Driver, Long> {
 
+    
     @EntityGraph(attributePaths = {"user","shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
-    Driver findByName(String name);
+    Optional<Driver> findByName(String name);
 
     @EntityGraph(attributePaths = {"user","shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
-    Driver findByUserEmail(String email);
+    Optional<Driver> findByUserEmail(String email);
 
 }

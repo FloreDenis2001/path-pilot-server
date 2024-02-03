@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-@Transactional
 public interface CustomerQuerryService {
 
     Optional<Customer> findById(Long id);
@@ -15,8 +14,5 @@ public interface CustomerQuerryService {
     Optional<Customer> findByName(String name);
 
     Optional<Customer> findByUserEmail(String email);
-
-
-
 
 }

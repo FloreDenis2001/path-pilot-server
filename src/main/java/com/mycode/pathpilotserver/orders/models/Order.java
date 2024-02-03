@@ -40,6 +40,12 @@ public class Order {
     @JoinColumn(name = "shipment_id",referencedColumnName ="id",nullable = false)
     private Shipment shipment;
 
+    public Order(LocalDateTime orderDate, double totalAmount, Customer customer) {
+        this.orderDate = orderDate;
+        this.totalAmount = totalAmount;
+        this.customer = customer;
+    }
+
     @Override
     public String toString() {
         String text = "Order Date :"+orderDate+" Total Amount :"+totalAmount+" Customer :"+customer+" Shipment :"+shipment;

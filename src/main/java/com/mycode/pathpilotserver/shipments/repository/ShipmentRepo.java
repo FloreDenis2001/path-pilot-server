@@ -5,17 +5,15 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 
 @Repository
 public interface ShipmentRepo extends JpaRepository<Shipment, Long> {
 
-//    Shipment findByShipmentNumber(String shipmentNumber);
-//
-//    Shipment findByOrderNumber(String orderNumber);
-//
-//    Shipment findByDriverName(String driverName);
-//
-//    Shipment findByCustomerName(String customerName);
+
+    @EntityGraph(attributePaths = {"orders","shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
+    Optional<Shipment> findByOrigin(String origin);
 
 
 }

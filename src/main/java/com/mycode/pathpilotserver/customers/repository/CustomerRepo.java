@@ -5,14 +5,16 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface CustomerRepo extends JpaRepository<Customer, Long> {
 
     @EntityGraph(attributePaths = {"user"}, type = EntityGraph.EntityGraphType.LOAD)
-    Customer findByName(String name);
+    Optional<Customer> findByName(String name);
 
 
     @EntityGraph(attributePaths = {"user"}, type = EntityGraph.EntityGraphType.LOAD)
-    Customer findByUserEmail(String email);
+    Optional<Customer> findByUserEmail(String email);
 
 }

@@ -2,6 +2,7 @@ package com.mycode.pathpilotserver.user.repository;
 
 import com.mycode.pathpilotserver.PathPilotServerApplication;
 import com.mycode.pathpilotserver.user.models.User;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = PathPilotServerApplication.class)
+@Transactional
 class UserRepoTest {
 
     @Autowired
@@ -33,7 +35,7 @@ class UserRepoTest {
         user.setId(1L);
         userRepo.saveAndFlush(user);
 
-        User user1 = userRepo.findByEmail(" Email Test");
+        User user1 = userRepo.findByEmail(" Email Test").get();
         assertEquals(user1.getEmail(), user.getEmail());
     }
 }

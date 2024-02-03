@@ -45,6 +45,13 @@ public class Shipment {
     @OneToMany(mappedBy = "shipment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ShipmentDetail> shipmentDetails;
 
+    public Shipment(String origin, String destination, String pending, LocalDateTime localDateTime) {
+        this.origin = origin;
+        this.destination = destination;
+        this.status = pending;
+        this.estimatedDeliveryDate = localDateTime;
+    }
+
     @Override
     public String toString() {
         String text = "Origin :"+origin+" Destination :"+destination+" Status :"+status+" Estimated Delivery Date :"+estimatedDeliveryDate;
