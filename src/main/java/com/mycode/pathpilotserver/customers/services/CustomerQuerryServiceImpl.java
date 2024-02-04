@@ -8,12 +8,11 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-
-public class CusomerQuerryServiceImpl implements CustomerQuerryService {
+public class CustomerQuerryServiceImpl implements CustomerQuerryService {
 
     private final CustomerRepo customerRepo;
 
-    public CusomerQuerryServiceImpl(CustomerRepo customerRepo) {
+    public CustomerQuerryServiceImpl(CustomerRepo customerRepo) {
         this.customerRepo = customerRepo;
     }
 

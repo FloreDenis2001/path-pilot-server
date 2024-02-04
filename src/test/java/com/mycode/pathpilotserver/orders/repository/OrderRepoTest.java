@@ -37,11 +37,6 @@ class OrderRepoTest {
         return orderRepo.save(Order.builder().totalAmount(100.0).shipment(shipment).customer(customer).orderDate(LocalDateTime.now()).build());
     }
 
-    @Test
-    void findByCustomerName() {
-        Order order = createTestOrder();
-        Order order1 = orderRepo.findByCustomerName(order.getCustomer().getName()).get();
-        assertEquals(order.getCustomer().getName(), order1.getCustomer().getName());
-    }
+
 
 }

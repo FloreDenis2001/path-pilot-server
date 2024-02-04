@@ -2,10 +2,7 @@ package com.mycode.pathpilotserver.vehicles.models;
 
 import com.mycode.pathpilotserver.shipmentDetails.models.ShipmentDetail;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Set;
@@ -15,6 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 @SuperBuilder
 public class Vehicle {
