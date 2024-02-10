@@ -16,18 +16,14 @@ import java.util.Set;
 @AllArgsConstructor
 @SuperBuilder
 @Data
-public class Customer {
+public class Customer extends User {
 
     @Id
-
     @SequenceGenerator(name = "customers_sequence", sequenceName = "customers_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customers_sequence")
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private User user;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -45,7 +41,6 @@ public class Customer {
         this.name = name;
         this.address = address;
         this.phone = phone;
-        this.user = user;
     }
 
     @Override

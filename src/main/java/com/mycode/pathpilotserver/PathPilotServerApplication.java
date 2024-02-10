@@ -24,22 +24,9 @@ public class PathPilotServerApplication {
 
     @Bean
     @Transactional
-    CommandLineRunner commandLineRunner(UserRepo userRepo , CustomerRepo customerRepo,
-                                        VehicleRepo vehicleRepo, ShipmentRepo shipmentRepo, ShipmentDetailsRepo shipmentDetailsRepo,
-                                        DriverRepo driverRepo, OrderRepo orderRepo
-                                        ) {
+    CommandLineRunner commandLineRunner(UserRepo userRepo, CustomerRepo customerRepo, DriverRepo driverRepo, VehicleRepo vehicleRepo, ShipmentRepo shipmentRepo, ShipmentDetailsRepo shipmentDetailsRepo, OrderRepo orderRepo){
         return args -> {
 
-            User user = new User();
-            user.setEmail(" Email Test");
-            user.setPassword("Password Test");
-            user.setRole("Role Test");
-            user.setUsername("Username Test");
-            user.setId(1L);
-            userRepo.saveAndFlush(user);
-
-           User x=  userRepo.findByEmail(" Email Test").get();
-           System.out.println(x.toString());
 
         };
     }

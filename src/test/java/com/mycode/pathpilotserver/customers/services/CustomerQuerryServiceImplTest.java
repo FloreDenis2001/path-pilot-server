@@ -1,17 +1,13 @@
 package com.mycode.pathpilotserver.customers.services;
 
-import com.mycode.pathpilotserver.PathPilotServerApplication;
 import com.mycode.pathpilotserver.customers.exceptions.CustomerNotFoundException;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.customers.repository.CustomerRepo;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
 
@@ -72,14 +68,14 @@ class CustomerQuerryServiceImplTest {
     @Test
     void findByUserEmail() {
         Optional<Customer> customer = Optional.of(createCustomer());
-        doReturn(customer).when(customerRepo).findByUserEmail("Email Test");
+        doReturn(customer).when(customerRepo).findByEmail("Email Test");
         assertEquals(customer.get(), customerQuerryService.findByUserEmail("Email Test").get());
     }
 
 
     @Test
     void findByUserEmailException(){
-        doReturn(Optional.empty()).when(customerRepo).findByUserEmail("Email Test");
+        doReturn(Optional.empty()).when(customerRepo).findByEmail("Email Test");
         assertThrows(CustomerNotFoundException.class, () -> customerQuerryService.findByUserEmail("Email Test").get());
     }
 }

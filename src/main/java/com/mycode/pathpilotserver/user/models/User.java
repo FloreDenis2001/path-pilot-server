@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.user.models;
 
 
+import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.orders.models.Order;
@@ -18,6 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 @SuperBuilder
 @Data
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class User {
 
     @Id
@@ -39,11 +41,11 @@ public class User {
     @Column(name = "role", nullable = false)
     private String role;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
-    private Driver driver;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL, orphanRemoval = true)
-    private Customer customer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", referencedColumnName = "id")
+    private Company company;
+
 
     public User(String username, String password, String email, String role) {
         this.username = username;

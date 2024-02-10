@@ -15,6 +15,6 @@ public interface CustomerRepo extends JpaRepository<Customer, Long> {
 
 
     @EntityGraph(attributePaths = {"user"}, type = EntityGraph.EntityGraphType.LOAD)
-    Optional<Customer> findByUserEmail(String email);
+    Optional<Customer> findByEmail(String email);
 
 }

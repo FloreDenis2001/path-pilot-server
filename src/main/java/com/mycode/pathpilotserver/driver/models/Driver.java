@@ -18,17 +18,13 @@ import java.util.Set;
 @Setter
 @Data
 @SuperBuilder
-public class Driver {
+public class Driver extends User{
 
     @Id
     @SequenceGenerator(name = "driver_sequence", sequenceName = "driver_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "driver_sequence")
     @Column(name = "id", updatable = false)
     private Long id;
-
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private User user;
 
 
     @Column(name = "name", nullable = false)
@@ -44,11 +40,10 @@ public class Driver {
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ShipmentDetail> shipmentDetails;
 
-    public Driver(String driverName, String number, String license123, User user) {
+    public Driver(String driverName, String number, String license123) {
         this.name = driverName;
         this.phone = number;
         this.licenseNumber = license123;
-        this.user = user;
     }
 
 

@@ -38,7 +38,7 @@ public class CustomerQuerryServiceImpl implements CustomerQuerryService {
 
     @Override
     public Optional<Customer> findByUserEmail(String email) {
-        Optional<Customer> customer = customerRepo.findByUserEmail(email);
+        Optional<Customer> customer = customerRepo.findByEmail(email);
         if (customer.isPresent()) {
             return customer;
         }else {

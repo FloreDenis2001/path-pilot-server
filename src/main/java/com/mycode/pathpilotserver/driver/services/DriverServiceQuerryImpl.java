@@ -24,13 +24,5 @@ public class DriverServiceQuerryImpl implements DriverServiceQuerry{
         }
     }
 
-    @Override
-    public Optional<Driver> findByUserEmail(String email) {
-        Optional<Driver> driver = driverRepo.findByUserEmail(email);
-        if (driver.isPresent()) {
-            return driver;}
-        else {
-            throw new DriverNotFoundException("Driver with email: " + email + " not found");
-        }
-    }
+
 }

@@ -49,7 +49,6 @@ class CustomerRepoTest {
         customer.setId(1L);
         customer.setAddress("Address Test");
         customer.setPhone("Phone Number Test");
-        customer.setUser(user);
         customer.setName("Name Test");
         customerRepo.saveAndFlush(customer);
 
@@ -73,12 +72,11 @@ class CustomerRepoTest {
         customer.setId(1L);
         customer.setAddress("Address Test");
         customer.setPhone("Phone Number Test");
-        customer.setUser(user);
         customer.setName("Name Test");
         customerRepo.saveAndFlush(customer);
 
-        Customer customer1 = customerRepo.findByUserEmail(" Email Test").get();
-        assertEquals(customer1.getUser().getEmail(), customer.getUser().getEmail());
+        Customer customer1 = customerRepo.findByEmail(" Email Test").get();
+        assertEquals(customer1.getEmail(), customer.getEmail());
     }
 
 

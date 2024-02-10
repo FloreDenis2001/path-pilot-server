@@ -14,7 +14,6 @@ public interface DriverRepo extends JpaRepository<Driver, Long> {
     @EntityGraph(attributePaths = {"user","shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
     Optional<Driver> findByName(String name);
 
-    @EntityGraph(attributePaths = {"user","shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
-    Optional<Driver> findByUserEmail(String email);
+
 
 }

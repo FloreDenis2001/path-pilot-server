@@ -34,7 +34,6 @@ class DriverServiceQuerryImplTest {
         driver.setName("Driver Name");
         driver.setLicenseNumber("License123");
         driver.setPhone("123456789");
-        driver.setUser(new User());
         return driver;
     }
 

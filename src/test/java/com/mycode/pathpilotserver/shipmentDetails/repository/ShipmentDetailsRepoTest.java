@@ -70,8 +70,7 @@ class ShipmentDetailsRepoTest {
 
 
     private ShipmentDetail createTestShipmentDetail() {
-        User user = userRepo.save(new User("Username", "Password", "Email", "Role"));
-        Driver driver = driverRepo.save(new Driver("Driver Name", "123456789", "License123", user));
+        Driver driver = driverRepo.save(new Driver("Driver Name", "123456789", "License123"));
         Vehicle vehicle = vehicleRepo.save(new Vehicle("Vehicle Type", "REG123", 5000));
         Shipment shipment = shipmentRepo.save(new Shipment("Origin", "Destination", "Pending", LocalDateTime.of(2009,1,5,14,12,1).plusDays(1)));
 

@@ -8,6 +8,5 @@ import java.util.Optional;
 public interface DriverServiceQuerry {
 
     Optional<Driver> findByName(String name);
-    Optional<Driver> findByUserEmail(String email);
 
 }
