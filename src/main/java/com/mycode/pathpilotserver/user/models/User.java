@@ -19,7 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 @SuperBuilder
 @Data
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 public class User {
 
     @Id
