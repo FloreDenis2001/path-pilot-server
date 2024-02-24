@@ -1,12 +1,10 @@
 package com.mycode.pathpilotserver.shipments.models;
 
+import com.mycode.pathpilotserver.address.Address;
 import com.mycode.pathpilotserver.orders.models.Order;
 import com.mycode.pathpilotserver.shipmentDetails.models.ShipmentDetail;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
@@ -18,6 +16,7 @@ import java.util.Set;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class Shipment {
 
@@ -27,11 +26,28 @@ public class Shipment {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @Column(name = "origin", nullable = false)
-    private String origin;
 
-    @Column(name = "destination", nullable = false)
-    private String destination;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "country", column = @Column(name = "origin_country")),
+            @AttributeOverride(name = "city", column = @Column(name = "origin_city")),
+            @AttributeOverride(name = "street", column = @Column(name = "origin_street")),
+            @AttributeOverride(name = "streetNumber", column = @Column(name = "origin_number")),
+            @AttributeOverride(name = "postalCode", column = @Column(name = "origin_postalCode"))
+    })
+    private Address originAddress;
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "country", column = @Column(name = "destination_country")),
+            @AttributeOverride(name = "city", column = @Column(name = "destination_city")),
+            @AttributeOverride(name = "street", column = @Column(name = "destination_street")),
+            @AttributeOverride(name = "streetNumber", column = @Column(name = "destination_number")),
+            @AttributeOverride(name = "postalCode", column = @Column(name = "destination_postalCode"))
+    })
+    private Address destinationAddress;
+
+
 
     @Column(name = "status", nullable = false)
     private String status;
@@ -45,16 +61,17 @@ public class Shipment {
     @OneToMany(mappedBy = "shipment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ShipmentDetail> shipmentDetails;
 
-    public Shipment(String origin, String destination, String pending, LocalDateTime localDateTime) {
-        this.origin = origin;
-        this.destination = destination;
-        this.status = pending;
-        this.estimatedDeliveryDate = localDateTime;
+    public Shipment(Address destinationAddress, Address originAddress, String status, LocalDateTime localDateTime) {
+        this.destinationAddress=destinationAddress;
+        this.originAddress=originAddress;
+        this.status=status;
+        this.estimatedDeliveryDate=localDateTime;
     }
+
 
     @Override
     public String toString() {
-        String text = "Origin :"+origin+" Destination :"+destination+" Status :"+status+" Estimated Delivery Date :"+estimatedDeliveryDate;
+        String text = " Status :"+status+" Estimated Delivery Date :"+estimatedDeliveryDate;
         return text;
     }
 

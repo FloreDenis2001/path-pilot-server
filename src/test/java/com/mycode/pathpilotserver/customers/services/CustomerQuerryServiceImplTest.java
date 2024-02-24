@@ -1,5 +1,6 @@
 package com.mycode.pathpilotserver.customers.services;
 
+import com.mycode.pathpilotserver.address.Address;
 import com.mycode.pathpilotserver.customers.exceptions.CustomerNotFoundException;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.customers.repository.CustomerRepo;
@@ -31,10 +32,11 @@ class CustomerQuerryServiceImplTest {
     }
 
     private Customer createCustomer() {
+        Address address= new Address("Romania","Satu Mare","Grivitei","17A","5214");
         Customer customer = new Customer();
         customer.setId(1L);
-        customer.setAddress("Address Test");
         customer.setPhone("Phone Number Test");
+        customer.setCustomerAddress(address);
         customer.setName("Name Test");
         return customer;
     }
@@ -65,17 +67,4 @@ class CustomerQuerryServiceImplTest {
         assertThrows(CustomerNotFoundException.class, () -> customerQuerryService.findByName("Name Test").get());
     }
 
-    @Test
-    void findByUserEmail() {
-        Optional<Customer> customer = Optional.of(createCustomer());
-        doReturn(customer).when(customerRepo).findByEmail("Email Test");
-        assertEquals(customer.get(), customerQuerryService.findByUserEmail("Email Test").get());
-    }
-
-
-    @Test
-    void findByUserEmailException(){
-        doReturn(Optional.empty()).when(customerRepo).findByEmail("Email Test");
-        assertThrows(CustomerNotFoundException.class, () -> customerQuerryService.findByUserEmail("Email Test").get());
-    }
 }

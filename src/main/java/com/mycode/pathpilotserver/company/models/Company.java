@@ -33,7 +33,7 @@ public class Company {
             @AttributeOverride(name = "city", column = @Column(name = "company_city")),
             @AttributeOverride(name = "street", column = @Column(name = "company_street")),
             @AttributeOverride(name = "streetNumber", column = @Column(name = "company_number")),
-            @AttributeOverride(name = "postalCode", column = @Column(name = "company_postalCode"))
+            @AttributeOverride(name = "postalCode", column = @Column(name = "company_postal_code"))
     })
     private Address companyAddress;
 
@@ -41,7 +41,7 @@ public class Company {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "registration_number", nullable = false)
+    @Column(name = "registration_number", nullable = false, unique = true)
     private String registrationNumber;
 
     @Column(name = "industry", nullable = false)

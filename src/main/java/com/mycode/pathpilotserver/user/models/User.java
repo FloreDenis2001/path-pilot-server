@@ -32,6 +32,7 @@ public class User {
     @Column(name = "username", nullable = false)
     private String username;
 
+
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -40,6 +41,8 @@ public class User {
 
     @Column(name = "role", nullable = false)
     private String role;
+
+
 
 
     @ManyToOne(fetch = FetchType.LAZY)

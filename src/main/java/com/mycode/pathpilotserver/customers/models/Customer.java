@@ -1,5 +1,6 @@
 package com.mycode.pathpilotserver.customers.models;
 
+import com.mycode.pathpilotserver.address.Address;
 import com.mycode.pathpilotserver.orders.models.Order;
 import com.mycode.pathpilotserver.user.models.User;
 import jakarta.persistence.*;
@@ -28,8 +29,15 @@ public class Customer extends User {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "address", nullable = false)
-    private String address;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "country", column = @Column(name = "customer_country")),
+            @AttributeOverride(name = "city", column = @Column(name = "customer_city")),
+            @AttributeOverride(name = "street", column = @Column(name = "customer_street")),
+            @AttributeOverride(name = "streetNumber", column = @Column(name = "customer_number")),
+            @AttributeOverride(name = "postalCode", column = @Column(name = "customer_postal_code"))
+    })
+    private Address customerAddress;
 
     @Column(name = "phone", nullable = false)
     private String phone;
@@ -37,15 +45,15 @@ public class Customer extends User {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Order> orders;
 
-    public Customer(String name, String address, String phone, User user) {
+    public Customer(String name, Address address, String phone, User user) {
         this.name = name;
-        this.address = address;
+        this.customerAddress=address   ;
         this.phone = phone;
     }
 
     @Override
     public String toString() {
-        String text = "Name :"+name+" Phone :"+phone+" Address :"+address;
+        String text = "Name :"+name+" Phone :"+phone+"\n"+customerAddress.toString();
         return text;
     }
 }

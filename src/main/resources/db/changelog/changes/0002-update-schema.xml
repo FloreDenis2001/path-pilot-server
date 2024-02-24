@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                    https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="0" author="admin">
+    <changeSet id="10" author="admin" >
         <dropForeignKeyConstraint
                 constraintName="fk_drivers_users"
                 baseTableSchemaName="pathpilot_db"
@@ -12,7 +12,7 @@
         <dropColumn tableName="drivers" columnName="user_id"/>
     </changeSet>
 
-    <changeSet id="1" author="admin">
+    <changeSet id="11" author="admin" context="!test">
         <dropForeignKeyConstraint
                 constraintName="fk_customers_users"
                 baseTableSchemaName="pathpilot_db"
@@ -20,9 +20,7 @@
         <dropColumn tableName="customers" columnName="user_id"/>
     </changeSet>
 
-
-
-    <changeSet id="2" author="admin">
+    <changeSet id="12" author="admin" >
         <createTable tableName="companies">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="pk_company"/>
@@ -66,5 +64,8 @@
         </createTable>
     </changeSet>
 
-
+    <changeSet id="13" author="admin">
+        <dropColumn tableName="shipments" columnName="origin"/>
+        <dropColumn tableName="shipments" columnName="destination"/>
+    </changeSet>
 </databaseChangeLog>

@@ -1,5 +1,6 @@
 package com.mycode.pathpilotserver.shipments.services;
 
+import com.mycode.pathpilotserver.address.Address;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
 import com.mycode.pathpilotserver.shipments.repository.ShipmentRepo;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,10 +29,12 @@ class ShipmentServiceQuerryImplTest {
     }
 
     public Shipment createShipment(){
+        Address originAddress= new Address("Romania","Satu Mare","Grivitei","17A","5214");
+        Address destinationAddress = new Address("Romania","Bucuresti","Dambovicioarei","17","99921");
         Shipment shipment = new Shipment();
         shipment.setId(1L);
-        shipment.setDestination("Destination");
-        shipment.setOrigin("Origin");
+        shipment.setDestinationAddress(destinationAddress);
+        shipment.setOriginAddress(originAddress);
         shipment.setEstimatedDeliveryDate(LocalDateTime.of(2024,12,12,14,20,0));
         return shipment;
     }
@@ -39,13 +42,17 @@ class ShipmentServiceQuerryImplTest {
     @Test
     void findByOrigin() {
         Optional<Shipment> shipment = Optional.of(createShipment());
-        doReturn(shipment).when(shipmentRepo).findByOrigin("Origin");
-        assertEquals(shipment, shipmentServiceQuerry.findByOrigin("Origin"));
+        Address originAddress= new Address("Romania","Satu Mare","Grivitei","17A","5214");
+
+        doReturn(shipment).when(shipmentRepo).findByOrigin(originAddress);
+        assertEquals(shipment, shipmentServiceQuerry.findByOrigin(originAddress));
     }
 
     @Test
     void findByOriginException(){
-        doReturn(null).when(shipmentRepo).findByOrigin("Origin");
-        assertThrows(NullPointerException.class, () -> shipmentServiceQuerry.findByOrigin("Origin"));
+        Address originAddress = new Address("Romania","Bucuresti","Dambovicioarei","17","99921");
+
+        doReturn(null).when(shipmentRepo).findByOrigin(originAddress);
+        assertThrows(NullPointerException.class, () -> shipmentServiceQuerry.findByOrigin(originAddress));
     }
 }

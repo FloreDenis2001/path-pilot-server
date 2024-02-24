@@ -1,4 +1,8 @@
 package com.mycode.pathpilotserver.company.dto;
 
-public record CompanyCreateRequest (String name, String address) {
+import com.mycode.pathpilotserver.address.Address;
+
+public record CompanyCreateRequest (String name, String industry,double capital,
+                                    String registrationNumber, String website,
+                                    Address address, String phone,String email) {
 }

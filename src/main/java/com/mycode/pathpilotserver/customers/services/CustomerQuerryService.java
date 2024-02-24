@@ -13,6 +13,5 @@ public interface CustomerQuerryService {
 
     Optional<Customer> findByName(String name);
 
-    Optional<Customer> findByUserEmail(String email);
 
 }

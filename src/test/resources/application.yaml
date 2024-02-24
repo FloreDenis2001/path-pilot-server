@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: PATHPILOT_DB
+  main:
+    allow-bean-definition-overriding: true
+  profiles:
+    active: test
+
+  datasource:
+     url: jdbc:h2:mem:PATHPILOT_DB;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=Mysql;NON_KEYWORDS=VALUE,USER
+     username: test-h2
+     password: pass-h2
+
+  liquibase:
+     enabled: false

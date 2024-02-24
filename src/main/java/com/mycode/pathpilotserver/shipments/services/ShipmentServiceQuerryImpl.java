@@ -1,5 +1,6 @@
 package com.mycode.pathpilotserver.shipments.services;
 
+import com.mycode.pathpilotserver.address.Address;
 import com.mycode.pathpilotserver.shipments.exceptions.ShipmentNotFoundException;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
 import com.mycode.pathpilotserver.shipments.repository.ShipmentRepo;
@@ -14,7 +15,7 @@ public class ShipmentServiceQuerryImpl implements ShipmentServiceQuerry{
     }
 
     @Override
-    public Optional<Shipment> findByOrigin(String origin) {
+    public Optional<Shipment> findByOrigin(Address origin) {
         Optional<Shipment> shipment = shipmentRepo.findByOrigin(origin);
         if (shipment.isPresent()) {
             return shipment;

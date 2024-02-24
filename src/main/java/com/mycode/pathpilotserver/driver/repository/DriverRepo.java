@@ -11,7 +11,6 @@ import java.util.Optional;
 public interface DriverRepo extends JpaRepository<Driver, Long> {
 
     
-    @EntityGraph(attributePaths = {"user","shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
     Optional<Driver> findByName(String name);
 
 

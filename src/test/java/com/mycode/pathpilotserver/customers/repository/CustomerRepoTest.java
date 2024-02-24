@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.customers.repository;
 
 import com.mycode.pathpilotserver.PathPilotServerApplication;
+import com.mycode.pathpilotserver.address.Address;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
@@ -36,48 +37,23 @@ class CustomerRepoTest {
 
     @Test
     void findByName() {
-        User user = new User();
-        user.setEmail(" Email Test");
-        user.setPassword("Password Test");
-        user.setRole("Role Test");
-        user.setUsername("Username Test");
-        user.setId(1L);
-        userRepo.saveAndFlush(user);
 
+        Address address= new Address("Romania","Satu Mare","Grivitei","17A","5214");
 
         Customer customer = new Customer();
-        customer.setId(1L);
-        customer.setAddress("Address Test");
+        customer.setCustomerAddress(address);
         customer.setPhone("Phone Number Test");
         customer.setName("Name Test");
+        customer.setEmail(" Email Test");
+        customer.setPassword("Password Test");
+        customer.setRole("Role Test");
+        customer.setUsername("Username Test");
         customerRepo.saveAndFlush(customer);
 
         Customer customer1 = customerRepo.findByName("Name Test").get();
         assertEquals(customer1.getName(), customer.getName());
     }
 
-    @Test
-    void findByUserEmail() {
-
-        User user = new User();
-        user.setEmail(" Email Test");
-        user.setPassword("Password Test");
-        user.setRole("Role Test");
-        user.setUsername("Username Test");
-        user.setId(1L);
-        userRepo.saveAndFlush(user);
-
-
-        Customer customer = new Customer();
-        customer.setId(1L);
-        customer.setAddress("Address Test");
-        customer.setPhone("Phone Number Test");
-        customer.setName("Name Test");
-        customerRepo.saveAndFlush(customer);
-
-        Customer customer1 = customerRepo.findByEmail(" Email Test").get();
-        assertEquals(customer1.getEmail(), customer.getEmail());
-    }
 
 
 }

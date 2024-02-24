@@ -31,11 +31,7 @@ class OrderRepoTest {
         orderRepo.deleteAll();
     }
 
-    private Order createTestOrder() {
-        Shipment shipment = Shipment.builder().id(1L).destination("Destination").origin("Origin").estimatedDeliveryDate(LocalDateTime.of(2024,12,12,14,20,0)).build();
-        Customer customer = Customer.builder().id(1L).name("Name").address("Address").phone("Phone").build();
-        return orderRepo.save(Order.builder().totalAmount(100.0).shipment(shipment).customer(customer).orderDate(LocalDateTime.now()).build());
-    }
+
 
 
 

@@ -36,46 +36,46 @@ public class PathPilotServerApplication {
             , CustomerRepo customerRepo, DriverRepo driverRepo, VehicleRepo vehicleRepo, UserServiceCommandImpl userServiceCommandImpl
             , ShipmentRepo shipmentRepo, ShipmentDetailsRepo shipmentDetailsRepo, OrderRepo orderRepo) {
         return args -> {
-//            Address address = new Address();
-//            address.setCity("New York");
-//            address.setCountry("USA");
-//            address.setStreet("Wall Street");
-//            address.setStreetNumber("1234");
-//            address.setPostalCode("12345");
+            Address address = new Address();
+            address.setCity("New York");
+            address.setCountry("USA");
+            address.setStreet("Wall Street");
+            address.setStreetNumber("1234");
+            address.setPostalCode("12345");
 
 
-//            Company company = new Company();
-//            company.setName("PathPilot");
-//            company.setIndustry("Transportation");
-//            company.setRegistrationNumber("1234567890");
-//            company.setWebsite("www.pathpilot.com");
-//            company.setCompanyAddress(address);
-//            company.setPhone("1234567890");
-//            company.setEmail("daskda@yahoo.com");
-//            companyRepo.saveAndFlush(company);
-
-//
-//            Driver driver = new Driver();
-//            driver.setUsername("johnSmile");
-//            driver.setPassword("123");
-//            driver.setEmail("jhon@yahoo.com");
-//            driver.setRole("DRIVER");
-//            driver.setCompany(company);
-//            driver.setName("John");
-//            driver.setPhone("1234567890");
-//            driver.setLicenseNumber("1234567890");
-//            driverRepo.saveAndFlush(driver);
+            Company company = new Company();
+            company.setName("PathPilot");
+            company.setIndustry("Transportation");
+            company.setRegistrationNumber("1234567890");
+            company.setWebsite("www.pathpilot.com");
+            company.setCompanyAddress(address);
+            company.setPhone("1234567890");
+            company.setEmail("daskda@yahoo.com");
+            companyRepo.saveAndFlush(company);
 
 
-//            Customer customer = new Customer();
-//            customer.setUsername("johnSmile");
-//            customer.setPassword("123");
-//            customer.setEmail("denis2@yahoo.com");
-//            customer.setRole("CUSTOMER");
-//            customer.setCompany(company);
-//            customer.setName("Denis");
-//            customer.setPhone("123456");
-//            customerRepo.saveAndFlush(customer);
+            Driver driver = new Driver();
+            driver.setUsername("johnSmile");
+            driver.setPassword("123");
+            driver.setEmail("jhon@yahoo.com");
+            driver.setRole("DRIVER");
+            driver.setCompany(company);
+            driver.setName("John");
+            driver.setPhone("1234567890");
+            driver.setLicenseNumber("1234567890");
+            driverRepo.saveAndFlush(driver);
+
+
+            Customer customer = new Customer();
+            customer.setUsername("johnSmile");
+            customer.setPassword("123");
+            customer.setEmail("denis2@yahoo.com");
+            customer.setRole("CUSTOMER");
+            customer.setCompany(company);
+            customer.setName("Denis");
+            customer.setPhone("123456");
+            customerRepo.saveAndFlush(customer);
 
 //            LoginUserRequest loginUserRequest = LoginUserRequest.builder().email("jhon@yahoo.com").password("123").build();
 //            userServiceCommandImpl.deleteUser(loginUserRequest);

@@ -40,8 +40,17 @@ class DriverRepoTest {
     }
 
     private Driver createTestDriver() {
-        return driverRepo.save(new Driver("Driver Name", "123456789", "License123"));
+        Driver driver = new Driver();
+        driver.setPhone("Phone Number Test");
+        driver.setName("Name Test");
+        driver.setLicenseNumber("License Number Test");
+        driver.setEmail(" Email Test");
+        driver.setPassword("Password Test");
+        driver.setRole("Role Test");
+        driver.setUsername("Username Test");
+        return driverRepo.save(driver);
     }
+
     @Test
     void findByName() {
         Driver driver1 = driverRepo.findByName(createTestDriver().getName()).get();

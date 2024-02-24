@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.shipments.repository;
 
 import com.mycode.pathpilotserver.PathPilotServerApplication;
+import com.mycode.pathpilotserver.address.Address;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.customers.repository.CustomerRepo;
 import com.mycode.pathpilotserver.driver.models.Driver;
@@ -38,13 +39,15 @@ class ShipmentRepoTest {
         shipmentRepo.deleteAll();
     }
     private Shipment createTestShipment() {
-        return shipmentRepo.save(new Shipment("OriginTest", "Destination", "Pending", LocalDateTime.of(2009,1,5,14,12,1).plusDays(1)));
+        Address originAddress= new Address("Romania","Satu Mare","Grivitei","17A","5214");
+
+        return shipmentRepo.save(new Shipment(originAddress,originAddress, "Pending", LocalDateTime.of(2009,1,5,14,12,1).plusDays(1)));
     }
     @Test
     void findByOrigin() {
-        Optional<Shipment> shipment1 = shipmentRepo.findByOrigin(createTestShipment().getOrigin());
+        Optional<Shipment> shipment1 = shipmentRepo.findByOrigin(createTestShipment().getOriginAddress());
         assertTrue(shipment1.isPresent());
-        assertEquals(createTestShipment().getOrigin(), shipment1.get().getOrigin());
+        assertEquals(createTestShipment().getOriginAddress().getCity(), shipment1.get().getOriginAddress().getCity());
 
     }
 }

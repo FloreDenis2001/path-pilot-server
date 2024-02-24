@@ -50,17 +50,5 @@ class DriverServiceQuerryImplTest {
         assertThrows(DriverNotFoundException.class, () -> driverServiceQuerry.findByName("Driver Name").get());
     }
 
-    @Test
-    void findByUserEmail() {
-        Optional<Driver> driver = Optional.of(createTestDriver());
-        doReturn(driver).when(driverRepo).findByUserEmail("Email Test");
-        assertEquals(driver.get(), driverServiceQuerry.findByUserEmail("Email Test").get());
-    }
-
-    @Test
-    void findByUserEmailException(){
-        doReturn(Optional.empty()).when(driverRepo).findByUserEmail("Email Test");
-        assertThrows(DriverNotFoundException.class, () -> driverServiceQuerry.findByUserEmail("Email Test").get());
-    }
 
 }

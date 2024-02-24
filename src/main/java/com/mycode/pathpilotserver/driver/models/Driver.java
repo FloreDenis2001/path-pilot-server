@@ -3,10 +3,7 @@ package com.mycode.pathpilotserver.driver.models;
 import com.mycode.pathpilotserver.shipmentDetails.models.ShipmentDetail;
 import com.mycode.pathpilotserver.user.models.User;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Set;
@@ -18,6 +15,7 @@ import java.util.Set;
 @Setter
 @Data
 @SuperBuilder
+@AllArgsConstructor
 public class Driver extends User{
 
     @Id
@@ -27,29 +25,30 @@ public class Driver extends User{
     private Long id;
 
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
     @Column(name = "license_number", nullable = false)
     private String licenseNumber;
 
-    @Column(name = "phone", nullable = false)
+    @Column(name="name",nullable = false)
+    private String name;
+
+    @Column(name="phone",nullable = false)
     private String phone;
+
 
 
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<ShipmentDetail> shipmentDetails;
 
-    public Driver(String driverName, String number, String license123) {
-        this.name = driverName;
-        this.phone = number;
-        this.licenseNumber = license123;
+    public Driver(String license) {
+
+        this.licenseNumber = license;
     }
 
 
     @Override
     public String toString() {
-        String text = "Name :"+name+" License Number :"+licenseNumber+" Phone :"+phone;
+        String text = super.toString();
+        text+= "License Number :"+licenseNumber;
         return text;
     }
 }

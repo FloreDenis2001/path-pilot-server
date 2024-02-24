@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.shipmentDetails.repository;
 
 import com.mycode.pathpilotserver.PathPilotServerApplication;
+import com.mycode.pathpilotserver.address.Address;
 import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.driver.repository.DriverRepo;
 import com.mycode.pathpilotserver.shipmentDetails.models.ShipmentDetail;
@@ -62,7 +63,6 @@ class ShipmentDetailsRepoTest {
     void findByArrivalTime() {
         Optional<ShipmentDetail> found = shipmentDetailsRepo.findByArrivalTime(createTestShipmentDetail().getArrivalTime());
         assertFalse(found.isEmpty());
-//        assertTrue(found.stream().anyMatch(detail -> detail.getId().equals(createTestShipmentDetail().getId())));
         assertEquals(createTestShipmentDetail().getArrivalTime(), found.get().getArrivalTime());
     }
 
@@ -70,11 +70,21 @@ class ShipmentDetailsRepoTest {
 
 
     private ShipmentDetail createTestShipmentDetail() {
-        Driver driver = driverRepo.save(new Driver("Driver Name", "123456789", "License123"));
-        Vehicle vehicle = vehicleRepo.save(new Vehicle("Vehicle Type", "REG123", 5000));
-        Shipment shipment = shipmentRepo.save(new Shipment("Origin", "Destination", "Pending", LocalDateTime.of(2009,1,5,14,12,1).plusDays(1)));
+        Driver driver = new Driver();
+        driver.setPhone("Phone Number Test");
+        driver.setName("Name Test");
+        driver.setLicenseNumber("License Number Test");
+        driver.setEmail(" Email Test");
+        driver.setPassword("Password Test");
+        driver.setRole("Role Test");
+        driver.setUsername("Username Test");
 
-        return shipmentDetailsRepo.save(new ShipmentDetail(shipment, driver, vehicle, LocalDateTime.of(2009,1,5,14,12,1), LocalDateTime.of(2009,1,5,14,12,1).plusDays(10)));
+        Address originAddress= new Address("Romania","Satu Mare","Grivitei","17A","5214");
+
+        Vehicle vehicle = vehicleRepo.save(new Vehicle("Vehicle Type", "REG123", 5000));
+        Shipment shipment = shipmentRepo.save(new Shipment(originAddress, originAddress, "Pending", LocalDateTime.of(2009,1,5,14,12,1).plusDays(1)));
+
+        return shipmentDetailsRepo.save(new ShipmentDetail(shipment, driverRepo.save(driver), vehicle, LocalDateTime.of(2009,1,5,14,12,1), LocalDateTime.of(2009,1,5,14,12,1).plusDays(10)));
     }
 
 }
