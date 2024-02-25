@@ -1,7 +1,9 @@
 package com.mycode.pathpilotserver.company.models;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mycode.pathpilotserver.address.Address;
+import com.mycode.pathpilotserver.system.audit.AbstractAuditingEntity;
 import com.mycode.pathpilotserver.user.models.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,7 +19,7 @@ import java.util.Set;
 @Setter
 @Builder
 @Data
-public class Company {
+public class Company extends AbstractAuditingEntity {
 
     @Id
     @SequenceGenerator(name = "company_sequence", sequenceName = "company_sequence", allocationSize = 1)
@@ -25,6 +27,7 @@ public class Company {
     private Long id;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<User> users;
 
     @Embedded

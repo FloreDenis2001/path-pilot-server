@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.user.models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.driver.models.Driver;
@@ -47,6 +48,7 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", referencedColumnName = "id")
+    @JsonBackReference
     private Company company;
 
 

@@ -21,7 +21,6 @@ public interface CompanyQuerryService {
 
     Optional<Company> findByRegistrationNumber(String registrationNumber);
 
-    Optional<List<Company>> findCompaniesByCapital(double capital);
 
     Optional<List<Company>> findCompaniesByIndustry(String industry);
 

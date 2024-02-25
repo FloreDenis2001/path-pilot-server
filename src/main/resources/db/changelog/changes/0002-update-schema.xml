@@ -82,14 +82,7 @@
     </changeSet>
 
 
-    <changeSet id="16" author="admin">
-            <dropColumn tableName="customers" columnName="address"/>
-            <dropColumn tableName="customers" columnName="customer_city"/>
-            <dropColumn tableName="customers" columnName="customer_country"/>
-            <dropColumn tableName="customers" columnName="customer_postal_code"/>
-            <dropColumn tableName="customers" columnName="customer_street"/>
-            <dropColumn tableName="customers" columnName="customer_number"/>
-    </changeSet>
+
 
 
 

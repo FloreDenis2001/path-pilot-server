@@ -59,15 +59,7 @@ public class CompanyQuerryServiceImpl implements CompanyQuerryService {
         }
     }
 
-    @Override
-    public Optional<List<Company>> findCompaniesByCapital(double capital) {
-        Optional<List<Company>> companies = companyRepo.findCompaniesByCapital(capital);
-        if (companies.isPresent()) {
-            return companies;
-        } else {
-            throw new CompanyNotFoundException("Company with capital: " + capital + " not found");
-        }
-    }
+
 
     @Override
     public Optional<List<Company>> findCompaniesByIndustry(String industry) {

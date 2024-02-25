@@ -21,6 +21,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @SpringBootApplication
 public class PathPilotServerApplication {
@@ -36,6 +42,7 @@ public class PathPilotServerApplication {
             , CustomerRepo customerRepo, DriverRepo driverRepo, VehicleRepo vehicleRepo, UserServiceCommandImpl userServiceCommandImpl
             , ShipmentRepo shipmentRepo, ShipmentDetailsRepo shipmentDetailsRepo, OrderRepo orderRepo) {
         return args -> {
+
             Address address = new Address();
             address.setCity("New York");
             address.setCountry("USA");
@@ -51,31 +58,36 @@ public class PathPilotServerApplication {
             company.setWebsite("www.pathpilot.com");
             company.setAddress(address);
             company.setPhone("1234567890");
-            company.setEmail("daskda@yahoo.com");
+            company.setEmail("floredenis907@yahoo.com");
+            company.setCreatedBy("Flore Denis");
+            company.setCapital(100000);
+            company.setCreatedDate(LocalDateTime.now());
+            company.setLastModifiedDate(LocalDateTime.now());
+            company.setLastModifiedBy("Flore Denis");
             companyRepo.saveAndFlush(company);
-
-
-            Driver driver = new Driver();
-            driver.setUsername("johnSmile");
-            driver.setPassword("123");
-            driver.setEmail("jhon@yahoo.com");
-            driver.setRole("DRIVER");
-            driver.setCompany(company);
-            driver.setName("John");
-            driver.setPhone("1234567890");
-            driver.setLicenseNumber("1234567890");
-            driverRepo.saveAndFlush(driver);
-
-
-            Customer customer = new Customer();
-            customer.setUsername("johnSmile");
-            customer.setPassword("123");
-            customer.setEmail("denis2@yahoo.com");
-            customer.setRole("CUSTOMER");
-            customer.setCompany(company);
-            customer.setName("Denis");
-            customer.setPhone("123456");
-            customerRepo.saveAndFlush(customer);
+//
+//
+//            Driver driver = new Driver();
+//            driver.setUsername("johnSmile");
+//            driver.setPassword("123");
+//            driver.setEmail("jhon@yahoo.com");
+//            driver.setRole("DRIVER");
+//            driver.setCompany(company);
+//            driver.setName("John");
+//            driver.setPhone("1234567890");
+//            driver.setLicenseNumber("1234567890");
+//            driverRepo.saveAndFlush(driver);
+//
+//
+//            Customer customer = new Customer();
+//            customer.setUsername("johnSmile");
+//            customer.setPassword("123");
+//            customer.setEmail("denis2@yahoo.com");
+//            customer.setRole("CUSTOMER");
+//            customer.setCompany(company);
+//            customer.setName("Denis");
+//            customer.setPhone("123456");
+//            customerRepo.saveAndFlush(customer);
 
 //            LoginUserRequest loginUserRequest = LoginUserRequest.builder().email("jhon@yahoo.com").password("123").build();
 //            userServiceCommandImpl.deleteUser(loginUserRequest);
@@ -88,5 +100,24 @@ public class PathPilotServerApplication {
 
         };
     }
-
+//    @Bean
+//    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
+//
+//    @Bean
+//    public CorsFilter corsFilter() {
+//        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+//        CorsConfiguration corsConfiguration = new CorsConfiguration();
+//        corsConfiguration.setAllowCredentials(true);
+//        corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:3000","http://online-school-client.eu-west-1.elasticbeanstalk.com/","http://localhost:4200","http://localhost"));
+//        corsConfiguration.setAllowedHeaders(Arrays.asList("Origin", "Access-Control-Allow-Origin", "Content-Type",
+//                "Accept", "Jwt-Token", "Authorization", "Origin, Accept", "X-Requested-With",
+//                "Access-Control-Request-Method", "Access-Control-Request-Headers","Access-Control-Allow-Headers"));
+//        corsConfiguration.setExposedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Jwt-Token", "Authorization",
+//                "Access-Control-Allow-Origin", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials", "Access-Control-Allow-Headers"));
+//        corsConfiguration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+//        return new CorsFilter(urlBasedCorsConfigurationSource);
+//    }
 }
