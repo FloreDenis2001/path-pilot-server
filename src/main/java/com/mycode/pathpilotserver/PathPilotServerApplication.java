@@ -49,7 +49,7 @@ public class PathPilotServerApplication {
             company.setIndustry("Transportation");
             company.setRegistrationNumber("1234567890");
             company.setWebsite("www.pathpilot.com");
-            company.setCompanyAddress(address);
+            company.setAddress(address);
             company.setPhone("1234567890");
             company.setEmail("daskda@yahoo.com");
             companyRepo.saveAndFlush(company);

@@ -29,13 +29,13 @@ public class Company {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "country", column = @Column(name = "company_country")),
-            @AttributeOverride(name = "city", column = @Column(name = "company_city")),
-            @AttributeOverride(name = "street", column = @Column(name = "company_street")),
-            @AttributeOverride(name = "streetNumber", column = @Column(name = "company_number")),
-            @AttributeOverride(name = "postalCode", column = @Column(name = "company_postal_code"))
+            @AttributeOverride(name = "country", column = @Column(name = "country")),
+            @AttributeOverride(name = "city", column = @Column(name = "city")),
+            @AttributeOverride(name = "street", column = @Column(name = "street")),
+            @AttributeOverride(name = "streetNumber", column = @Column(name = "number")),
+            @AttributeOverride(name = "postalCode", column = @Column(name = "postal_code"))
     })
-    private Address companyAddress;
+    private Address address;
 
 
     @Column(name = "name", nullable = false)

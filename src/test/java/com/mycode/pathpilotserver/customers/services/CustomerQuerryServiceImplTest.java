@@ -36,7 +36,7 @@ class CustomerQuerryServiceImplTest {
         Customer customer = new Customer();
         customer.setId(1L);
         customer.setPhone("Phone Number Test");
-        customer.setCustomerAddress(address);
+        customer.setAddress(address);
         customer.setName("Name Test");
         return customer;
     }

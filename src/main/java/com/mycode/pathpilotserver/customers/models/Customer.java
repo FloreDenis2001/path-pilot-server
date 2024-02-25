@@ -31,13 +31,13 @@ public class Customer extends User {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "country", column = @Column(name = "customer_country")),
-            @AttributeOverride(name = "city", column = @Column(name = "customer_city")),
-            @AttributeOverride(name = "street", column = @Column(name = "customer_street")),
-            @AttributeOverride(name = "streetNumber", column = @Column(name = "customer_number")),
-            @AttributeOverride(name = "postalCode", column = @Column(name = "customer_postal_code"))
+            @AttributeOverride(name = "country", column = @Column(name = "country")),
+            @AttributeOverride(name = "city", column = @Column(name = "city")),
+            @AttributeOverride(name = "street", column = @Column(name = "street")),
+            @AttributeOverride(name = "streetNumber", column = @Column(name = "number")),
+            @AttributeOverride(name = "postalCode", column = @Column(name = "postal_code"))
     })
-    private Address customerAddress;
+    private Address address;
 
     @Column(name = "phone", nullable = false)
     private String phone;
@@ -47,13 +47,13 @@ public class Customer extends User {
 
     public Customer(String name, Address address, String phone, User user) {
         this.name = name;
-        this.customerAddress=address   ;
+        this.address=address   ;
         this.phone = phone;
     }
 
     @Override
     public String toString() {
-        String text = "Name :"+name+" Phone :"+phone+"\n"+customerAddress.toString();
+        String text = "Name :"+name+" Phone :"+phone+"\n"+address.toString();
         return text;
     }
 }

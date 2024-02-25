@@ -41,7 +41,7 @@ class CustomerRepoTest {
         Address address= new Address("Romania","Satu Mare","Grivitei","17A","5214");
 
         Customer customer = new Customer();
-        customer.setCustomerAddress(address);
+        customer.setAddress(address);
         customer.setPhone("Phone Number Test");
         customer.setName("Name Test");
         customer.setEmail(" Email Test");

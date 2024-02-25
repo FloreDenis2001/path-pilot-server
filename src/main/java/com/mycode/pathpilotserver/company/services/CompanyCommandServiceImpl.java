@@ -56,10 +56,10 @@ public class CompanyCommandServiceImpl implements CompanyCommandService {
     }
 
     private Company buildCompany(CompanyCreateRequest companyCreateRequest) {
-        return Company.builder().companyAddress(companyCreateRequest.address()).capital(companyCreateRequest.capital()).email(companyCreateRequest.email()).name(companyCreateRequest.name()).phone(companyCreateRequest.phone()).registrationNumber(companyCreateRequest.registrationNumber()).build();
+        return Company.builder().address(companyCreateRequest.address()).capital(companyCreateRequest.capital()).email(companyCreateRequest.email()).name(companyCreateRequest.name()).phone(companyCreateRequest.phone()).registrationNumber(companyCreateRequest.registrationNumber()).build();
     }
 
     private Company updatedCompany(UpdateCompanyRequest updateCompanyRequest) {
-        return Company.builder().companyAddress(updateCompanyRequest.updatedCompany().getCompanyAddress()).registrationNumber(updateCompanyRequest.registrationNumber()).capital(updateCompanyRequest.updatedCompany().getCapital()).email(updateCompanyRequest.updatedCompany().getEmail()).name(updateCompanyRequest.updatedCompany().getName()).phone(updateCompanyRequest.updatedCompany().getPhone()).build();
+        return Company.builder().address(updateCompanyRequest.updatedCompany().getAddress()).registrationNumber(updateCompanyRequest.registrationNumber()).capital(updateCompanyRequest.updatedCompany().getCapital()).email(updateCompanyRequest.updatedCompany().getEmail()).name(updateCompanyRequest.updatedCompany().getName()).phone(updateCompanyRequest.updatedCompany().getPhone()).build();
     }
 }

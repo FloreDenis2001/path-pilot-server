@@ -66,6 +66,31 @@
 
     <changeSet id="13" author="admin">
         <dropColumn tableName="shipments" columnName="origin"/>
+    </changeSet>
+
+    <changeSet id="14" author="admin">
+        <renameColumn columnDataType="varchar(255)" tableName="companies" oldColumnName="company_city" newColumnName="city"/>
+        <renameColumn columnDataType="varchar(255)" tableName="companies" oldColumnName="company_country" newColumnName="country"/>
+        <renameColumn columnDataType="varchar(255)" tableName="companies" oldColumnName="company_postal_code" newColumnName="postal_code"/>
+        <renameColumn columnDataType="varchar(255)" tableName="companies" oldColumnName="company_street" newColumnName="street"/>
+        <renameColumn columnDataType="varchar(255)" tableName="companies" oldColumnName="company_number" newColumnName="number"/>
+    </changeSet>
+
+
+    <changeSet id="15" author="admin">
         <dropColumn tableName="shipments" columnName="destination"/>
     </changeSet>
+
+
+    <changeSet id="16" author="admin">
+            <dropColumn tableName="customers" columnName="address"/>
+            <dropColumn tableName="customers" columnName="customer_city"/>
+            <dropColumn tableName="customers" columnName="customer_country"/>
+            <dropColumn tableName="customers" columnName="customer_postal_code"/>
+            <dropColumn tableName="customers" columnName="customer_street"/>
+            <dropColumn tableName="customers" columnName="customer_number"/>
+    </changeSet>
+
+
+
 </databaseChangeLog>
