@@ -29,7 +29,7 @@ public class CustomerCommandServiceImpl implements CustomerCommandService {
 
 
     @Override
-    public void createCustomer(CustomerCreateRequest customerCreateRequest) {
+    public void create(CustomerCreateRequest customerCreateRequest) {
         Optional<User> user = userRepo.findByEmail(customerCreateRequest.email());
         if (user.isEmpty()) {
             Customer customer = new Customer();
@@ -47,7 +47,7 @@ public class CustomerCommandServiceImpl implements CustomerCommandService {
     }
 
     @Override
-    public void deleteCustomer(RemoveValidationRequest removeValidationRequest) {
+    public void delete(RemoveValidationRequest removeValidationRequest) {
         Optional<User> user = userRepo.findByEmail(removeValidationRequest.email());
         if(user.isPresent() && user.get().getPassword().equals(removeValidationRequest.password()) && user.get().getRole().equals("CUSTOMER")) {
             customerRepo.delete((Customer) user.get());

@@ -40,14 +40,14 @@ public class ServerControllerCustomer {
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/create")
     public ResponseEntity<String> createCustomer(@RequestBody CustomerCreateRequest customer) {
-        customerCommandService.createCustomer(customer);
+        customerCommandService.create(customer);
         return ResponseEntity.ok("Customer added successfully");
     }
 
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteCustomer(@RequestBody RemoveValidationRequest removeValidationRequest) {
-        customerCommandService.deleteCustomer(removeValidationRequest);
+        customerCommandService.delete(removeValidationRequest);
         return ResponseEntity.ok("Customer deleted successfully");
     }
 

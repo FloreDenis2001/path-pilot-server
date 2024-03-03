@@ -13,6 +13,8 @@ public interface DriverRepo extends JpaRepository<Driver, Long> {
     
     Optional<Driver> findByName(String name);
 
+    Optional<Driver> findByLicenseNumber(String licenseNumber);
+
 
 
 }

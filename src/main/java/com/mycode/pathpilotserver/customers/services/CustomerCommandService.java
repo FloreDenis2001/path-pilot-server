@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public interface CustomerCommandService {
 
-    void createCustomer(CustomerCreateRequest customerCreateRequest);
+    void create(CustomerCreateRequest customerCreateRequest);
 
-    void deleteCustomer(RemoveValidationRequest removeValidationRequest);
+    void delete(RemoveValidationRequest removeValidationRequest);
 }

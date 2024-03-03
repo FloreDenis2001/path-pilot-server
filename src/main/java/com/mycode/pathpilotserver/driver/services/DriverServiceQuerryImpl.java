@@ -5,8 +5,10 @@ import com.mycode.pathpilotserver.driver.models.Driver;
 
 import java.util.Optional;
 import com.mycode.pathpilotserver.driver.repository.DriverRepo;
+import org.springframework.stereotype.Service;
 
-public class DriverServiceQuerryImpl implements DriverServiceQuerry{
+@Service
+public class DriverServiceQuerryImpl implements DriverQuerryService {
 
     private final DriverRepo driverRepo;
 
@@ -21,6 +23,16 @@ public class DriverServiceQuerryImpl implements DriverServiceQuerry{
             return driver;}
         else {
             throw new DriverNotFoundException("Driver with name: " + name + " not found");
+        }
+    }
+
+    @Override
+    public Optional<Driver> findByLicenseNumber(String licenseNumber) {
+        Optional<Driver> driver = driverRepo.findByLicenseNumber(licenseNumber);
+        if (driver.isPresent()) {
+            return driver;}
+        else {
+            throw new DriverNotFoundException("Driver with license number: " + licenseNumber + " not found");
         }
     }
 

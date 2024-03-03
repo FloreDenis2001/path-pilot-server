@@ -3,7 +3,6 @@ package com.mycode.pathpilotserver.driver.services;
 import com.mycode.pathpilotserver.driver.exceptions.DriverNotFoundException;
 import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.driver.repository.DriverRepo;
-import com.mycode.pathpilotserver.user.models.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,12 +15,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
-class DriverServiceQuerryImplTest {
+class DriverQuerryServiceImplTest {
 
     @Mock
     private DriverRepo driverRepo;
 
-    private DriverServiceQuerry driverServiceQuerry;
+    private DriverQuerryService driverServiceQuerry;
 
     @BeforeEach
     void setUp() {
