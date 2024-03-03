@@ -15,8 +15,10 @@ public interface ShipmentRepo extends JpaRepository<Shipment, Long> {
 
 
     @EntityGraph(attributePaths = {"orders","shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
-    @Query("select s from Shipments s  where s.originAddress=?1")
-    Optional<Shipment> findByOrigin(Address originAddress);
+    Optional<Shipment> findShipmentByOriginAddress(Address originAddress);
+
+    @EntityGraph(attributePaths = {"orders","shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
+    Optional<Shipment> findShipmentByDestinationAddress(Address destinationAddress);
 
 
 }

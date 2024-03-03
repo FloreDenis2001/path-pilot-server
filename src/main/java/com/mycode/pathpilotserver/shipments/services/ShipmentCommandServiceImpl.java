@@ -4,6 +4,9 @@ public class ShipmentCommandServiceImpl implements ShipmentCommandService{
     @Override
     public void createShipment() {
 
+        
+
+
     }
 
     @Override

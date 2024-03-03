@@ -45,7 +45,7 @@ class ShipmentRepoTest {
     }
     @Test
     void findByOrigin() {
-        Optional<Shipment> shipment1 = shipmentRepo.findByOrigin(createTestShipment().getOriginAddress());
+        Optional<Shipment> shipment1 = shipmentRepo.findShipmentByOriginAddress(createTestShipment().getOriginAddress());
         assertTrue(shipment1.isPresent());
         assertEquals(createTestShipment().getOriginAddress().getCity(), shipment1.get().getOriginAddress().getCity());
 

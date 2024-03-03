@@ -16,11 +16,23 @@ public class ShipmentServiceQuerryImpl implements ShipmentServiceQuerry{
 
     @Override
     public Optional<Shipment> findByOrigin(Address origin) {
-        Optional<Shipment> shipment = shipmentRepo.findByOrigin(origin);
+        Optional<Shipment> shipment = shipmentRepo.findShipmentByOriginAddress(origin);
         if (shipment.isPresent()) {
             return shipment;
         } else {
             throw new ShipmentNotFoundException("Shipment with origin: " + origin + " not found");
         }
     }
+
+    @Override
+    public Optional<Shipment> findByDestination(Address destination) {
+        Optional<Shipment> shipment = shipmentRepo.findShipmentByDestinationAddress(destination);
+        if (shipment.isPresent()) {
+            return shipment;
+        } else {
+            throw new ShipmentNotFoundException("Shipment with destination: " + destination + " not found");
+        }
+    }
+
+
 }

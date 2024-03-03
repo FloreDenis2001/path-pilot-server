@@ -44,7 +44,7 @@ class ShipmentServiceQuerryImplTest {
         Optional<Shipment> shipment = Optional.of(createShipment());
         Address originAddress= new Address("Romania","Satu Mare","Grivitei","17A","5214");
 
-        doReturn(shipment).when(shipmentRepo).findByOrigin(originAddress);
+        doReturn(shipment).when(shipmentRepo).findShipmentByOriginAddress(originAddress);
         assertEquals(shipment, shipmentServiceQuerry.findByOrigin(originAddress));
     }
 
@@ -52,7 +52,7 @@ class ShipmentServiceQuerryImplTest {
     void findByOriginException(){
         Address originAddress = new Address("Romania","Bucuresti","Dambovicioarei","17","99921");
 
-        doReturn(null).when(shipmentRepo).findByOrigin(originAddress);
+        doReturn(null).when(shipmentRepo).findShipmentByOriginAddress(originAddress);
         assertThrows(NullPointerException.class, () -> shipmentServiceQuerry.findByOrigin(originAddress));
     }
 }

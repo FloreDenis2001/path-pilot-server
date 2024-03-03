@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface ShipmentServiceQuerry {
 
     Optional<Shipment> findByOrigin(Address origin);
+
+    Optional<Shipment> findByDestination(Address destination);
 }
