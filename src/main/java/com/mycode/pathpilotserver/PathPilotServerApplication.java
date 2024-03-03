@@ -43,29 +43,28 @@ public class PathPilotServerApplication {
             , ShipmentRepo shipmentRepo, ShipmentDetailsRepo shipmentDetailsRepo, OrderRepo orderRepo) {
         return args -> {
 
-            Address address = new Address();
-            address.setCity("New York");
-            address.setCountry("USA");
-            address.setStreet("Wall Street");
-            address.setStreetNumber("1234");
-            address.setPostalCode("12345");
-
-
-            Company company = new Company();
-            company.setName("PathPilot");
-            company.setIndustry("Transportation");
-            company.setRegistrationNumber("1234567890");
-            company.setWebsite("www.pathpilot.com");
-            company.setAddress(address);
-            company.setPhone("1234567890");
-            company.setEmail("floredenis907@yahoo.com");
-            company.setCreatedBy("Flore Denis");
-            company.setCapital(100000);
-            company.setCreatedDate(LocalDateTime.now());
-            company.setLastModifiedDate(LocalDateTime.now());
-            company.setLastModifiedBy("Flore Denis");
-            companyRepo.saveAndFlush(company);
+//            Address address = new Address();
+//            address.setCity("New York");
+//            address.setCountry("USA");
+//            address.setStreet("Wall Street");
+//            address.setStreetNumber("1234");
+//            address.setPostalCode("12345");
 //
+//
+//            Company company = new Company();
+//            company.setName("PathPilot");
+//            company.setIndustry("Transportation");
+//            company.setRegistrationNumber("1234567890");
+//            company.setWebsite("www.pathpilot.com");
+//            company.setAddress(address);
+//            company.setPhone("1234567890");
+//            company.setEmail("floredenis907@yahoo.com");
+//            company.setCreatedBy("Flore Denis");
+//            company.setCapital(100000);
+//            company.setCreatedDate(LocalDateTime.now());
+//            company.setLastModifiedDate(LocalDateTime.now());
+//            company.setLastModifiedBy("Flore Denis");
+//            companyRepo.saveAndFlush(company);
 //
 //            Driver driver = new Driver();
 //            driver.setUsername("johnSmile");
@@ -77,7 +76,6 @@ public class PathPilotServerApplication {
 //            driver.setPhone("1234567890");
 //            driver.setLicenseNumber("1234567890");
 //            driverRepo.saveAndFlush(driver);
-//
 //
 //            Customer customer = new Customer();
 //            customer.setUsername("johnSmile");

@@ -33,6 +33,7 @@ public class CustomerCommandServiceImpl implements CustomerCommandService {
         Optional<User> user = userRepo.findByEmail(customerCreateRequest.email());
         if (user.isEmpty()) {
             Customer customer = new Customer();
+            customer.setName(customerCreateRequest.name());
             customer.setEmail(customerCreateRequest.email());
             customer.setPhone(customerCreateRequest.phone());
             customer.setPassword(customerCreateRequest.password());
