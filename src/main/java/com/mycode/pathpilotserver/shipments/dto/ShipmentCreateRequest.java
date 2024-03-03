@@ -1,4 +1,6 @@
 package com.mycode.pathpilotserver.shipments.dto;
 
-public record ShipmentCreateRequest(String origin,String destination) {
+import com.mycode.pathpilotserver.address.Address;
+
+public record ShipmentCreateRequest(Address origin,Address destination) {
 }
