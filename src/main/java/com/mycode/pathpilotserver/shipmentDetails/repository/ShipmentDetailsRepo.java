@@ -12,11 +12,8 @@ import java.util.Optional;
 @Repository
 public interface ShipmentDetailsRepo extends JpaRepository<ShipmentDetail, Long> {
 
-    @EntityGraph(attributePaths = {"shipment", "driver", "vehicle"})
-    Optional<ShipmentDetail> findByShipmentId(Long shipmentId);
 
-    @EntityGraph(attributePaths = {"shipment", "driver", "vehicle"})
-    Optional<ShipmentDetail> findByArrivalTime(LocalDateTime arrivalTime);
+
 
 }
 

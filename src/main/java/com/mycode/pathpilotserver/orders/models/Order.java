@@ -1,7 +1,9 @@
 package com.mycode.pathpilotserver.orders.models;
 
 import com.mycode.pathpilotserver.customers.models.Customer;
+import com.mycode.pathpilotserver.shipmentDetails.models.ShipmentDetail;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
+import com.mycode.pathpilotserver.system.enums.OrderType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -10,6 +12,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity(name = "Order")
 @Table(name = "orders")
@@ -26,19 +29,47 @@ public class Order {
     @Column(name = "id", updatable = false)
     private Long id;
 
+
+    @Column(name = "weight", nullable = false)
+    private double weight;
+
+    @Column(name = "height", nullable = false)
+    private double height;
+
+    @Column(name = "width", nullable = false)
+    private double width;
+
+    @Column(name = "volume", nullable = false)
+    private double volume;
+
+    @Column(name="type",nullable = false)
+    private OrderType type;
+
+
+    @Column(name = "delivery_description", nullable = false)
+    private String deliveryDescription;
+
+
+
+
     @Column(name = "order_date", nullable = false)
     private LocalDateTime orderDate;
 
     @Column(name = "total_amount", nullable = false)
-    private Double totalAmount;
+    private double totalAmount;
 
     @ManyToOne
     @JoinColumn(name = "customer_id",referencedColumnName ="id",nullable = false)
     private Customer customer;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "shipment_id",referencedColumnName ="id",nullable = false)
     private Shipment shipment;
+
+    @ManyToOne
+    @JoinColumn(name = "shipment_details_id",referencedColumnName ="id",nullable = false)
+    private ShipmentDetail shipmentDetail;
+
 
     public Order(LocalDateTime orderDate, double totalAmount, Customer customer) {
         this.orderDate = orderDate;

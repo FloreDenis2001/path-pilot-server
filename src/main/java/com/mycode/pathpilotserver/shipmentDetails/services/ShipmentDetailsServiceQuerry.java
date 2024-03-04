@@ -7,7 +7,5 @@ import java.util.Optional;
 
 public interface ShipmentDetailsServiceQuerry {
 
-    Optional<ShipmentDetail> findByShipmentId(Long shipmentId);
 
-    Optional<ShipmentDetail> findByArrivalTime(LocalDateTime arrivalTime);
 }

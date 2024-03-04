@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.shipmentDetails.models;
 
 import com.mycode.pathpilotserver.driver.models.Driver;
+import com.mycode.pathpilotserver.orders.models.Order;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
 import com.mycode.pathpilotserver.vehicles.models.Vehicle;
 import jakarta.persistence.*;
@@ -9,10 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Table(name = "shipment_details")
 @Entity(name = "ShipmentDetails")
@@ -29,9 +29,8 @@ public class ShipmentDetail {
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "shipment_id",referencedColumnName ="id",nullable = false)
-    private Shipment shipment;
+    @OneToMany(mappedBy = "shipmentDetail", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Order> orders;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_id",referencedColumnName ="id",nullable = false)
@@ -47,18 +46,26 @@ public class ShipmentDetail {
     @Column(name="arrival_time", nullable = false)
     private LocalDateTime arrivalTime;
 
-    public ShipmentDetail(Shipment shipment, Driver driver, Vehicle vehicle, LocalDateTime now, LocalDateTime localDateTime) {
-        this.shipment = shipment;
-        this.driver = driver;
-        this.vehicle = vehicle;
-        this.departureDate = now;
-        this.arrivalTime = localDateTime;
-    }
+
+
 
     @Override
     public String toString() {
-        String text = "Id:"+ shipment.getId()+"Shipment Id :"+shipment.getId()+" Vehicle Id :"+vehicle.getId()+" Driver Id :"+driver.getId()+" Departure Date :"+departureDate+" Arrival Time :"+arrivalTime;
-        return text;
+        return "ShipmentDetail{" +
+                "id=" + id +
+                ", orders=" + orders +
+                ", vehicle=" + vehicle +
+                ", driver=" + driver +
+                ", departureDate=" + departureDate +
+                ", arrivalTime=" + arrivalTime +
+                '}';
     }
+
+
+
+
+
+
+
 
 }

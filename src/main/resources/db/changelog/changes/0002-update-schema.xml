@@ -81,6 +81,45 @@
         <dropColumn tableName="shipments" columnName="destination"/>
     </changeSet>
 
+    <changeSet id="16" author="admin">
+        <addColumn tableName="orders">
+            <column name="weight" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="height" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="width" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="volume" type="double">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="delivery_description" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="17" author="admin">
+        <renameColumn columnDataType="bigint" tableName="shipment_details" oldColumnName="shipment_id" newColumnName="order_id"/>
+    </changeSet>
+
+<!--    <changeSet id="18" author="admin">-->
+<!--        <dropColumn tableName="shipment_details" columnName="shipment_date"/>-->
+<!--    </changeSet>-->
+
+    <changeSet id="19" author="admin">
+
+        <addForeignKeyConstraint constraintName="fk_orders_shipment_details"
+                                 baseTableName="orders"
+                                 baseColumnNames="shipment_details_id"
+                                 referencedTableName="shipment_details"
+                                 referencedColumnNames="id"/>
+    </changeSet>
 
 
 

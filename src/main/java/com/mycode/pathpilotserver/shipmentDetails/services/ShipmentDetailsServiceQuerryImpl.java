@@ -15,23 +15,6 @@ public class ShipmentDetailsServiceQuerryImpl implements ShipmentDetailsServiceQ
     }
 
 
-    @Override
-    public Optional<ShipmentDetail> findByShipmentId(Long shipmentId) {
-        Optional<ShipmentDetail> shipmentDetail = shipmentDetailsRepo.findByShipmentId(shipmentId);
-        if (shipmentDetail.isPresent()) {
-            return shipmentDetail;
-        } else {
-            throw new ShipmentDetailsNotFoundException("ShipmentDetail with shipment id: " + shipmentId + " not found");
-        }
-    }
 
-    @Override
-    public Optional<ShipmentDetail> findByArrivalTime(LocalDateTime arrivalTime) {
-        Optional<ShipmentDetail> shipmentDetail = shipmentDetailsRepo.findByArrivalTime(arrivalTime);
-        if (shipmentDetail.isPresent()) {
-            return shipmentDetail;
-        } else {
-            throw new ShipmentDetailsNotFoundException("ShipmentDetail with arrival time: " + arrivalTime + " not found");
-        }
-    }
+
 }

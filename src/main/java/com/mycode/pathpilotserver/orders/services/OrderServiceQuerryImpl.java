@@ -3,9 +3,11 @@ package com.mycode.pathpilotserver.orders.services;
 import com.mycode.pathpilotserver.orders.exceptions.OrderNotFoundException;
 import com.mycode.pathpilotserver.orders.models.Order;
 import com.mycode.pathpilotserver.orders.repository.OrderRepo;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class OrderServiceQuerryImpl implements OrderServiceQuerry {
     private final OrderRepo orderRepo;
 
@@ -13,13 +15,13 @@ public class OrderServiceQuerryImpl implements OrderServiceQuerry {
         this.orderRepo = orderRepo;
     }
 
+
     @Override
-    public Optional<Order> findByCustomerName(String customerName) {
-        Optional<Order> order = orderRepo.findByCustomerName(customerName);
-        if (order.isPresent()) {
-            return order;
-        } else {
-            throw new OrderNotFoundException("Order with customer name: " + customerName + " not found");
+    public Optional<Order> findByCustomerAndAndShipment(Long customerId, Long shipmentId) {
+        Optional<Order> order = orderRepo.findByCustomerAndAndShipment(customerId, shipmentId);
+        if (order.isEmpty()) {
+            throw new OrderNotFoundException("Order with customer id: " + customerId + " and shipment id: " + shipmentId + " not found");
         }
+        return order;
     }
 }

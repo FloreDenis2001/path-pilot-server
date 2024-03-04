@@ -55,11 +55,10 @@ public class Shipment {
     @Column(name = "estimated_delivery_date", nullable = false)
     private LocalDateTime estimatedDeliveryDate;
 
-    @OneToMany(mappedBy = "shipment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Order> orders;
+    @OneToOne(mappedBy = "shipment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Order order;
 
-    @OneToMany(mappedBy = "shipment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<ShipmentDetail> shipmentDetails;
+
 
     public Shipment(Address destinationAddress, Address originAddress, String status, LocalDateTime localDateTime) {
         this.destinationAddress=destinationAddress;
