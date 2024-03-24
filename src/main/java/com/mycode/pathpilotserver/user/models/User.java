@@ -3,14 +3,9 @@ package com.mycode.pathpilotserver.user.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mycode.pathpilotserver.company.models.Company;
-import com.mycode.pathpilotserver.customers.models.Customer;
-import com.mycode.pathpilotserver.driver.models.Driver;
-import com.mycode.pathpilotserver.orders.models.Order;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
-import java.util.Set;
 
 @Entity(name = "User")
 @Table(name = "users")

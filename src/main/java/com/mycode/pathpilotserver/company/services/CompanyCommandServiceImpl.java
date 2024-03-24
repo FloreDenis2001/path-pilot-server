@@ -4,6 +4,7 @@ package com.mycode.pathpilotserver.company.services;
 import com.mycode.pathpilotserver.company.dto.CompanyCreateRequest;
 import com.mycode.pathpilotserver.company.dto.UpdateCompanyRequest;
 import com.mycode.pathpilotserver.company.exceptions.CompanyNotFoundException;
+import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.company.repository.CompanyRepo;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
@@ -12,8 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-
-import com.mycode.pathpilotserver.company.models.Company;
 
 @Service
 @Transactional

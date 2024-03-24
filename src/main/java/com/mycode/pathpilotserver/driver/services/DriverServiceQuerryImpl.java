@@ -2,10 +2,10 @@ package com.mycode.pathpilotserver.driver.services;
 
 import com.mycode.pathpilotserver.driver.exceptions.DriverNotFoundException;
 import com.mycode.pathpilotserver.driver.models.Driver;
-
-import java.util.Optional;
 import com.mycode.pathpilotserver.driver.repository.DriverRepo;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class DriverServiceQuerryImpl implements DriverQuerryService {

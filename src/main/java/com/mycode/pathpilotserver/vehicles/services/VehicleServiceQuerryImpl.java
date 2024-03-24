@@ -3,7 +3,6 @@ package com.mycode.pathpilotserver.vehicles.services;
 import com.mycode.pathpilotserver.vehicles.exceptions.VehicleNotFoundException;
 import com.mycode.pathpilotserver.vehicles.models.Vehicle;
 import com.mycode.pathpilotserver.vehicles.repository.VehicleRepo;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

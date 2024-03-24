@@ -2,7 +2,6 @@ package com.mycode.pathpilotserver.shipmentDetails.models;
 
 import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.orders.models.Order;
-import com.mycode.pathpilotserver.shipments.models.Shipment;
 import com.mycode.pathpilotserver.vehicles.models.Vehicle;
 import jakarta.persistence.*;
 import lombok.Data;

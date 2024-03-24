@@ -2,13 +2,11 @@ package com.mycode.pathpilotserver.shipments.models;
 
 import com.mycode.pathpilotserver.address.Address;
 import com.mycode.pathpilotserver.orders.models.Order;
-import com.mycode.pathpilotserver.shipmentDetails.models.ShipmentDetail;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity(name = "Shipments")
 @Table(name = "shipments")

@@ -1,34 +1,26 @@
 package com.mycode.pathpilotserver;
 
-import com.mycode.pathpilotserver.address.Address;
-import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.company.repository.CompanyRepo;
-import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.customers.repository.CustomerRepo;
-import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.driver.repository.DriverRepo;
 import com.mycode.pathpilotserver.orders.repository.OrderRepo;
 import com.mycode.pathpilotserver.shipmentDetails.repository.ShipmentDetailsRepo;
 import com.mycode.pathpilotserver.shipments.repository.ShipmentRepo;
-import com.mycode.pathpilotserver.user.dto.LoginUserRequest;
-import com.mycode.pathpilotserver.user.dto.UpdateUserRequest;
-import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
 import com.mycode.pathpilotserver.user.services.UserServiceCommandImpl;
 import com.mycode.pathpilotserver.vehicles.repository.VehicleRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-
-import java.time.LocalDateTime;
-import java.util.Arrays;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
+@EnableFeignClients
+@ImportAutoConfiguration(FeignAutoConfiguration.class)
 public class PathPilotServerApplication {
 
     public static void main(String[] args) {

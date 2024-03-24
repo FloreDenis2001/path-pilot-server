@@ -7,7 +7,6 @@ import com.mycode.pathpilotserver.system.audit.AbstractAuditingEntity;
 import com.mycode.pathpilotserver.user.models.User;
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Set;
 
