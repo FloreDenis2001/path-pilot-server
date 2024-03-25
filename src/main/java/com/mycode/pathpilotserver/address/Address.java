@@ -1,8 +1,11 @@
 package com.mycode.pathpilotserver.address;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.io.IOException;
 
 @Embeddable
 @Setter
@@ -44,5 +47,19 @@ public class Address {
 
     public String getPostalCode() {
         return postalCode;
+    }
+
+    public static Address convertToAddress(String addressString) {
+        String[] addressParts = addressString.split(",");
+        if (addressParts.length < 5) {
+            throw new IllegalArgumentException("Invalid address format");
+        }
+        String country = addressParts[0].trim();
+        String city = addressParts[1].trim();
+        String street = addressParts[2].trim();
+        String streetNumber = addressParts[3].trim();
+        String postalCode = addressParts[4].trim();
+
+        return new Address(country, city, street, streetNumber, postalCode);
     }
 }

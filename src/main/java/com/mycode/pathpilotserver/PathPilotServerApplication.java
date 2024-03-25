@@ -1,5 +1,11 @@
 package com.mycode.pathpilotserver;
 
+import com.google.maps.DirectionsApi;
+import com.google.maps.GeoApiContext;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.TravelMode;
+import com.google.maps.model.Unit;
 import com.mycode.pathpilotserver.company.repository.CompanyRepo;
 import com.mycode.pathpilotserver.customers.repository.CustomerRepo;
 import com.mycode.pathpilotserver.driver.repository.DriverRepo;
@@ -17,6 +23,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+
+import java.io.IOException;
+
+import static com.mycode.pathpilotserver.utils.Utile.API_KEY;
 
 @SpringBootApplication
 @EnableFeignClients
@@ -86,7 +96,31 @@ public class PathPilotServerApplication {
 //            UpdateUserRequest updateUserRequest = UpdateUserRequest.builder().email("floredenis907@yahoo.com").password("parolaNoua123")
 //                    .newUser(User.builder().email("floredenis907@yahoo.com").password("parolaNoua123").username("denisflore120").build()).build();
 //            userServiceCommandImpl.updateUser(updateUserRequest);
+            // Inițializăm un context pentru API cu cheia noastră
+            GeoApiContext context = new GeoApiContext.Builder()
+                    .apiKey(API_KEY)
+                    .build();
 
+            String origin = "Bucharest Dambovicioarei 17";
+            String destination = "Satu Mare Botiz Mioritei 122";
+
+            try {
+                // Facem cererea către Directions API
+                DirectionsResult result = DirectionsApi.newRequest(context)
+                        .origin(origin)
+                        .destination(destination)
+                        .mode(TravelMode.DRIVING)
+                        .units(Unit.METRIC)
+                        .await();
+
+                System.out.println(result.routes[0].summary);
+                System.out.println(result.routes[0].legs[0].distance);
+                System.out.println(result.routes[0].legs[0].duration);
+
+
+            } catch (ApiException | InterruptedException | IOException e) {
+                e.printStackTrace();
+            }
 
         };
     }
