@@ -1,4 +1,4 @@
-package com.mycode.pathpilotserver.customers.models;
+package com.mycode.pathpilotserver.admin.models;
 
 import com.mycode.pathpilotserver.address.Address;
 import com.mycode.pathpilotserver.orders.models.Order;
@@ -8,20 +8,20 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Set;
-
-@Entity(name = "Customers")
-@Table(name = "customers")
+@Entity(name = "Admin")
+@Table(name = "admins")
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
 @Data
-public class Customer extends User {
+public class Admin extends User {
+
 
     @Id
-    @SequenceGenerator(name = "customers_sequence", sequenceName = "customers_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customers_sequence")
+    @SequenceGenerator(name = "admins_sequence", sequenceName = "admins_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "admins_sequence")
     @Column(name = "id", updatable = false)
     private Long id;
 
@@ -45,15 +45,15 @@ public class Customer extends User {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Order> orders;
 
-    public Customer(String name, Address address, String phone) {
+    public Admin(String name, Address address, String phone) {
         this.name = name;
-        this.address = address;
+        this.address=address;
         this.phone = phone;
     }
 
     @Override
     public String toString() {
-        String text = "Name :" + name + " Phone :" + phone + "\n" + address.toString();
+        String text = "Name :"+name+" Phone :"+phone+"\n"+address.toString();
         return text;
     }
 }

@@ -123,6 +123,33 @@
 
 
 
+    <changeSet id="21" author="your_username">
+        <createTable tableName="admins">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="pk_admins"/>
+            </column>
+            <column name="user_id" type="bigint"/>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
 
+            <column name="address" type="varchar(255)"/>
+            <column name="phone" type="varchar(255)"/>
+        </createTable>
+        <addForeignKeyConstraint constraintName="fk_admins_users"
+                                 baseTableName="admins"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="22" author="admin">
+        <dropForeignKeyConstraint
+                constraintName="fk_admins_users"
+                baseTableSchemaName="pathpilot_db"
+                baseTableName="admins"/>
+        <dropColumn tableName="admins" columnName="user_id"/>
+
+    </changeSet>
 
 </databaseChangeLog>
