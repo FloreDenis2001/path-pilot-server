@@ -94,34 +94,9 @@ public class PathPilotServerApplication {
 
 
 //            UpdateUserRequest updateUserRequest = UpdateUserRequest.builder().email("floredenis907@yahoo.com").password("parolaNoua123")
-//                    .newUser(User.builder().email("floredenis907@yahoo.com").password("parolaNoua123").username("denisflore120").build()).build();
+//            .newUser(User.builder().email("floredenis907@yahoo.com").password("parolaNoua123").username("denisflore120").build()).build();
 //            userServiceCommandImpl.updateUser(updateUserRequest);
-            // Inițializăm un context pentru API cu cheia noastră
-            GeoApiContext context = new GeoApiContext.Builder()
-                    .apiKey(API_KEY)
-                    .build();
-
-            String origin = "Bucharest Dambovicioarei 17";
-            String destination = "Satu Mare Botiz Mioritei 122";
-
-            try {
-                // Facem cererea către Directions API
-                DirectionsResult result = DirectionsApi.newRequest(context)
-                        .origin(origin)
-                        .destination(destination)
-                        .mode(TravelMode.DRIVING)
-                        .units(Unit.METRIC)
-                        .await();
-
-                System.out.println(result.routes[0].summary);
-                System.out.println(result.routes[0].legs[0].distance);
-                System.out.println(result.routes[0].legs[0].duration);
-
-
-            } catch (ApiException | InterruptedException | IOException e) {
-                e.printStackTrace();
-            }
-
+//            Inițializăm un context pentru API cu cheia noastră-
         };
     }
 //    @Bean

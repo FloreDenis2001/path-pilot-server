@@ -25,6 +25,6 @@ public class DirectionsService implements IDirections {
                 .units(Unit.METRIC).await();
     }
 
-    
+
 
 }
