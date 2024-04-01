@@ -6,6 +6,7 @@ import com.mycode.pathpilotserver.driver.exceptions.DriverAlreadyExistException;
 import com.mycode.pathpilotserver.driver.exceptions.DriverNotFoundException;
 import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.driver.repository.DriverRepo;
+import com.mycode.pathpilotserver.system.security.UserRole;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
 import jakarta.transaction.Transactional;
@@ -40,7 +41,7 @@ public class DriverCommandServiceImpl implements DriverCommandService{
             newDriver.setUsername(driverCreateRequest.username());
             newDriver.setPassword(driverCreateRequest.password());
             newDriver.setEmail(driverCreateRequest.email());
-            newDriver.setRole("DRIVER");
+            newDriver.setRole(UserRole.DRIVER);
             driverRepo.saveAndFlush(newDriver);
         }
 

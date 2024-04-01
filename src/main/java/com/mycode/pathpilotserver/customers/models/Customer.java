@@ -6,7 +6,9 @@ import com.mycode.pathpilotserver.user.models.User;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Collection;
 import java.util.Set;
 
 @Entity(name = "Customers")
@@ -56,4 +58,6 @@ public class Customer extends User {
         String text = "Name :" + name + " Phone :" + phone + "\n" + address.toString();
         return text;
     }
+
+
 }

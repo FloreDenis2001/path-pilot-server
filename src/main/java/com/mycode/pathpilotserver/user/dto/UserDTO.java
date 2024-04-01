@@ -1,4 +1,7 @@
 package com.mycode.pathpilotserver.user.dto;
 
-public class UserDTO {
+import lombok.Builder;
+
+@Builder
+public record UserDTO(String firstName, String lastName, String phoneNumber, String email, String password, boolean active) {
 }

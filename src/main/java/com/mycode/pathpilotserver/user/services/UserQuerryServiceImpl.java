@@ -3,10 +3,13 @@ package com.mycode.pathpilotserver.user.services;
 import com.mycode.pathpilotserver.user.exceptions.UserNotFoundException;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-public class UserQuerryServiceImpl implements UserQuerryService{
+
+@Service
+public class UserQuerryServiceImpl implements UserQuerryService {
 
     private final UserRepo userRepo;
 
@@ -19,8 +22,8 @@ public class UserQuerryServiceImpl implements UserQuerryService{
     public Optional<User> findByEmail(String email) {
         Optional<User> user = userRepo.findByEmail(email);
         if (user.isPresent()) {
-            return user;}
-        else {
+            return user;
+        } else {
             throw new UserNotFoundException("User with email: " + email + " not found");
         }
     }

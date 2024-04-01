@@ -5,7 +5,9 @@ import com.mycode.pathpilotserver.user.models.User;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.security.core.GrantedAuthority;
 
+import java.util.Collection;
 import java.util.Set;
 
 @Entity(name = "Driver")
@@ -51,4 +53,6 @@ public class Driver extends User{
         text+= "License Number :"+licenseNumber;
         return text;
     }
+
+
 }

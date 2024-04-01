@@ -6,6 +6,7 @@ import com.mycode.pathpilotserver.customers.exceptions.CustomerAlreadyExist;
 import com.mycode.pathpilotserver.customers.exceptions.CustomerNotFoundException;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.customers.repository.CustomerRepo;
+import com.mycode.pathpilotserver.system.security.UserRole;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
 import jakarta.transaction.Transactional;
@@ -37,7 +38,7 @@ public class CustomerCommandServiceImpl implements CustomerCommandService {
             customer.setEmail(customerCreateRequest.email());
             customer.setPhone(customerCreateRequest.phone());
             customer.setPassword(customerCreateRequest.password());
-            customer.setRole("CUSTOMER");
+            customer.setRole(UserRole.CUSTOMER);
             customer.setAddress(customerCreateRequest.address());
             customer.setUsername(customerCreateRequest.username());
             customerRepo.saveAndFlush(customer);

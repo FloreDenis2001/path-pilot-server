@@ -149,7 +149,10 @@
                 baseTableSchemaName="pathpilot_db"
                 baseTableName="admins"/>
         <dropColumn tableName="admins" columnName="user_id"/>
+    </changeSet>
 
+    <changeSet id="23" author="admin">
+       <dropTable tableName="admins"/>
     </changeSet>
 
 </databaseChangeLog>
