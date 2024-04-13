@@ -26,6 +26,10 @@ public class Package {
     private Long id;
 
 
+    @Column(name = "awb", nullable = false)
+    private String awb;
+
+
     @Column(name = "weight", nullable = false)
     private double weight;
 
