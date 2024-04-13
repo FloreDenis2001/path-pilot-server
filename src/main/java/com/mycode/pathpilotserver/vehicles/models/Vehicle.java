@@ -1,6 +1,6 @@
 package com.mycode.pathpilotserver.vehicles.models;
 
-import com.mycode.pathpilotserver.shipmentDetails.models.ShipmentDetail;
+import com.mycode.pathpilotserver.routes.models.Route;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -34,7 +34,7 @@ public class Vehicle {
 
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<ShipmentDetail> shipmentDetails;
+    private Set<Route> routes;
 
     public Vehicle(String vehicleType, String registrationNumber, int capacity) {
         this.type = vehicleType;

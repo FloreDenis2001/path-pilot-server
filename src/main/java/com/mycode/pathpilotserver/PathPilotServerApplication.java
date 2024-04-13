@@ -1,16 +1,9 @@
 package com.mycode.pathpilotserver;
 
-import com.google.maps.DirectionsApi;
-import com.google.maps.GeoApiContext;
-import com.google.maps.errors.ApiException;
-import com.google.maps.model.DirectionsResult;
-import com.google.maps.model.TravelMode;
-import com.google.maps.model.Unit;
 import com.mycode.pathpilotserver.company.repository.CompanyRepo;
-import com.mycode.pathpilotserver.customers.repository.CustomerRepo;
 import com.mycode.pathpilotserver.driver.repository.DriverRepo;
 import com.mycode.pathpilotserver.orders.repository.OrderRepo;
-import com.mycode.pathpilotserver.shipmentDetails.repository.ShipmentDetailsRepo;
+import com.mycode.pathpilotserver.routes.repository.RouteRepo;
 import com.mycode.pathpilotserver.shipments.repository.ShipmentRepo;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
 import com.mycode.pathpilotserver.user.services.UserServiceCommandImpl;
@@ -28,10 +21,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import java.io.IOException;
 import java.util.Arrays;
-
-import static com.mycode.pathpilotserver.utils.Utile.API_KEY;
 
 @SpringBootApplication
 @EnableFeignClients
@@ -46,8 +36,8 @@ public class PathPilotServerApplication {
     @Bean
     @Transactional
     CommandLineRunner commandLineRunner(CompanyRepo companyRepo, UserRepo userRepo
-            , CustomerRepo customerRepo, DriverRepo driverRepo, VehicleRepo vehicleRepo, UserServiceCommandImpl userServiceCommandImpl
-            , ShipmentRepo shipmentRepo, ShipmentDetailsRepo shipmentDetailsRepo, OrderRepo orderRepo) {
+            , DriverRepo driverRepo, VehicleRepo vehicleRepo, UserServiceCommandImpl userServiceCommandImpl
+            , ShipmentRepo shipmentRepo, RouteRepo routeRepo, OrderRepo orderRepo) {
         return args -> {
         };
     }

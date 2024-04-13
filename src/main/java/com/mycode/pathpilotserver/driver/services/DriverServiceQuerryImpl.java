@@ -16,15 +16,6 @@ public class DriverServiceQuerryImpl implements DriverQuerryService {
         this.driverRepo = driverRepo;
     }
 
-    @Override
-    public Optional<Driver> findByName(String name) {
-        Optional<Driver> driver = driverRepo.findByName(name);
-        if (driver.isPresent()) {
-            return driver;}
-        else {
-            throw new DriverNotFoundException("Driver with name: " + name + " not found");
-        }
-    }
 
     @Override
     public Optional<Driver> findByLicenseNumber(String licenseNumber) {

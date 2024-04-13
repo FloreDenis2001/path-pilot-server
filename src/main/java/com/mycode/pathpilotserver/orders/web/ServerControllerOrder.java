@@ -38,19 +38,7 @@ public class ServerControllerOrder {
         return ResponseEntity.ok().build();
     }
 
-    @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/update")
-    public ResponseEntity<Order> update(@RequestBody OrderDTO order) {
-        orderServiceCommand.updateOrder(order);
-        return ResponseEntity.ok().build();
-    }
 
-    @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/delete={customerId},{shipmentId}")
-    public ResponseEntity<Order> delete(@PathVariable Long customerId, @PathVariable Long shipmentId) {
-        orderServiceCommand.deleteOrder(customerId, shipmentId);
-        return ResponseEntity.ok().build();
-    }
 
 
 

@@ -1,9 +1,7 @@
-package com.mycode.pathpilotserver.orders.models;
+package com.mycode.pathpilotserver.packages.models;
 
 import com.mycode.pathpilotserver.customers.models.Customer;
-import com.mycode.pathpilotserver.routes.models.Route;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
-import com.mycode.pathpilotserver.system.enums.OrderType;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -12,19 +10,18 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-
-@Entity(name = "Order")
-@Table(name = "orders")
+@Entity(name = "Package")
+@Table(name = "package")
 @Getter
 @Setter
 @NoArgsConstructor
 @Data
 @SuperBuilder
-public class Order {
+public class Package {
 
     @Id
-    @SequenceGenerator(name = "order_sequence", sequenceName = "order_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_sequence")
+    @SequenceGenerator(name = "package_sequence", sequenceName = "package_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "package_sequence")
     @Column(name = "id", updatable = false)
     private Long id;
 
@@ -39,13 +36,12 @@ public class Order {
     private double width;
 
     @Column(name="type",nullable = false)
-    private OrderType type;
+    @Enumerated(EnumType.STRING)
+    private PackageType type;
 
 
     @Column(name = "delivery_description", nullable = false)
     private String deliveryDescription;
-
-
 
 
     @Column(name = "order_date", nullable = false)
@@ -62,21 +58,10 @@ public class Order {
     @JoinColumn(name = "shipment_id",referencedColumnName ="id",nullable = false)
     private Shipment shipment;
 
-    @ManyToOne
-    @JoinColumn(name = "route_id",referencedColumnName ="id")
-    private Route route;
-
-
-    public Order(LocalDateTime orderDate, double totalAmount, Customer customer) {
-        this.orderDate = orderDate;
-        this.totalAmount = totalAmount;
-        this.customer = customer;
-    }
 
     @Override
     public String toString() {
         String text = "Order Date :"+orderDate+" Total Amount :"+totalAmount+" Customer :"+customer+" Shipment :"+shipment;
         return text;
     }
-
 }

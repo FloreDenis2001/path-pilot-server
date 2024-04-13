@@ -1,11 +1,14 @@
 package com.mycode.pathpilotserver.customers.models;
 
 import com.mycode.pathpilotserver.address.Address;
+import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.orders.models.Order;
+import com.mycode.pathpilotserver.system.security.UserRole;
 import com.mycode.pathpilotserver.user.models.User;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
@@ -28,36 +31,20 @@ public class Customer extends User {
     private Long id;
 
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @Column(name = "subscriptionType", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private SubscriptionType subscriptionType;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "country", column = @Column(name = "country")),
-            @AttributeOverride(name = "city", column = @Column(name = "city")),
-            @AttributeOverride(name = "street", column = @Column(name = "street")),
-            @AttributeOverride(name = "streetNumber", column = @Column(name = "number")),
-            @AttributeOverride(name = "postalCode", column = @Column(name = "postal_code"))
-    })
-    private Address address;
-
-    @Column(name = "phone", nullable = false)
-    private String phone;
+    public Customer(Long id, String firstName, String lastName, String username, String password, String email, String phone, UserRole role, Address address, Company company, SubscriptionType subscriptionType) {
+        super(id, firstName, lastName, username, password, email, phone, role, address, company);
+        this.subscriptionType = subscriptionType;
+    }
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Order> orders;
 
-    public Customer(String name, Address address, String phone) {
-        this.name = name;
-        this.address = address;
-        this.phone = phone;
+
+    public void setSubscriptionType(SubscriptionType subscriptionType) {
+        this.subscriptionType = subscriptionType;
     }
-
-    @Override
-    public String toString() {
-        String text = "Name :" + name + " Phone :" + phone + "\n" + address.toString();
-        return text;
-    }
-
-
 }

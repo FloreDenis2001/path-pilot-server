@@ -1,4 +1,4 @@
-package com.mycode.pathpilotserver.shipmentDetails.exceptions;
+package com.mycode.pathpilotserver.routes.exceptions;
 
 
 import org.springframework.http.HttpStatus;

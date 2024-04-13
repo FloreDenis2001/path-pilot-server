@@ -1,13 +1,11 @@
 package com.mycode.pathpilotserver.driver.models;
 
-import com.mycode.pathpilotserver.shipmentDetails.models.ShipmentDetail;
+import com.mycode.pathpilotserver.routes.models.Route;
 import com.mycode.pathpilotserver.user.models.User;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.springframework.security.core.GrantedAuthority;
 
-import java.util.Collection;
 import java.util.Set;
 
 @Entity(name = "Driver")
@@ -30,16 +28,24 @@ public class Driver extends User{
     @Column(name = "license_number", nullable = false)
     private String licenseNumber;
 
-    @Column(name="name",nullable = false)
-    private String name;
+    @Column(name = "salary", nullable = false)
+    private double salary;
 
-    @Column(name="phone",nullable = false)
-    private String phone;
+
+    @Column(name="is_available", nullable = false)
+    private boolean isAvailable;
+
+    @Column(name="rating", nullable = false)
+    private double rating;
+
+    @Column(name="experience", nullable = false)
+    private int experience;
+
 
 
 
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<ShipmentDetail> shipmentDetails;
+    private Set<Route> routes;
 
     public Driver(String license) {
 

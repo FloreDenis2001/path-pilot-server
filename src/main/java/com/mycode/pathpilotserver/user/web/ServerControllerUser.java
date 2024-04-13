@@ -2,9 +2,7 @@ package com.mycode.pathpilotserver.user.web;
 
 import com.mycode.pathpilotserver.system.jwt.JWTTokenProvider;
 import com.mycode.pathpilotserver.system.security.UserRole;
-import com.mycode.pathpilotserver.user.dto.LoginResponse;
-import com.mycode.pathpilotserver.user.dto.RegisterResponse;
-import com.mycode.pathpilotserver.user.dto.UserDTO;
+import com.mycode.pathpilotserver.user.dto.*;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.services.UserQuerryServiceImpl;
 import com.mycode.pathpilotserver.user.services.UserServiceCommandImpl;
@@ -30,6 +28,7 @@ public class ServerControllerUser {
 
     private UserServiceCommandImpl userServiceCommand;
 
+
     private AuthenticationManager authentificateManager ;
 
     private JWTTokenProvider jwtTokenProvider;
@@ -46,19 +45,22 @@ public class ServerControllerUser {
 
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody UserDTO userDTO) {
-        authenticate(userDTO.email(), userDTO.password());
-        User loginUser = userQuerryServiceImpl.findByEmail(userDTO.email()).get();
-        HttpHeaders jwtHeader = getJwtHeader(loginUser);
-        LoginResponse loginResponse = new LoginResponse(loginUser.getId(), loginUser.getEmail(), jwtHeader.getFirst(HttpHeaders.AUTHORIZATION), loginUser.getUsername(), loginUser.getRole().name(), UserRole.valueOf(loginUser.getRole().name()));
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginUserRequest loginUserRequest) {
+        authenticate(loginUserRequest.email(),loginUserRequest.password());
+        User user = userQuerryServiceImpl.findByEmail(loginUserRequest.email()).get();
+        HttpHeaders jwtHeader = getJwtHeader(user);
+        LoginResponse loginResponse = new LoginResponse(user.getId(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getRole(),user.getEmail(),user.getPhone(),jwtHeader.getFirst(HttpHeaders.AUTHORIZATION));
         return new ResponseEntity<>(loginResponse, jwtHeader, HttpStatus.OK);
     }
 
 
-
-//    @ResponseStatus(HttpStatus.OK)
-//    @PostMapping("/register")
-//    public ResponseEntity<RegisterResponse> addUser(@RequestBody UserDTO userDTO) {
-//    }
+    @PostMapping("/register")
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterUserRequest registerDTO) {
+        userServiceCommand.registerUser(registerDTO);
+        User user = userQuerryServiceImpl.findByEmail(registerDTO.email()).get();
+        HttpHeaders jwtHeader = getJwtHeader(user);
+        RegisterResponse registerResponse = new RegisterResponse(user.getId(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getRole(),user.getEmail(),user.getPhone(),jwtHeader.getFirst(HttpHeaders.AUTHORIZATION));
+        return new ResponseEntity<>(registerResponse, jwtHeader, HttpStatus.OK);
+    }
 
 }

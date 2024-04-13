@@ -24,6 +24,18 @@ public class Shipment {
     @Column(name = "id", updatable = false)
     private Long id;
 
+    @Column(name="origin_name", nullable = false)
+    private String originName;
+
+    @Column(name="destination_name", nullable = false)
+    private String destinationName;
+
+    @Column(name="origin_phone", nullable = false)
+    private String originPhone;
+
+    @Column(name="destination_phone", nullable = false)
+    private String destinationPhone;
+
 
     @Embedded
     @AttributeOverrides({
@@ -48,17 +60,25 @@ public class Shipment {
 
 
     @Column(name = "status", nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private StatusType status;
 
     @Column(name = "estimated_delivery_date", nullable = false)
     private LocalDateTime estimatedDeliveryDate;
+
+
+    @Column(name = "total_distance", nullable = false)
+    private double totalDistance;
+
+
+
 
     @OneToOne(mappedBy = "shipment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Order order;
 
 
 
-    public Shipment(Address destinationAddress, Address originAddress, String status, LocalDateTime localDateTime) {
+    public Shipment(Address destinationAddress, Address originAddress, StatusType status, LocalDateTime localDateTime) {
         this.destinationAddress=destinationAddress;
         this.originAddress=originAddress;
         this.status=status;
@@ -71,6 +91,7 @@ public class Shipment {
         String text = " Status :"+status+" Estimated Delivery Date :"+estimatedDeliveryDate;
         return text;
     }
+
 
 
 }

@@ -7,7 +7,6 @@ import java.util.Optional;
 
 public interface DriverQuerryService {
 
-    Optional<Driver> findByName(String name);
 
     Optional<Driver> findByLicenseNumber(String licenseNumber);
 

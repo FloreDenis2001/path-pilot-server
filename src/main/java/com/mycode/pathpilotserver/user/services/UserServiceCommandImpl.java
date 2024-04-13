@@ -1,6 +1,10 @@
 package com.mycode.pathpilotserver.user.services;
 
+import com.mycode.pathpilotserver.customers.models.Customer;
+import com.mycode.pathpilotserver.customers.models.SubscriptionType;
+import com.mycode.pathpilotserver.system.security.UserRole;
 import com.mycode.pathpilotserver.user.dto.LoginUserRequest;
+import com.mycode.pathpilotserver.user.dto.RegisterUserRequest;
 import com.mycode.pathpilotserver.user.dto.UpdateUserRequest;
 import com.mycode.pathpilotserver.user.exceptions.UserNotFoundException;
 import com.mycode.pathpilotserver.user.exceptions.WrongPasswordException;
@@ -21,6 +25,9 @@ public class UserServiceCommandImpl implements UserServiceCommand {
         this.userRepo = userRepo;
     }
 
+
+
+
     @Override
     public void deleteUser(LoginUserRequest loginUserRequest) {
         Optional<User> user = userRepo.findByEmail(loginUserRequest.email());
@@ -36,6 +43,26 @@ public class UserServiceCommandImpl implements UserServiceCommand {
         validatePassword(user, request.password());
         applyNewDetailsToUser(user, request.newUser());
         userRepo.save(user);
+    }
+
+    @Override
+    public void registerUser(RegisterUserRequest registerUserRequest) {
+          Optional<User> user = userRepo.findByEmail(registerUserRequest.email());
+
+            if (user.isPresent()) {
+                throw new UserNotFoundException("User with email: " + registerUserRequest.email() + " already exists");
+            }
+
+            Customer customer = new Customer();
+            customer.setFirstName(registerUserRequest.firstName());
+            customer.setLastName(registerUserRequest.lastName());
+            customer.setPhone(registerUserRequest.phone());
+            customer.setRole(UserRole.CUSTOMER);
+            customer.setEmail(registerUserRequest.email());
+            customer.setPassword(registerUserRequest.password());
+            customer.setUsername(registerUserRequest.username());
+            customer.setSubscriptionType(SubscriptionType.BASIC);
+            userRepo.saveAndFlush(customer);
     }
 
     private User findUserByEmail(String email) {

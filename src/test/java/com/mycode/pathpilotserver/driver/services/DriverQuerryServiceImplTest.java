@@ -30,24 +30,23 @@ class DriverQuerryServiceImplTest {
     private Driver createTestDriver() {
         Driver driver = new Driver();
         driver.setId(1L);
-        driver.setName("Driver Name");
         driver.setLicenseNumber("License123");
         driver.setPhone("123456789");
         return driver;
     }
+//
+//    @Test
+//    void findByName() {
+//        Optional<Driver> driver = Optional.of(createTestDriver());
+//        doReturn(driver).when(driverRepo).findByName("Driver Name");
+//        assertEquals(driver.get(), driverServiceQuerry.findByName("Driver Name").get());
+//    }
 
-    @Test
-    void findByName() {
-        Optional<Driver> driver = Optional.of(createTestDriver());
-        doReturn(driver).when(driverRepo).findByName("Driver Name");
-        assertEquals(driver.get(), driverServiceQuerry.findByName("Driver Name").get());
-    }
-
-    @Test
-    void findByNameException(){
-        doReturn(Optional.empty()).when(driverRepo).findByName("Driver Name");
-        assertThrows(DriverNotFoundException.class, () -> driverServiceQuerry.findByName("Driver Name").get());
-    }
+//    @Test
+//    void findByNameException(){
+//        doReturn(Optional.empty()).when(driverRepo).findByName("Driver Name");
+//        assertThrows(DriverNotFoundException.class, () -> driverServiceQuerry.findByName("Driver Name").get());
+//    }
 
 
 }

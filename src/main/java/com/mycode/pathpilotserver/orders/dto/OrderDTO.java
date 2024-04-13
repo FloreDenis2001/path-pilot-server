@@ -4,6 +4,6 @@ import com.mycode.pathpilotserver.address.Address;
 import com.mycode.pathpilotserver.system.enums.OrderType;
 
 public record OrderDTO(Long customerId, double totalAmount,
-                       double weight, double height, double width, double volume, String deliveryDescription,
-                       OrderType type, Address origin, Address destination) {
+                       double weight, double height, double width, String deliveryDescription,
+                       OrderType type, String originName,String destinationName,String originPhone,String destinationPhone, Address origin, Address destination) {
 }

@@ -35,7 +35,6 @@ public class DriverCommandServiceImpl implements DriverCommandService{
             throw new DriverAlreadyExistException("Driver with license number: " + driverCreateRequest.licenseNumber() + " already exist");
         }else {
             Driver newDriver= new Driver();
-            newDriver.setName(driverCreateRequest.name());
             newDriver.setLicenseNumber(driverCreateRequest.licenseNumber());
             newDriver.setPhone(driverCreateRequest.phone());
             newDriver.setUsername(driverCreateRequest.username());

@@ -2,16 +2,8 @@ package com.mycode.pathpilotserver.shipments.repository;
 
 import com.mycode.pathpilotserver.PathPilotServerApplication;
 import com.mycode.pathpilotserver.address.Address;
-import com.mycode.pathpilotserver.customers.models.Customer;
-import com.mycode.pathpilotserver.customers.repository.CustomerRepo;
-import com.mycode.pathpilotserver.driver.models.Driver;
-import com.mycode.pathpilotserver.orders.models.Order;
-import com.mycode.pathpilotserver.orders.repository.OrderRepo;
-import com.mycode.pathpilotserver.shipmentDetails.models.ShipmentDetail;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
-import com.mycode.pathpilotserver.user.models.User;
-import com.mycode.pathpilotserver.user.repository.UserRepo;
-import com.mycode.pathpilotserver.vehicles.models.Vehicle;
+import com.mycode.pathpilotserver.shipments.models.StatusType;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +33,7 @@ class ShipmentRepoTest {
     private Shipment createTestShipment() {
         Address originAddress= new Address("Romania","Satu Mare","Grivitei","17A","5214");
 
-        return shipmentRepo.save(new Shipment(originAddress,originAddress, "Pending", LocalDateTime.of(2009,1,5,14,12,1).plusDays(1)));
+        return shipmentRepo.save(new Shipment(originAddress,originAddress, StatusType.PICKED, LocalDateTime.of(2009,1,5,14,12,1).plusDays(1)));
     }
     @Test
     void findByOrigin() {

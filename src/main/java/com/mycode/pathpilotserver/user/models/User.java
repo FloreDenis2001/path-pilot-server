@@ -2,6 +2,7 @@ package com.mycode.pathpilotserver.user.models;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.mycode.pathpilotserver.address.Address;
 import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.system.security.UserRole;
 import jakarta.persistence.*;
@@ -30,6 +31,12 @@ public abstract class User implements UserDetails {
     @Column(name = "id", updatable = false)
     private Long id;
 
+    @Column(name = "firstName", nullable = false)
+    private String firstName;
+
+    @Column(name = "lastName", nullable = false)
+    private String lastName;
+
 
     @Column(name = "username", nullable = false)
     private String username;
@@ -41,11 +48,22 @@ public abstract class User implements UserDetails {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Column(name = "phone", nullable = false)
+    private String phone;
+
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
-
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "country", column = @Column(name = "country")),
+            @AttributeOverride(name = "city", column = @Column(name = "city")),
+            @AttributeOverride(name = "street", column = @Column(name = "street")),
+            @AttributeOverride(name = "streetNumber", column = @Column(name = "number")),
+            @AttributeOverride(name = "postalCode", column = @Column(name = "postal_code"))
+    })
+    private Address address;
 
 
     @ManyToOne(fetch = FetchType.LAZY)

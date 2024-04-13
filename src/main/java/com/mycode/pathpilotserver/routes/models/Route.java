@@ -1,4 +1,4 @@
-package com.mycode.pathpilotserver.shipmentDetails.models;
+package com.mycode.pathpilotserver.routes.models;
 
 import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.orders.models.Order;
@@ -13,22 +13,22 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Table(name = "shipment_details")
-@Entity(name = "ShipmentDetails")
+@Table(name = "route")
+@Entity(name = "Route")
 @Getter
 @Setter
 @NoArgsConstructor
 @SuperBuilder
 @Data
-public class ShipmentDetail {
+public class Route {
 
     @Id
-    @SequenceGenerator(name = "shipment_details_sequence", sequenceName = "shipment_details_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shipment_details_sequence")
+    @SequenceGenerator(name = "route_sequence", sequenceName = "route_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "route_sequence")
     @Column(name = "id", updatable = false)
     private Long id;
 
-    @OneToMany(mappedBy = "shipmentDetail", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Order> orders;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -46,25 +46,16 @@ public class ShipmentDetail {
     private LocalDateTime arrivalTime;
 
 
-
-
     @Override
     public String toString() {
-        return "ShipmentDetail{" +
-                "id=" + id +
-                ", orders=" + orders +
-                ", vehicle=" + vehicle +
-                ", driver=" + driver +
-                ", departureDate=" + departureDate +
-                ", arrivalTime=" + arrivalTime +
-                '}';
+        final StringBuilder sb = new StringBuilder("Route{");
+        sb.append("id=").append(id);
+        sb.append(", orders=").append(orders);
+        sb.append(", vehicle=").append(vehicle);
+        sb.append(", driver=").append(driver);
+        sb.append(", departureDate=").append(departureDate);
+        sb.append(", arrivalTime=").append(arrivalTime);
+        sb.append('}');
+        return sb.toString();
     }
-
-
-
-
-
-
-
-
 }

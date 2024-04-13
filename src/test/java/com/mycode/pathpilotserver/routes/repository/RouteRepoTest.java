@@ -1,34 +1,15 @@
-package com.mycode.pathpilotserver.shipmentDetails.repository;
+package com.mycode.pathpilotserver.routes.repository;
 
 import com.mycode.pathpilotserver.PathPilotServerApplication;
-import com.mycode.pathpilotserver.address.Address;
-import com.mycode.pathpilotserver.driver.models.Driver;
-import com.mycode.pathpilotserver.driver.repository.DriverRepo;
-import com.mycode.pathpilotserver.shipmentDetails.models.ShipmentDetail;
-import com.mycode.pathpilotserver.shipments.models.Shipment;
-import com.mycode.pathpilotserver.shipments.repository.ShipmentRepo;
-import com.mycode.pathpilotserver.user.models.User;
-import com.mycode.pathpilotserver.user.repository.UserRepo;
-import com.mycode.pathpilotserver.vehicles.models.Vehicle;
-import com.mycode.pathpilotserver.vehicles.repository.VehicleRepo;
 import jakarta.transaction.Transactional;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = PathPilotServerApplication.class)
 @Transactional
-class ShipmentDetailsRepoTest {
+class RouteRepoTest {
 //    @Autowired
 //    private ShipmentRepo shipmentRepo;
 //

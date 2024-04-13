@@ -10,14 +10,7 @@ import java.util.Optional;
 @Repository
 public interface OrderRepo extends JpaRepository<Order, Long> {
 
-
     @Query("SELECT o FROM Order o WHERE o.customer.id = :customerId AND o.shipment.id = :shipmentId")
     Optional<Order> findByCustomerAndAndShipment(Long customerId, Long shipmentId);
-
-
-
-
-
-
 
 }
