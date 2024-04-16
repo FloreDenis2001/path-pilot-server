@@ -14,6 +14,7 @@ import com.mycode.pathpilotserver.shipments.models.StatusType;
 import com.mycode.pathpilotserver.shipments.repository.ShipmentRepo;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class PackageCommandServiceImpl implements PackageCommandService {
     }
 
 
-    private static Optional<Shipment> getShipments(PackageDTO packageDTO)  {
+    private static Optional<Shipment> getShipments(PackageDTO packageDTO) {
         try {
 
 //            DirectionsResult directionsResult = directionsService.getDirections(packageDTO.origin().toString(),packageDTO.destination().toString());
@@ -71,6 +72,7 @@ public class PackageCommandServiceImpl implements PackageCommandService {
         Package pack = new Package().builder()
                 .customer((Customer) customer.get())
                 .shipment(shipment.get())
+                .awb((packageDTO.origin().getCity().substring(0, 2).concat(RandomStringUtils.randomAlphabetic(8).concat(String.valueOf(System.currentTimeMillis()).substring(11, 13)))).toUpperCase())
                 .totalAmount(packageDTO.totalAmount())
                 .type(PackageType.UNASSIGNED)
                 .deliveryDescription(packageDTO.deliveryDescription())
@@ -101,5 +103,52 @@ public class PackageCommandServiceImpl implements PackageCommandService {
         packRepo.saveAndFlush(pack);
 
 
+    }
+
+    @Override
+    public void deletePackage(String awb) {
+        Optional<Package> pack = packRepo.getPackageByAwb(awb);
+        if (pack.isEmpty()) {
+            throw new CustomerNotFoundException("Package with awb: " + awb + " not found");
+        }
+        packRepo.delete(pack.get());
+    }
+
+    @Override
+    public void editPackage(String awb, PackageDTO packageDTO) {
+        Optional<Package> pack = packRepo.getPackageByAwb(awb);
+
+        if (pack.isEmpty()) {
+            throw new CustomerNotFoundException("Package with awb: " + awb + " not found");
+        }
+
+        Optional<Shipment> shipment = shipmentRepo.findById(pack.get().getShipment().getId());
+
+        if (shipment.isEmpty()) {
+            throw new CustomerNotFoundException("Shipment with id: " + pack.get().getShipment().getId() + " not found");
+        }
+
+        shipment.get().setDestinationName(packageDTO.destinationName());
+        shipment.get().setOriginName(packageDTO.originName());
+        shipment.get().setDestinationPhone(packageDTO.destinationPhone());
+        shipment.get().setOriginPhone(packageDTO.originPhone());
+        shipment.get().setDestinationAddress(packageDTO.destination());
+        shipment.get().setOriginAddress(packageDTO.origin());
+        shipment.get().setStatus(StatusType.PICKED);
+        shipment.get().setEstimatedDeliveryDate(LocalDateTime.now().plusDays(3));
+        shipment.get().setTotalDistance(0);
+
+        shipmentRepo.saveAndFlush(shipment.get());
+
+
+        pack.get().setShipment(shipment.get());
+        pack.get().setTotalAmount(packageDTO.totalAmount());
+        pack.get().setDeliveryDescription(packageDTO.deliveryDescription());
+        pack.get().setHeight(packageDTO.height());
+        pack.get().setWeight(packageDTO.weight());
+        pack.get().setWidth(packageDTO.width());
+        pack.get().setOrderDate(LocalDateTime.now());
+
+        packRepo.saveAndFlush(pack.get());
     }
 }

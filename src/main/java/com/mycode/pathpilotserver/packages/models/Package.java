@@ -58,7 +58,7 @@ public class Package {
     @JoinColumn(name = "customer_id",referencedColumnName ="id",nullable = false)
     private Customer customer;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "shipment_id",referencedColumnName ="id",nullable = false)
     private Shipment shipment;
 
@@ -67,5 +67,11 @@ public class Package {
     public String toString() {
         String text = "Order Date :"+orderDate+" Total Amount :"+totalAmount+" Customer :"+customer+" Shipment :"+shipment;
         return text;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Package pack = (Package) obj;
+        return this.awb.equals(pack.getAwb());
     }
 }

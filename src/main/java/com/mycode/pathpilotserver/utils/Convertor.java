@@ -43,6 +43,7 @@ public class Convertor {
                     .weight(p.getWeight())
                     .type(p.getType())
                     .totalAmount(p.getTotalAmount())
+                    .awb(p.getAwb())
                     .deliveryDescription(p.getDeliveryDescription())
                     .shipmentDTO(convertToShipmentDTO(p.getShipment()))
                     .build();

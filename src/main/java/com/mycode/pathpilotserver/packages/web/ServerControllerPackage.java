@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.mycode.pathpilotserver.packages.models.Package;
+
 import java.util.List;
 
 @RestController
@@ -37,5 +38,19 @@ public class ServerControllerPackage {
     @GetMapping("/findAllByCustomer={customerId}")
     public ResponseEntity<List<PackageRequest>> findAllByCustomer(@PathVariable Long customerId) {
         return ResponseEntity.ok(packageServiceQuerry.getAllPackagesByCustomer(customerId).get());
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("/delete/{awb}")
+    public ResponseEntity<String> delete(@PathVariable String awb) {
+        packageServiceCommand.deletePackage(awb);
+        return ResponseEntity.ok("Package with awb: " + awb + " deleted");
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("/edit/{awb}")
+    public ResponseEntity<PackageDTO> edit(@PathVariable String awb, @RequestBody PackageDTO packageDTO) {
+        packageServiceCommand.editPackage(awb, packageDTO);
+        return ResponseEntity.ok(packageDTO);
     }
 }

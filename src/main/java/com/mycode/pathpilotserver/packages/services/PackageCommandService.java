@@ -9,4 +9,7 @@ import java.io.IOException;
 public interface PackageCommandService {
 
     void createPackage(PackageDTO packageDTO) throws IOException, InterruptedException, ApiException;
+    void deletePackage(String awb);
+
+    void editPackage(String awb, PackageDTO packageDTO) throws IOException, InterruptedException, ApiException;
 }

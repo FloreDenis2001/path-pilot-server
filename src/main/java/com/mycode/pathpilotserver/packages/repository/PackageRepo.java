@@ -17,4 +17,7 @@ public interface PackageRepo extends JpaRepository<Package, Long> {
 
     @Query("SELECT o FROM Package o WHERE o.customer.id = :customerId")
     Optional<List<Package>> getAllPackagesByCustomer(Long customerId);
+
+    @Query("SELECT o FROM Package o WHERE o.awb = :awb")
+    Optional<Package> getPackageByAwb(String awb);
 }

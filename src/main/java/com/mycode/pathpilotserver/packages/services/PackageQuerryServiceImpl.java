@@ -14,12 +14,10 @@ import java.util.Optional;
 @Service
 public class PackageQuerryServiceImpl implements PackageQuerryService {
 
-    private final UserRepo userRepo;
 
     private final PackageRepo packageRepo;
 
-    public PackageQuerryServiceImpl(UserRepo userRepo, PackageRepo packageRepo) {
-        this.userRepo = userRepo;
+    public PackageQuerryServiceImpl(PackageRepo packageRepo) {
         this.packageRepo = packageRepo;
     }
 
@@ -29,9 +27,10 @@ public class PackageQuerryServiceImpl implements PackageQuerryService {
         if (packages.isEmpty()) {
             throw new UserNotFoundException("Packages for user with id: " + customerId + " not found");
         }
-
         List<PackageRequest> packagesRequest = Convertor.convertToPackageRequest(packages.get());
-
         return Optional.of(packagesRequest);
     }
+
+
+
 }
