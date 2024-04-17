@@ -3,6 +3,7 @@ package com.mycode.pathpilotserver.vehicles.web;
 
 import com.mycode.pathpilotserver.vehicles.dto.CreateVehicleRequest;
 import com.mycode.pathpilotserver.vehicles.dto.UpdatedVehicleRequest;
+import com.mycode.pathpilotserver.vehicles.models.FuelType;
 import com.mycode.pathpilotserver.vehicles.models.Vehicle;
 import com.mycode.pathpilotserver.vehicles.services.VehicleServiceCommandImpl;
 import com.mycode.pathpilotserver.vehicles.services.VehicleServiceQuerryImpl;
@@ -35,8 +36,15 @@ public class ServerControllerVehicles {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/findByType={type}")
-    public ResponseEntity<List<Vehicle>> findByType(@PathVariable String type) {
-        return ResponseEntity.ok(vehicleServiceQuerry.findByType(type).get());
+    public ResponseEntity<List<Vehicle>> findByType(@PathVariable FuelType type) {
+        return ResponseEntity.ok(vehicleServiceQuerry.findByFuelType(type).get());
+    }
+
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/findAll")
+    public ResponseEntity<List<Vehicle>> findAll() {
+        return ResponseEntity.ok(vehicleServiceQuerry.findAll().get());
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -53,7 +61,7 @@ public class ServerControllerVehicles {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/delete/{registrationNumber}")
+    @DeleteMapping("/delete={registrationNumber}")
     public ResponseEntity<Vehicle> delete(@PathVariable String registrationNumber) {
         vehicleCommandService.delete(registrationNumber);
         return ResponseEntity.ok().build();

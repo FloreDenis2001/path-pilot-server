@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.vehicles.services;
 
 import com.mycode.pathpilotserver.vehicles.exceptions.VehicleNotFoundException;
+import com.mycode.pathpilotserver.vehicles.models.FuelType;
 import com.mycode.pathpilotserver.vehicles.models.Vehicle;
 import com.mycode.pathpilotserver.vehicles.repository.VehicleRepo;
 import org.springframework.stereotype.Service;
@@ -28,24 +29,41 @@ public class VehicleServiceQuerryImpl implements VehicleServiceQuerry {
     }
 
     @Override
-    public Optional<List<Vehicle>> findByType(String type) {
-        Optional<List<Vehicle>> vehicle = vehicleRepo.findByType(type);
-        if (vehicle.isPresent()) {
-            return vehicle;
+    public Optional<List<Vehicle>> findByFuelType(FuelType  fuelType) {
+        Optional<List<Vehicle>> vehicles = vehicleRepo.findByFuelType(fuelType);
+        if (vehicles.isPresent()) {
+            return vehicles;
         } else {
-            throw new VehicleNotFoundException("Vehicles with type " + type + " not found");
+            throw new VehicleNotFoundException("No vehicles found with fuel type " + fuelType);
         }
     }
 
     @Override
     public Optional<List<Vehicle>> findByCapacity(int capacity) {
-        Optional<List<Vehicle>> vehicle = vehicleRepo.findByCapacity(capacity);
-        if (vehicle.isPresent()) {
-            return vehicle;
+        Optional<List<Vehicle>> vehicles = vehicleRepo.findByCapacity(capacity);
+        if (vehicles.isPresent()) {
+            return vehicles;
         } else {
-            throw new VehicleNotFoundException("Vehicles with capacity " + capacity + " not found");
+            throw new VehicleNotFoundException("No vehicles found with capacity " + capacity);
         }
     }
+
+
+    @Override
+    public Optional<List<Vehicle>> findAll() {
+        Optional<List<Vehicle>> vehicles = Optional.of(vehicleRepo.findAll());
+        if (vehicles.isPresent()) {
+            return vehicles;
+        } else {
+            throw new VehicleNotFoundException("No vehicles found");
+        }
+    }
+
+
+
+
+
+
 
 
 }

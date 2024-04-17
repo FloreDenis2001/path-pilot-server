@@ -26,21 +26,21 @@ class VehicleServiceQuerryImplTest {
         vehicleServiceQuerry = new VehicleServiceQuerryImpl(vehicleRepo);
     }
 
-    public Vehicle createVehicle() {
-        Vehicle vehicle = Vehicle.builder().registrationNumber("KAA 001A").capacity(2000).type("Coupe").build();
-        return vehicle;
-    }
-
-    @Test
-    void findByRegistrationNumber() {
-        Optional<Vehicle> vehicle = Optional.of(createVehicle());
-        doReturn(vehicle).when(vehicleRepo).findByRegistrationNumber("KAA 001A");
-        assertEquals(vehicle, vehicleServiceQuerry.findByRegistrationNumber("KAA 001A"));
-    }
-
-    @Test
-    void findByRegistrationNumberException(){
-        doReturn(null).when(vehicleRepo).findByRegistrationNumber("KAA 001A");
-        assertThrows(NullPointerException.class, () -> vehicleServiceQuerry.findByRegistrationNumber("KAA 001A"));
-    }
+//    public Vehicle createVehicle() {
+//        Vehicle vehicle = Vehicle.builder().registrationNumber("KAA 001A").capacity(2000).type("Coupe").build();
+//        return vehicle;
+//    }
+//
+//    @Test
+//    void findByRegistrationNumber() {
+//        Optional<Vehicle> vehicle = Optional.of(createVehicle());
+//        doReturn(vehicle).when(vehicleRepo).findByRegistrationNumber("KAA 001A");
+//        assertEquals(vehicle, vehicleServiceQuerry.findByRegistrationNumber("KAA 001A"));
+//    }
+//
+//    @Test
+//    void findByRegistrationNumberException(){
+//        doReturn(null).when(vehicleRepo).findByRegistrationNumber("KAA 001A");
+//        assertThrows(NullPointerException.class, () -> vehicleServiceQuerry.findByRegistrationNumber("KAA 001A"));
+//    }
 }

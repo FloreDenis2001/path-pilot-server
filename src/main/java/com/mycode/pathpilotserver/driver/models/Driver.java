@@ -42,8 +42,6 @@ public class Driver extends User{
     private int experience;
 
 
-
-
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Route> routes;
 

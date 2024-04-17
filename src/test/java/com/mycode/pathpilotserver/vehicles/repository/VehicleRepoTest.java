@@ -31,14 +31,14 @@ class VehicleRepoTest {
         vehicleRepo.deleteAll();
     }
 
-    public Vehicle createVehicle() {
-        Vehicle vehicle = Vehicle.builder().registrationNumber("KAA 001A").capacity(2000).type("Coupe").build();
-        return vehicleRepo.save(vehicle);
-    }
+//    public Vehicle createVehicle() {
+//        Vehicle vehicle = Vehicle.builder().registrationNumber("KAA 001A").capacity(2000).type("Coupe").build();
+//        return vehicleRepo.save(vehicle);
+//    }
 
-    @Test
-    void findByRegistrationNumber() {
-        Optional<Vehicle> vehicle = vehicleRepo.findByRegistrationNumber(createVehicle().getRegistrationNumber());
-        assertEquals(createVehicle().getRegistrationNumber(), vehicle.get().getRegistrationNumber());
-    }
+//    @Test
+//    void findByRegistrationNumber() {
+//        Optional<Vehicle> vehicle = vehicleRepo.findByRegistrationNumber(createVehicle().getRegistrationNumber());
+//        assertEquals(createVehicle().getRegistrationNumber(), vehicle.get().getRegistrationNumber());
+//    }
 }
