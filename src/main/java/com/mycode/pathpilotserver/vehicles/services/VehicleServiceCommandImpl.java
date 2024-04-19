@@ -50,7 +50,7 @@ public class VehicleServiceCommandImpl implements VehicleServiceCommand {
             vehicle.get().setLastService(updatedVehicleRequest.lastService());
             vehicle.get().setNextService(updatedVehicleRequest.nextService());
             vehicle.get().setCapacity(updatedVehicleRequest.capacity());
-            vehicle.get().setActive(updatedVehicleRequest.isActive());
+            vehicle.get().setActive(updatedVehicleRequest.active());
             vehicleRepo.save(vehicle.get());
         } else {
             throw new VehicleNotFoundException("Vehicle with registration number " + updatedVehicleRequest.registrationNumber() + " not found");

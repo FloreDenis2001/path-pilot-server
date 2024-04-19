@@ -9,6 +9,6 @@ public record UpdatedVehicleRequest(String make, String model,
                                     int year , FuelType fuelType,
                                     double fuelCapacity , double fuelConsumption ,
                                     LocalDate lastService,LocalDate nextService ,
-                                    double km ,  String registrationNumber , int capacity , boolean isActive) {
+                                    double km ,  String registrationNumber , int capacity , boolean active) {
 }
 
