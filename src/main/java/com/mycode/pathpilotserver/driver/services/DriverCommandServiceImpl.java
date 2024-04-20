@@ -40,19 +40,17 @@ public class DriverCommandServiceImpl implements DriverCommandService{
             newDriver.setUsername(driverCreateRequest.username());
             newDriver.setPassword(driverCreateRequest.password());
             newDriver.setEmail(driverCreateRequest.email());
+            newDriver.setFirstName(driverCreateRequest.firstName());
+            newDriver.setLastName(driverCreateRequest.lastName());
+            newDriver.setExperience(driverCreateRequest.experience());
+            newDriver.setRating(driverCreateRequest.rating());
+            newDriver.setSalary(driverCreateRequest.salary());
             newDriver.setRole(UserRole.DRIVER);
+            newDriver.setAvailable(true);
             driverRepo.saveAndFlush(newDriver);
         }
 
     }
 
-    @Override
-    public void delete(RemoveValidationRequest removeValidationRequest) {
-        Optional<User> user = userRepo.findByEmail(removeValidationRequest.email());
-        if(user.isPresent() && user.get().getPassword().equals(removeValidationRequest.password()) && user.get().getRole().equals("DRIVER")) {
-            driverRepo.delete((Driver) user.get());
-        }else {
-            throw new DriverNotFoundException("Driver with email " + removeValidationRequest.email() + " not found !");
-        }
-    }
+
 }

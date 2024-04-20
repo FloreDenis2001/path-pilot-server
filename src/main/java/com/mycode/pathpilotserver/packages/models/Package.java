@@ -39,6 +39,9 @@ public class Package {
     @Column(name = "width", nullable = false)
     private double width;
 
+    @Column(name="length", nullable = false)
+    private double length;
+
     @Column(name="type",nullable = false)
     @Enumerated(EnumType.STRING)
     private PackageType type;

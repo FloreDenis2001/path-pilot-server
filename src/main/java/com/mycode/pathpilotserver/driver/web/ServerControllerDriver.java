@@ -2,6 +2,7 @@ package com.mycode.pathpilotserver.driver.web;
 
 import com.mycode.pathpilotserver.customers.dto.RemoveValidationRequest;
 import com.mycode.pathpilotserver.driver.dto.DriverCreateRequest;
+import com.mycode.pathpilotserver.driver.dto.DriverDTO;
 import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.driver.services.DriverCommandServiceImpl;
 import com.mycode.pathpilotserver.driver.services.DriverServiceQuerryImpl;
@@ -9,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -25,6 +28,22 @@ public class ServerControllerDriver {
         this.driverServiceQuerry = driverServiceQuerry;
         this.driverCommandService = driverCommandService;
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<DriverDTO>> getAllDrivers() {
+        return new ResponseEntity<>(driverServiceQuerry.getAllDrivers().get(), HttpStatus.OK);
+    }
+
+
+    @PostMapping("/create")
+    public ResponseEntity<String> createDriver(@RequestBody DriverCreateRequest driverCreateRequest) {
+        driverCommandService.create(driverCreateRequest);
+        return new ResponseEntity<>("Driver created successfully", HttpStatus.CREATED);
+    }
+
+
+
+
 
 
 

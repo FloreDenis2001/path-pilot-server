@@ -1,10 +1,12 @@
 package com.mycode.pathpilotserver.driver.services;
 
+import com.mycode.pathpilotserver.driver.dto.DriverDTO;
 import com.mycode.pathpilotserver.driver.exceptions.DriverNotFoundException;
 import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.driver.repository.DriverRepo;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,6 +28,18 @@ public class DriverServiceQuerryImpl implements DriverQuerryService {
             throw new DriverNotFoundException("Driver with license number: " + licenseNumber + " not found");
         }
     }
+
+    @Override
+    public Optional<List<DriverDTO>> getAllDrivers() {
+        List<Driver> drivers = driverRepo.findAll();
+        if (drivers.isEmpty()) {
+            throw new DriverNotFoundException("No drivers found");
+        } else {
+            return Optional.of(DriverDTO.fromList(drivers));
+        }
+    }
+
+
 
 
 }

@@ -80,6 +80,7 @@ public class PackageCommandServiceImpl implements PackageCommandService {
                 .height(packageDTO.height())
                 .weight(packageDTO.weight())
                 .width(packageDTO.width())
+                .length(packageDTO.length())
                 .build();
 
         return pack;
@@ -147,6 +148,7 @@ public class PackageCommandServiceImpl implements PackageCommandService {
         pack.get().setHeight(packageDTO.height());
         pack.get().setWeight(packageDTO.weight());
         pack.get().setWidth(packageDTO.width());
+        pack.get().setLength(packageDTO.length());
         pack.get().setOrderDate(LocalDateTime.now());
 
         packRepo.saveAndFlush(pack.get());

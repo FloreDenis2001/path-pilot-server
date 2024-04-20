@@ -63,6 +63,21 @@ public class Vehicle {
     @Column(name = "capacity", nullable = false)
     private int capacity;
 
+    @Column(name="width", nullable = false)
+    private double width;
+
+    @Column(name="height", nullable = false)
+    private double height;
+
+    @Column(name="length", nullable = false)
+    private double length;
+
+    @Column(name="weight", nullable = false)
+    private double weight;
+
+
+
+
     @Column(name = "isActive", nullable = false)
     private boolean isActive;
 

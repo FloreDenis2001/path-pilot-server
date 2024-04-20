@@ -6,5 +6,4 @@ import com.mycode.pathpilotserver.driver.dto.DriverCreateRequest;
 public interface DriverCommandService {
 
     void create(DriverCreateRequest driverCreateRequest);
-    void delete(RemoveValidationRequest removeValidationRequest);
 }

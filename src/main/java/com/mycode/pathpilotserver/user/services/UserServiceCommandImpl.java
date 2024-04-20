@@ -11,6 +11,7 @@ import com.mycode.pathpilotserver.user.exceptions.WrongPasswordException;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -70,7 +71,8 @@ public class UserServiceCommandImpl implements UserServiceCommand {
     }
 
     private void validatePassword(User user, String password) {
-        if (!user.getPassword().equals(password)) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (!encoder.matches(password, user.getPassword())) {
             throw new WrongPasswordException("Invalid password for user: " + user.getEmail());
         }
     }

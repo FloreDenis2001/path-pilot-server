@@ -1,4 +1,4 @@
 package com.mycode.pathpilotserver.driver.dto;
 
-public record DriverCreateRequest(String name,String licenseNumber,String phone, String password, String username, String email) {
+public record DriverCreateRequest(String username,String email,String firstName,String lastName,String password,String phone,double salary,double rating,int experience, String licenseNumber) {
 }

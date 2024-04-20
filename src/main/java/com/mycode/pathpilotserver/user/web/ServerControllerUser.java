@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.service.annotation.DeleteExchange;
 
 
 @RestController
@@ -61,6 +61,12 @@ public class ServerControllerUser {
         HttpHeaders jwtHeader = getJwtHeader(user);
         RegisterResponse registerResponse = new RegisterResponse(user.getId(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getRole(),user.getEmail(),user.getPhone(),jwtHeader.getFirst(HttpHeaders.AUTHORIZATION));
         return new ResponseEntity<>(registerResponse, jwtHeader, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteUser(@RequestBody LoginUserRequest loginUserRequest) {
+        userServiceCommand.deleteUser(loginUserRequest);
+        return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
     }
 
 }

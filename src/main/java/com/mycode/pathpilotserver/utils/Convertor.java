@@ -46,6 +46,7 @@ public class Convertor {
                     .awb(p.getAwb())
                     .deliveryDescription(p.getDeliveryDescription())
                     .shipmentDTO(convertToShipmentDTO(p.getShipment()))
+                    .length(p.getLength())
                     .build();
 
             packageRequests.add(packageRequest);
