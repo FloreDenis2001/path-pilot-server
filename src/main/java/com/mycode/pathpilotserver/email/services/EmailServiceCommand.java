@@ -9,4 +9,6 @@ public interface EmailServiceCommand {
     boolean isLinkValid(String code);
 
     void removeExpiredLinks();
+
+    void removeLinkAfterCreation(String code);
 }

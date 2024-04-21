@@ -45,10 +45,6 @@ public class Driver extends User{
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Route> routes;
 
-    public Driver(String license) {
-
-        this.licenseNumber = license;
-    }
 
 
     @Override

@@ -2,7 +2,6 @@ package com.mycode.pathpilotserver.vehicles.repository;
 
 import com.mycode.pathpilotserver.vehicles.models.FuelType;
 import com.mycode.pathpilotserver.vehicles.models.Vehicle;
-import org.checkerframework.checker.nullness.Opt;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -17,6 +16,7 @@ public interface VehicleRepo extends JpaRepository<Vehicle, Long> {
     Optional<List<Vehicle>> findByFuelType(FuelType fuelType);
 
     Optional<List<Vehicle>> findByCapacity(int capacity);
+
 
 
 

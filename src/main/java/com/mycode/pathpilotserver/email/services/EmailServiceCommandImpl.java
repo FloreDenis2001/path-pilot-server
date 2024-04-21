@@ -43,11 +43,7 @@ public class EmailServiceCommandImpl implements EmailServiceCommand{
     @Override
     public boolean isLinkValid(String code) {
         LocalDateTime expirationTime = linkExpirationMap.get(code);
-        if (expirationTime != null && expirationTime.isAfter(LocalDateTime.now())) {
-            return true;
-        } else {
-            return false;
-        }
+        return expirationTime != null && expirationTime.isAfter(LocalDateTime.now());
     }
 
     @Override
@@ -63,6 +59,12 @@ public class EmailServiceCommandImpl implements EmailServiceCommand{
         linkExpirationMap.put(uniqueCode, expirationTime);
         return "http://localhost:3000/drivers/add?code=" + uniqueCode + "&expires=" + expirationTimestamp;
     }
+
+    @Override
+    public void removeLinkAfterCreation(String code) {
+        linkExpirationMap.remove(code);
+    }
+
 
 
 }

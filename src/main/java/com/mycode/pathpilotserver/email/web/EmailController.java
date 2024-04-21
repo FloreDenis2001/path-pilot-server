@@ -28,5 +28,11 @@ public class EmailController {
         return ResponseEntity.ok(isValid);
     }
 
+    @DeleteMapping("/remove/{code}")
+    public ResponseEntity<String> removeLink(@PathVariable String code) {
+        emailServiceCommand.removeLinkAfterCreation(code);
+        return ResponseEntity.ok("Link removed");
+    }
+
 
 }

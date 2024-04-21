@@ -5,6 +5,7 @@ import com.mycode.pathpilotserver.driver.repository.DriverRepo;
 import com.mycode.pathpilotserver.orders.repository.OrderRepo;
 import com.mycode.pathpilotserver.routes.repository.RouteRepo;
 import com.mycode.pathpilotserver.shipments.repository.ShipmentRepo;
+import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
 import com.mycode.pathpilotserver.user.services.UserServiceCommandImpl;
 import com.mycode.pathpilotserver.vehicles.repository.VehicleRepo;
@@ -39,6 +40,7 @@ public class PathPilotServerApplication {
             , DriverRepo driverRepo, VehicleRepo vehicleRepo, UserServiceCommandImpl userServiceCommandImpl
             , ShipmentRepo shipmentRepo, RouteRepo routeRepo, OrderRepo orderRepo) {
         return args -> {
+
         };
     }
     @Bean
