@@ -1,8 +1,5 @@
 package com.mycode.pathpilotserver.email.models;
-
-
 import lombok.*;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

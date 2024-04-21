@@ -38,8 +38,5 @@ public class DriverServiceQuerryImpl implements DriverQuerryService {
             return Optional.of(DriverDTO.fromList(drivers));
         }
     }
-
-
-
-
+    
 }
