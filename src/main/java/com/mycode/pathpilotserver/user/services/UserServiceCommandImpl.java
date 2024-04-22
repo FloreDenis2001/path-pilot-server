@@ -1,19 +1,23 @@
 package com.mycode.pathpilotserver.user.services;
 
+import com.mycode.pathpilotserver.company.models.Company;
+import com.mycode.pathpilotserver.company.repository.CompanyRepo;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.customers.models.SubscriptionType;
 import com.mycode.pathpilotserver.system.security.UserRole;
 import com.mycode.pathpilotserver.user.dto.LoginUserRequest;
-import com.mycode.pathpilotserver.user.dto.RegisterUserRequest;
+import com.mycode.pathpilotserver.user.dto.RegisterDTO;
 import com.mycode.pathpilotserver.user.dto.UpdateUserRequest;
 import com.mycode.pathpilotserver.user.exceptions.UserNotFoundException;
 import com.mycode.pathpilotserver.user.exceptions.WrongPasswordException;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
 import jakarta.transaction.Transactional;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -22,11 +26,12 @@ public class UserServiceCommandImpl implements UserServiceCommand {
 
     private final UserRepo userRepo;
 
-    public UserServiceCommandImpl(UserRepo userRepo) {
+    private final CompanyRepo companyRepo;
+
+    public UserServiceCommandImpl(UserRepo userRepo, CompanyRepo companyRepo) {
         this.userRepo = userRepo;
+        this.companyRepo = companyRepo;
     }
-
-
 
 
     @Override
@@ -47,23 +52,54 @@ public class UserServiceCommandImpl implements UserServiceCommand {
     }
 
     @Override
-    public void registerUser(RegisterUserRequest registerUserRequest) {
-          Optional<User> user = userRepo.findByEmail(registerUserRequest.email());
+    public void registerUser(RegisterDTO registerDTO) {
+        Optional<User> user = userRepo.findByEmail(registerDTO.user().email());
 
-            if (user.isPresent()) {
-                throw new UserNotFoundException("User with email: " + registerUserRequest.email() + " already exists");
-            }
+        if (user.isPresent()) {
+            throw new UserNotFoundException("User with email: " + registerDTO.company().email() + " already exists");
+        }
 
-            Customer customer = new Customer();
-            customer.setFirstName(registerUserRequest.firstName());
-            customer.setLastName(registerUserRequest.lastName());
-            customer.setPhone(registerUserRequest.phone());
-            customer.setRole(UserRole.CUSTOMER);
-            customer.setEmail(registerUserRequest.email());
-            customer.setPassword(registerUserRequest.password());
-            customer.setUsername(registerUserRequest.username());
-            customer.setSubscriptionType(SubscriptionType.BASIC);
-            userRepo.saveAndFlush(customer);
+        Company company = getCompany(registerDTO);
+        companyRepo.saveAndFlush(company);
+
+        Customer customer = getCustomer(registerDTO);
+        customer.setCompany(company);
+        userRepo.saveAndFlush(customer);
+    }
+
+    @NotNull
+    private static Company getCompany(RegisterDTO registerDTO) {
+        Company company = new Company();
+        company.setName(registerDTO.company().name());
+        company.setRegistrationNumber(registerDTO.company().registrationNumber());
+        company.setIndustry(registerDTO.company().industry());
+        company.setPhone(registerDTO.company().phone());
+        company.setEmail(registerDTO.company().email());
+        company.setCapital(registerDTO.company().capital());
+        company.setAddress(registerDTO.company().address());
+        company.setWebsite(registerDTO.company().website());
+        company.setCreatedBy(registerDTO.user().username());
+        company.setLastModifiedBy(registerDTO.user().username());
+        company.setCreatedDate(LocalDateTime.now());
+        company.setLastModifiedDate(LocalDateTime.now());
+        return company;
+    }
+
+
+    @NotNull
+    private static Customer getCustomer(RegisterDTO registerDTO) {
+        Customer customer = new Customer();
+        customer.setFirstName(registerDTO.user().firstName());
+        customer.setLastName(registerDTO.user().lastName());
+        customer.setPhone(registerDTO.user().phone());
+        customer.setRole(UserRole.CUSTOMER);
+        customer.setEmail(registerDTO.user().email());
+        customer.setPassword(registerDTO.user().password());
+        customer.setUsername(registerDTO.user().username());
+        customer.setSubscriptionType(SubscriptionType.BASIC);
+        customer.setAddress(registerDTO.user().address());
+
+        return customer;
     }
 
     private User findUserByEmail(String email) {

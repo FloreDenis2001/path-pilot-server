@@ -55,9 +55,9 @@ public class ServerControllerUser {
 
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterUserRequest registerDTO) {
+    public ResponseEntity<RegisterResponse> register(@RequestBody RegisterDTO registerDTO) {
         userServiceCommand.registerUser(registerDTO);
-        User user = userQuerryServiceImpl.findByEmail(registerDTO.email()).get();
+        User user = userQuerryServiceImpl.findByEmail(registerDTO.user().email()).get();
         HttpHeaders jwtHeader = getJwtHeader(user);
         RegisterResponse registerResponse = new RegisterResponse(user.getId(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getRole(),user.getEmail(),user.getPhone(),jwtHeader.getFirst(HttpHeaders.AUTHORIZATION));
         return new ResponseEntity<>(registerResponse, jwtHeader, HttpStatus.OK);

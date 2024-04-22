@@ -60,9 +60,9 @@ public class ServerControllerCompany {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping("/create")
-    public ResponseEntity<String> createCompany(@RequestBody CompanyCreateRequest company) {
-        companyCommandService.createCompany(company);
+    @PostMapping("/create/{userEmail}")
+    public ResponseEntity<String> createCompany(@RequestBody CompanyCreateRequest company ,@PathVariable String userEmail) {
+        companyCommandService.createCompany(company, userEmail);
         return ResponseEntity.ok("Company created successfully");
     }
 

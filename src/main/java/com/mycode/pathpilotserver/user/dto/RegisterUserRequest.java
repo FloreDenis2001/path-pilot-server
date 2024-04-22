@@ -1,4 +1,7 @@
 package com.mycode.pathpilotserver.user.dto;
 
-public record RegisterUserRequest(String username,String email,String firstName,String lastName,String password,String phone) {
+import com.mycode.pathpilotserver.address.Address;
+
+public record RegisterUserRequest(String username, String email, String firstName, String lastName, String password, String phone,
+                                  Address address) {
 }
