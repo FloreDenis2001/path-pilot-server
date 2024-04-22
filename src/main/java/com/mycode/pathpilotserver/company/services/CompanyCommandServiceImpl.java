@@ -27,13 +27,14 @@ public class CompanyCommandServiceImpl implements CompanyCommandService {
         this.userRepo = userRepo;
     }
 
+
     @Override
-    public void createCompany(CompanyCreateRequest companyCreateRequest) {
+    public void createCompany(CompanyCreateRequest companyCreateRequest , String userEmail) {
         Optional<Company> company = companyRepo.findByName(companyCreateRequest.name());
         if (company.isPresent()) {
             throw new CompanyNotFoundException("Company with name: " + companyCreateRequest.name() + " already exists");
         } else {
-            Company newCompany = buildCompany(companyCreateRequest);
+            Company newCompany = buildCompany(companyCreateRequest , userEmail);
             companyRepo.save(newCompany);
         }
     }
@@ -60,9 +61,9 @@ public class CompanyCommandServiceImpl implements CompanyCommandService {
 
     }
 
-    private Company buildCompany(CompanyCreateRequest companyCreateRequest) {
+    private Company buildCompany(CompanyCreateRequest companyCreateRequest , String userEmail) {
 
-        User user = userRepo.findByEmail(companyCreateRequest.userEmail()).get();
+        User user = userRepo.findByEmail(userEmail).get();
 
         Company company = Company.builder().address(companyCreateRequest.address()).capital(companyCreateRequest.capital()).email(companyCreateRequest.email()).name(companyCreateRequest.name()).phone(companyCreateRequest.phone()).registrationNumber(companyCreateRequest.registrationNumber()).industry(companyCreateRequest.industry()).address(companyCreateRequest.address()).website(companyCreateRequest.website()).build();
         company.setLastModifiedBy(user.getUsername());

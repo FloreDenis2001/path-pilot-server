@@ -99,8 +99,4 @@ public class DriverCommandServiceImpl implements DriverCommandService {
             throw new WrongPasswordException("Invalid password for user: " + user.getEmail());
         }
     }
-
-
-
-
 }

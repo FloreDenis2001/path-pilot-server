@@ -7,7 +7,8 @@ import org.springframework.stereotype.Service;
 @Service
 public interface CompanyCommandService {
 
-   void createCompany(CompanyCreateRequest companyCreateRequest);
+   void createCompany(CompanyCreateRequest companyCreateRequest, String userEmail);
+
    void updateCompany(UpdateCompanyRequest updateCompanyRequest);
 
    void deleteCompany(String registrationNumber);
