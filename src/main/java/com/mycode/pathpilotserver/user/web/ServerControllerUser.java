@@ -49,7 +49,7 @@ public class ServerControllerUser {
         authenticate(loginUserRequest.email(),loginUserRequest.password());
         User user = userQuerryServiceImpl.findByEmail(loginUserRequest.email()).get();
         HttpHeaders jwtHeader = getJwtHeader(user);
-        LoginResponse loginResponse = new LoginResponse(user.getId(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getRole(),user.getEmail(),user.getPhone(),jwtHeader.getFirst(HttpHeaders.AUTHORIZATION));
+        LoginResponse loginResponse = new LoginResponse(user.getId(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getRole(),user.getEmail(),user.getPhone(),user.getCompany().getRegistrationNumber(),jwtHeader.getFirst(HttpHeaders.AUTHORIZATION));
         return new ResponseEntity<>(loginResponse, jwtHeader, HttpStatus.OK);
     }
 
@@ -59,7 +59,7 @@ public class ServerControllerUser {
         userServiceCommand.registerUser(registerDTO);
         User user = userQuerryServiceImpl.findByEmail(registerDTO.user().email()).get();
         HttpHeaders jwtHeader = getJwtHeader(user);
-        RegisterResponse registerResponse = new RegisterResponse(user.getId(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getRole(),user.getEmail(),user.getPhone(),jwtHeader.getFirst(HttpHeaders.AUTHORIZATION));
+        RegisterResponse registerResponse = new RegisterResponse(user.getId(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getRole(),user.getEmail(),user.getPhone(),user.getCompany().getRegistrationNumber(),jwtHeader.getFirst(HttpHeaders.AUTHORIZATION));
         return new ResponseEntity<>(registerResponse, jwtHeader, HttpStatus.OK);
     }
 

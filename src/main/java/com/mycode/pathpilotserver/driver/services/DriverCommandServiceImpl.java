@@ -1,5 +1,8 @@
 package com.mycode.pathpilotserver.driver.services;
 
+import com.mycode.pathpilotserver.company.exceptions.CompanyNotFoundException;
+import com.mycode.pathpilotserver.company.models.Company;
+import com.mycode.pathpilotserver.company.repository.CompanyRepo;
 import com.mycode.pathpilotserver.customers.dto.RemoveValidationRequest;
 import com.mycode.pathpilotserver.driver.dto.DriverCreateRequest;
 import com.mycode.pathpilotserver.driver.dto.DriverUpdateRequest;
@@ -12,6 +15,7 @@ import com.mycode.pathpilotserver.user.exceptions.WrongPasswordException;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
 import jakarta.transaction.Transactional;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,32 +29,48 @@ public class DriverCommandServiceImpl implements DriverCommandService {
     private final DriverRepo driverRepo;
     private final UserRepo userRepo;
 
-    public DriverCommandServiceImpl(DriverRepo driverRepo, UserRepo userRepo) {
+    private final CompanyRepo companyRepo;
+
+    public DriverCommandServiceImpl(DriverRepo driverRepo, UserRepo userRepo, CompanyRepo companyRepo) {
         this.driverRepo = driverRepo;
         this.userRepo = userRepo;
+        this.companyRepo = companyRepo;
     }
 
     @Override
     public void create(DriverCreateRequest driverCreateRequest) {
         Optional<Driver> user= driverRepo.findByLicenseNumber(driverCreateRequest.licenseNumber());
+        Optional<Company> company=companyRepo.findByRegistrationNumber(driverCreateRequest.companyRegistrationNumber());
         if (user.isPresent()) {
             throw new DriverAlreadyExistException("Driver with license number: " + driverCreateRequest.licenseNumber() + " already exist");
-        } else {
-            Driver newDriver = new Driver();
-            newDriver.setLicenseNumber(driverCreateRequest.licenseNumber());
-            newDriver.setPhone(driverCreateRequest.phone());
-            newDriver.setUsername(driverCreateRequest.username());
-            newDriver.setPassword(driverCreateRequest.password());
-            newDriver.setEmail(driverCreateRequest.email());
-            newDriver.setFirstName(driverCreateRequest.firstName());
-            newDriver.setLastName(driverCreateRequest.lastName());
-            newDriver.setExperience(driverCreateRequest.experience());
-            newDriver.setRating(driverCreateRequest.rating());
-            newDriver.setSalary(driverCreateRequest.salary());
-            newDriver.setRole(UserRole.DRIVER);
-            newDriver.setAvailable(true);
-            driverRepo.saveAndFlush(newDriver);
         }
+
+        if(company.isEmpty()){
+            throw new CompanyNotFoundException("Company with registration number: "+driverCreateRequest.companyRegistrationNumber()+" dosen't exist !");
+        }
+
+        Driver newDriver = getDriver(driverCreateRequest, company);
+        driverRepo.saveAndFlush(newDriver);
+    }
+
+    @NotNull
+    private static Driver getDriver(DriverCreateRequest driverCreateRequest, Optional<Company> company) {
+        Driver newDriver = new Driver();
+        newDriver.setLicenseNumber(driverCreateRequest.licenseNumber());
+        newDriver.setPhone(driverCreateRequest.phone());
+        newDriver.setUsername(driverCreateRequest.username());
+        newDriver.setPassword(driverCreateRequest.password());
+        newDriver.setEmail(driverCreateRequest.email());
+        newDriver.setFirstName(driverCreateRequest.firstName());
+        newDriver.setLastName(driverCreateRequest.lastName());
+        newDriver.setExperience(0);
+        newDriver.setRating(0);
+        newDriver.setSalary(0);
+        newDriver.setRole(UserRole.DRIVER);
+        newDriver.setCompany(company.get());
+        newDriver.setAddress(driverCreateRequest.address());
+        newDriver.setAvailable(true);
+        return newDriver;
     }
 
     @Override

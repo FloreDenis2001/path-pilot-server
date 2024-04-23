@@ -17,8 +17,8 @@ public class EmailController {
     private EmailServiceCommandImpl emailServiceCommand;
 
     @PostMapping("/send")
-    public ResponseEntity<String> sendEmail(@RequestBody Email email) {
-        emailServiceCommand.sendEmail(email.getTo());
+    public ResponseEntity<String> sendEmail(@RequestBody Email email , @RequestParam String companyRegistrationNumber) {
+        emailServiceCommand.sendEmail(email.getTo(),companyRegistrationNumber);
         return ResponseEntity.ok("Email sent");
     }
 

@@ -25,8 +25,8 @@ public class EmailServiceCommandImpl implements EmailServiceCommand{
     }
 
     @Override
-    public void sendEmail(String to) {
-        String link = generateUniqueLink();
+    public void sendEmail(String to,String companyRegistrationNumber) {
+        String link = generateUniqueLink(companyRegistrationNumber);
         String subject = "Your Driver Creation Link";
         String body = "Click here to create a Driver: " + link;
 
@@ -52,12 +52,12 @@ public class EmailServiceCommandImpl implements EmailServiceCommand{
         linkExpirationMap.entrySet().removeIf(entry -> entry.getValue().isBefore(LocalDateTime.now()));
     }
 
-    private String generateUniqueLink() {
+    private String generateUniqueLink(String companyRegistrationNumber) {
         String uniqueCode = UUID.randomUUID().toString();
         LocalDateTime expirationTime = LocalDateTime.now().plusDays(1);
         long expirationTimestamp = expirationTime.toEpochSecond(ZoneOffset.UTC);
         linkExpirationMap.put(uniqueCode, expirationTime);
-        return "http://localhost:3000/drivers/add?code=" + uniqueCode + "&expires=" + expirationTimestamp;
+        return "http://localhost:3000/drivers/add?code=" + uniqueCode + "&expires=" + expirationTimestamp + "&company=" + companyRegistrationNumber;
     }
 
     @Override
