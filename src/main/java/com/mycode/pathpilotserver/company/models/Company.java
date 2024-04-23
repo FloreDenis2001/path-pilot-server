@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mycode.pathpilotserver.address.Address;
 import com.mycode.pathpilotserver.system.audit.AbstractAuditingEntity;
 import com.mycode.pathpilotserver.user.models.User;
+import com.mycode.pathpilotserver.vehicles.models.Vehicle;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,6 +29,11 @@ public class Company extends AbstractAuditingEntity {
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private Set<User> users;
+
+
+    @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Set<Vehicle> vehicles;
 
     @Embedded
     @AttributeOverrides({

@@ -1,5 +1,7 @@
 package com.mycode.pathpilotserver.vehicles.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.routes.models.Route;
 import jakarta.persistence.*;
 import lombok.*;
@@ -84,6 +86,12 @@ public class Vehicle {
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Route> routes;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", referencedColumnName = "id")
+    @JsonBackReference
+    private Company company;
 
 
     public Vehicle(String make, String model, int year, FuelType fuelType, double fuelCapacity, double fuelConsumption, LocalDate lastService, LocalDate nextService, double km, String registrationNumber, int capacity) {
