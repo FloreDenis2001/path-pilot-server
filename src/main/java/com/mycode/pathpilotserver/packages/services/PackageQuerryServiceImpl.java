@@ -1,5 +1,6 @@
 package com.mycode.pathpilotserver.packages.services;
 
+import com.mycode.pathpilotserver.packages.dto.PackageDTO;
 import com.mycode.pathpilotserver.packages.dto.PackageRequest;
 import com.mycode.pathpilotserver.packages.models.Package;
 import com.mycode.pathpilotserver.packages.repository.PackageRepo;
@@ -22,13 +23,13 @@ public class PackageQuerryServiceImpl implements PackageQuerryService {
     }
 
     @Override
-    public Optional<List<PackageRequest>> getAllPackagesByCustomer(Long customerId) {
+    public Optional<List<PackageDTO>> getAllPackagesByCustomer(Long customerId) {
         Optional<List<Package>> packages = packageRepo.getAllPackagesByCustomer(customerId);
         if (packages.isEmpty()) {
             throw new UserNotFoundException("Packages for user with id: " + customerId + " not found");
         }
-        List<PackageRequest> packagesRequest = Convertor.convertToPackageRequest(packages.get());
-        return Optional.of(packagesRequest);
+        List<PackageDTO> packageDTOS = Convertor.convertToPackageDTO(packages.get());
+        return Optional.of(packageDTOS);
     }
 
 

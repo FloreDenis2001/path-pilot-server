@@ -1,13 +1,12 @@
 package com.mycode.pathpilotserver.packages.services;
 
-import com.google.maps.errors.ApiException;
-import com.google.maps.model.DirectionsResult;
 import com.mycode.pathpilotserver.customers.exceptions.CustomerNotFoundException;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.intercom.maps.DirectionsService;
 import com.mycode.pathpilotserver.packages.dto.PackageDTO;
+import com.mycode.pathpilotserver.packages.dto.PackageRequest;
 import com.mycode.pathpilotserver.packages.models.Package;
-import com.mycode.pathpilotserver.packages.models.PackageType;
+import com.mycode.pathpilotserver.packages.models.PackageStatus;
 import com.mycode.pathpilotserver.packages.repository.PackageRepo;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
 import com.mycode.pathpilotserver.shipments.models.StatusType;
@@ -17,7 +16,6 @@ import com.mycode.pathpilotserver.user.repository.UserRepo;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -28,19 +26,19 @@ public class PackageCommandServiceImpl implements PackageCommandService {
     private final PackageRepo packRepo;
     private final UserRepo customerRepo;
 
-    private static DirectionsService directionsService = new DirectionsService();
+//    private static DirectionsService directionsService = new DirectionsService();
 
     private final ShipmentRepo shipmentRepo;
 
     public PackageCommandServiceImpl(PackageRepo packRepo, UserRepo customerRepo, DirectionsService directionsService, ShipmentRepo shipmentRepo) {
         this.packRepo = packRepo;
         this.customerRepo = customerRepo;
-        this.directionsService = directionsService;
+//        this.directionsService = directionsService;
         this.shipmentRepo = shipmentRepo;
     }
 
 
-    private static Optional<Shipment> getShipments(PackageDTO packageDTO) {
+    private static Optional<Shipment> getShipments(PackageRequest packageRequest) {
         try {
 
 //            DirectionsResult directionsResult = directionsService.getDirections(packageDTO.origin().toString(),packageDTO.destination().toString());
@@ -50,12 +48,12 @@ public class PackageCommandServiceImpl implements PackageCommandService {
 //                totalDistanceInKm += directionsResult.routes[i].legs[0].distance.inMeters;
 //            }
 
-            Shipment shipment = new Shipment().builder().destinationName(packageDTO.destinationName())
-                    .originName(packageDTO.originName())
-                    .destinationPhone(packageDTO.destinationPhone())
-                    .originPhone(packageDTO.originPhone())
-                    .destinationAddress(packageDTO.destination())
-                    .originAddress(packageDTO.origin())
+            Shipment shipment = new Shipment().builder().destinationName(packageRequest.destination().name())
+                    .originName(packageRequest.origin().name())
+                    .destinationPhone(packageRequest.destination().phone())
+                    .originPhone(packageRequest.origin().phone())
+                    .destinationAddress(packageRequest.destination().address())
+                    .originAddress(packageRequest.origin().address())
                     .status(StatusType.PICKED)
                     .estimatedDeliveryDate(LocalDateTime.now().plusDays(3))
                     .totalDistance(0)
@@ -67,20 +65,20 @@ public class PackageCommandServiceImpl implements PackageCommandService {
         }
     }
 
-    private static Package getPackage(PackageDTO packageDTO, Optional<User> customer, Optional<Shipment> shipment) {
+    private static Package getPackage(PackageRequest packageRequest, Optional<User> customer, Optional<Shipment> shipment) {
 
         Package pack = new Package().builder()
                 .customer((Customer) customer.get())
                 .shipment(shipment.get())
-                .awb((packageDTO.origin().getCity().substring(0, 2).concat(RandomStringUtils.randomAlphabetic(8).concat(String.valueOf(System.currentTimeMillis()).substring(11, 13)))).toUpperCase())
-                .totalAmount(packageDTO.totalAmount())
-                .type(PackageType.UNASSIGNED)
-                .deliveryDescription(packageDTO.deliveryDescription())
+                .awb((packageRequest.origin().address().getCity().substring(0, 2).concat(RandomStringUtils.randomAlphabetic(8).concat(String.valueOf(System.currentTimeMillis()).substring(11, 13)))).toUpperCase())
+                .totalAmount(packageRequest.packageDetails().totalAmount())
+                .status(PackageStatus.UNASSIGNED)
+                .deliveryDescription(packageRequest.packageDetails().deliveryDescription())
                 .orderDate(LocalDateTime.now())
-                .height(packageDTO.height())
-                .weight(packageDTO.weight())
-                .width(packageDTO.width())
-                .length(packageDTO.length())
+                .height(packageRequest.packageDetails().height())
+                .weight(packageRequest.packageDetails().weight())
+                .width(packageRequest.packageDetails().width())
+                .length(packageRequest.packageDetails().length())
                 .build();
         
         return pack;
@@ -88,16 +86,16 @@ public class PackageCommandServiceImpl implements PackageCommandService {
 
 
     @Override
-    public void createPackage(PackageDTO packageDTO) {
+    public void createPackage(PackageRequest packageRequest) {
 
-        Optional<User> customer = customerRepo.findById(packageDTO.customerId());
+        Optional<User> customer = customerRepo.findByEmail(packageRequest.customerEmail());
 
         if (customer.isEmpty()) {
-            throw new CustomerNotFoundException("Customer with id: " + packageDTO.customerId() + " not found");
+            throw new CustomerNotFoundException("Customer with email: " + packageRequest.customerEmail() + " not found");
         }
 
-        Optional<Shipment> shipment = getShipments(packageDTO);
-        Package pack = getPackage(packageDTO, customer, shipment);
+        Optional<Shipment> shipment = getShipments(packageRequest);
+        Package pack = getPackage(packageRequest, customer, shipment);
 
 
         shipmentRepo.saveAndFlush(shipment.get());
@@ -116,7 +114,7 @@ public class PackageCommandServiceImpl implements PackageCommandService {
     }
 
     @Override
-    public void editPackage(String awb, PackageDTO packageDTO) {
+    public void editPackage(String awb, PackageRequest packageRequest) {
         Optional<Package> pack = packRepo.getPackageByAwb(awb);
 
         if (pack.isEmpty()) {
@@ -129,28 +127,18 @@ public class PackageCommandServiceImpl implements PackageCommandService {
             throw new CustomerNotFoundException("Shipment with id: " + pack.get().getShipment().getId() + " not found");
         }
 
-        shipment.get().setDestinationName(packageDTO.destinationName());
-        shipment.get().setOriginName(packageDTO.originName());
-        shipment.get().setDestinationPhone(packageDTO.destinationPhone());
-        shipment.get().setOriginPhone(packageDTO.originPhone());
-        shipment.get().setDestinationAddress(packageDTO.destination());
-        shipment.get().setOriginAddress(packageDTO.origin());
-        shipment.get().setStatus(StatusType.PICKED);
-        shipment.get().setEstimatedDeliveryDate(LocalDateTime.now().plusDays(3));
-        shipment.get().setTotalDistance(0);
-
-        shipmentRepo.saveAndFlush(shipment.get());
-
-
-        pack.get().setShipment(shipment.get());
-        pack.get().setTotalAmount(packageDTO.totalAmount());
-        pack.get().setDeliveryDescription(packageDTO.deliveryDescription());
-        pack.get().setHeight(packageDTO.height());
-        pack.get().setWeight(packageDTO.weight());
-        pack.get().setWidth(packageDTO.width());
-        pack.get().setLength(packageDTO.length());
+        pack.get().setLength(packageRequest.packageDetails().length());
+        pack.get().setHeight(packageRequest.packageDetails().height());
+        pack.get().setWeight(packageRequest.packageDetails().weight());
+        pack.get().setWidth(packageRequest.packageDetails().width());
+        pack.get().setDeliveryDescription(packageRequest.packageDetails().deliveryDescription());
+        pack.get().setTotalAmount(packageRequest.packageDetails().totalAmount());
         pack.get().setOrderDate(LocalDateTime.now());
+        pack.get().setShipment(shipment.get());
+        pack.get().setStatus(PackageStatus.UNASSIGNED);
 
-        packRepo.saveAndFlush(pack.get());
+
+
+
     }
 }

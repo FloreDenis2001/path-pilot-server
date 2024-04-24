@@ -2,7 +2,7 @@ package com.mycode.pathpilotserver.user.models;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.mycode.pathpilotserver.address.Address;
+import com.mycode.pathpilotserver.address.models.Address;
 import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.system.security.UserRole;
 import jakarta.persistence.*;

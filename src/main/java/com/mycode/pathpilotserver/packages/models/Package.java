@@ -42,9 +42,9 @@ public class Package {
     @Column(name="length", nullable = false)
     private double length;
 
-    @Column(name="type",nullable = false)
+    @Column(name="status",nullable = false)
     @Enumerated(EnumType.STRING)
-    private PackageType type;
+    private PackageStatus status;
 
 
     @Column(name = "delivery_description", nullable = false)

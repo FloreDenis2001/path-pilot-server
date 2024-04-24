@@ -2,7 +2,7 @@ package com.mycode.pathpilotserver.company.models;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.mycode.pathpilotserver.address.Address;
+import com.mycode.pathpilotserver.address.models.Address;
 import com.mycode.pathpilotserver.system.audit.AbstractAuditingEntity;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.vehicles.models.Vehicle;

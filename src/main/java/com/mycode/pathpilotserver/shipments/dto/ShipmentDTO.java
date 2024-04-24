@@ -1,6 +1,6 @@
 package com.mycode.pathpilotserver.shipments.dto;
 
-import com.mycode.pathpilotserver.address.Address;
+import com.mycode.pathpilotserver.address.models.Address;
 import lombok.Builder;
 
 @Builder

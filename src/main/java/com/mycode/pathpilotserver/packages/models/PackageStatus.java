@@ -1,6 +1,6 @@
 package com.mycode.pathpilotserver.packages.models;
 
-public enum PackageType {
+public enum PackageStatus {
     ASSIGNED,
     UNASSIGNED
 }

@@ -29,14 +29,14 @@ public class ServerControllerPackage {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
-    public ResponseEntity<PackageDTO> create(@RequestBody PackageDTO packageDTO) {
-        packageServiceCommand.createPackage(packageDTO);
-        return ResponseEntity.ok(packageDTO);
+    public ResponseEntity<PackageRequest> create(@RequestBody PackageRequest packageRequest) {
+        packageServiceCommand.createPackage(packageRequest);
+        return ResponseEntity.ok(packageRequest);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/findAllByCustomer={customerId}")
-    public ResponseEntity<List<PackageRequest>> findAllByCustomer(@PathVariable Long customerId) {
+    public ResponseEntity<List<PackageDTO>> findAllByCustomer(@PathVariable Long customerId) {
         return ResponseEntity.ok(packageServiceQuerry.getAllPackagesByCustomer(customerId).get());
     }
 
@@ -49,8 +49,8 @@ public class ServerControllerPackage {
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/edit/{awb}")
-    public ResponseEntity<PackageDTO> edit(@PathVariable String awb, @RequestBody PackageDTO packageDTO) {
-        packageServiceCommand.editPackage(awb, packageDTO);
-        return ResponseEntity.ok(packageDTO);
+    public ResponseEntity<PackageRequest> edit(@PathVariable String awb, @RequestBody PackageRequest packageRequest) {
+        packageServiceCommand.editPackage(awb, packageRequest);
+        return ResponseEntity.ok(packageRequest);
     }
 }

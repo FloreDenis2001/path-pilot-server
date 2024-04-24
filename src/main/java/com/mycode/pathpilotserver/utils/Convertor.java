@@ -1,5 +1,8 @@
 package com.mycode.pathpilotserver.utils;
 
+import com.mycode.pathpilotserver.address.dto.PackageAddress;
+import com.mycode.pathpilotserver.packages.dto.PackageDTO;
+import com.mycode.pathpilotserver.packages.dto.PackageDetails;
 import com.mycode.pathpilotserver.packages.models.Package;
 
 import com.mycode.pathpilotserver.packages.dto.PackageRequest;
@@ -33,25 +36,33 @@ public class Convertor {
     }
 
 
-    public static List<PackageRequest> convertToPackageRequest(List<Package> packages) {
+    public static List<PackageDTO> convertToPackageDTO(List<Package> packages) {
 
-        List<PackageRequest> packageRequests = new ArrayList<>();
+        List<PackageDTO> packageDTOS = new ArrayList<>();
         for (Package p : packages) {
-            PackageRequest packageRequest = PackageRequest.builder()
-                    .width(p.getWidth())
-                    .height(p.getHeight())
-                    .weight(p.getWeight())
-                    .type(p.getType())
+            PackageDetails packageDetails = PackageDetails.builder()
                     .totalAmount(p.getTotalAmount())
-                    .awb(p.getAwb())
-                    .deliveryDescription(p.getDeliveryDescription())
-                    .shipmentDTO(convertToShipmentDTO(p.getShipment()))
+                    .weight(p.getWeight())
+                    .height(p.getHeight())
                     .length(p.getLength())
+                    .width(p.getWidth())
+                    .deliveryDescription(p.getDeliveryDescription())
                     .build();
 
-            packageRequests.add(packageRequest);
+            ShipmentDTO shipmentDTO = convertToShipmentDTO(p.getShipment());
+
+            PackageDTO packageDTO = PackageDTO.builder()
+                    .customerEmail(p.getCustomer().getEmail())
+                    .awb(p.getAwb())
+                    .status(p.getStatus())
+                    .packageDetails(packageDetails)
+                    .shipmentDTO(shipmentDTO)
+                    .build();
+
+            packageDTOS.add(packageDTO);
         }
 
-        return packageRequests;
+        return packageDTOS;
     }
+
 }

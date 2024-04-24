@@ -1,11 +1,8 @@
-package com.mycode.pathpilotserver.address;
+package com.mycode.pathpilotserver.address.models;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.IOException;
 
 @Embeddable
 @Setter

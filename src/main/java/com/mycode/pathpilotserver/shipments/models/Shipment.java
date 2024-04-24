@@ -1,6 +1,6 @@
 package com.mycode.pathpilotserver.shipments.models;
 
-import com.mycode.pathpilotserver.address.Address;
+import com.mycode.pathpilotserver.address.models.Address;
 import com.mycode.pathpilotserver.orders.models.Order;
 import jakarta.persistence.*;
 import lombok.*;
