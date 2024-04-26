@@ -7,6 +7,7 @@ import com.mycode.pathpilotserver.packages.services.PackageQuerryServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.mycode.pathpilotserver.packages.models.Package;
 
@@ -41,6 +42,7 @@ public class ServerControllerPackage {
     }
 
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('ROLE_CUSTOMER', 'ROLE_ADMIN')")
     @DeleteMapping("/delete/{awb}")
     public ResponseEntity<String> delete(@PathVariable String awb) {
         packageServiceCommand.deletePackage(awb);

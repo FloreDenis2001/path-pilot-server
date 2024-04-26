@@ -80,7 +80,7 @@ public class PackageCommandServiceImpl implements PackageCommandService {
                 .width(packageRequest.packageDetails().width())
                 .length(packageRequest.packageDetails().length())
                 .build();
-        
+
         return pack;
     }
 
@@ -120,12 +120,18 @@ public class PackageCommandServiceImpl implements PackageCommandService {
         if (pack.isEmpty()) {
             throw new CustomerNotFoundException("Package with awb: " + awb + " not found");
         }
-
         Optional<Shipment> shipment = shipmentRepo.findById(pack.get().getShipment().getId());
 
-        if (shipment.isEmpty()) {
-            throw new CustomerNotFoundException("Shipment with id: " + pack.get().getShipment().getId() + " not found");
-        }
+        shipment.get().setDestinationName(packageRequest.destination().name());
+        shipment.get().setOriginName(packageRequest.origin().name());
+        shipment.get().setDestinationPhone(packageRequest.destination().phone());
+        shipment.get().setOriginPhone(packageRequest.origin().phone());
+        shipment.get().setDestinationAddress(packageRequest.destination().address());
+        shipment.get().setOriginAddress(packageRequest.origin().address());
+        shipment.get().setEstimatedDeliveryDate(LocalDateTime.now().plusDays(3));
+        shipment.get().setTotalDistance(0);
+
+        shipmentRepo.saveAndFlush(shipment.get());
 
         pack.get().setLength(packageRequest.packageDetails().length());
         pack.get().setHeight(packageRequest.packageDetails().height());
@@ -137,7 +143,7 @@ public class PackageCommandServiceImpl implements PackageCommandService {
         pack.get().setShipment(shipment.get());
         pack.get().setStatus(PackageStatus.UNASSIGNED);
 
-
+        packRepo.saveAndFlush(pack.get());
 
 
     }
