@@ -14,4 +14,8 @@ public interface DriverQuerryService {
 
     Optional<List<DriverDTO>> getAllDrivers();
 
+    Optional<List<DriverDTO>> getAllDriversByCompany(String registrationNumber);
+
+
+
 }

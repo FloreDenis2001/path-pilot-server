@@ -4,9 +4,13 @@ import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.company.repository.CompanyRepo;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.customers.models.SubscriptionType;
+import com.mycode.pathpilotserver.image.models.Image;
+import com.mycode.pathpilotserver.image.repository.ImageRepo;
+import com.mycode.pathpilotserver.image.utils.ImageUtils;
 import com.mycode.pathpilotserver.system.security.UserRole;
 import com.mycode.pathpilotserver.user.dto.LoginUserRequest;
 import com.mycode.pathpilotserver.user.dto.RegisterDTO;
+import com.mycode.pathpilotserver.user.dto.UpdateImageDTO;
 import com.mycode.pathpilotserver.user.dto.UpdateUserRequest;
 import com.mycode.pathpilotserver.user.exceptions.UserNotFoundException;
 import com.mycode.pathpilotserver.user.exceptions.WrongPasswordException;
@@ -16,7 +20,9 @@ import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -26,10 +32,13 @@ public class UserServiceCommandImpl implements UserServiceCommand {
 
     private final UserRepo userRepo;
 
+    private final ImageRepo imageRepo;
+
     private final CompanyRepo companyRepo;
 
-    public UserServiceCommandImpl(UserRepo userRepo, CompanyRepo companyRepo) {
+    public UserServiceCommandImpl(UserRepo userRepo, ImageRepo imageRepo, CompanyRepo companyRepo) {
         this.userRepo = userRepo;
+        this.imageRepo = imageRepo;
         this.companyRepo = companyRepo;
     }
 
@@ -49,6 +58,53 @@ public class UserServiceCommandImpl implements UserServiceCommand {
         validatePassword(user, request.password());
         applyNewDetailsToUser(user, request.newUser());
         userRepo.save(user);
+    }
+
+    @Override
+    public String uploadImage(MultipartFile file, String email) {
+        try {
+            Optional<User> user = userRepo.findByEmail(email);
+            if (user.isEmpty()) {
+                throw new UserNotFoundException("User not found for email: " + email);
+            }
+
+            byte[] compressedData = ImageUtils.compressImage(file.getBytes());
+            Image existingImage = user.get().getImage();
+
+            if (existingImage != null) {
+                existingImage.setData(compressedData);
+                existingImage.setFileType(file.getContentType());
+                existingImage.setName(file.getOriginalFilename());
+                imageRepo.save(existingImage);
+                return "File uploaded successfully: " + file.getOriginalFilename();
+            } else {
+                return createNewImage(file, user);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private String createNewImage(MultipartFile file, Optional<User> user) {
+        try {
+            byte[] compressedData = ImageUtils.compressImage(file.getBytes());
+            Image imageData = Image.builder().name(file.getOriginalFilename()).fileType(file.getContentType()).data(compressedData).build();
+
+            Image savedImage = imageRepo.save(imageData);
+
+            user.get().setImage(savedImage);
+            userRepo.save(user.get());
+            if (savedImage != null) {
+                return "File created successfully: " + file.getOriginalFilename();
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

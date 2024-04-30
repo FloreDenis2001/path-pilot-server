@@ -55,9 +55,9 @@ public class ServerControllerVehicles {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/create")
-    public ResponseEntity<Vehicle> create(@RequestBody CreateVehicleRequest vehicle) {
+    public ResponseEntity<CreateVehicleRequest> create(@RequestBody CreateVehicleRequest vehicle) {
         vehicleCommandService.create(vehicle);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(vehicle);
     }
 
     @ResponseStatus(HttpStatus.OK)
@@ -74,4 +74,9 @@ public class ServerControllerVehicles {
         return ResponseEntity.ok().build();
     }
 
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/getVehiclesByCompanyRegistrationNumber={registrationNumber}")
+    public ResponseEntity<List<Vehicle>> getVehiclesByCompanyRegistrationNumber(@PathVariable String registrationNumber) {
+        return ResponseEntity.ok(vehicleServiceQuerry.getVehiclesByCompanyRegistrationNumber(registrationNumber).get());
+    }
 }

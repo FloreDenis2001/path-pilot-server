@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.utils;
 
 import com.mycode.pathpilotserver.address.dto.PackageAddress;
+import com.mycode.pathpilotserver.image.models.Image;
 import com.mycode.pathpilotserver.packages.dto.PackageDTO;
 import com.mycode.pathpilotserver.packages.dto.PackageDetails;
 import com.mycode.pathpilotserver.packages.models.Package;
@@ -8,7 +9,9 @@ import com.mycode.pathpilotserver.packages.models.Package;
 import com.mycode.pathpilotserver.packages.dto.PackageRequest;
 import com.mycode.pathpilotserver.shipments.dto.ShipmentDTO;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +66,18 @@ public class Convertor {
         }
 
         return packageDTOS;
+    }
+
+    public static Image convertMultipartFileToImage(MultipartFile file) {
+        Image image = new Image();
+        image.setName(file.getOriginalFilename());
+        image.setFileType(file.getContentType());
+        try {
+            image.setData(file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException("Could not convert MultipartFile to Image");
+        }
+        return image;
     }
 
 }

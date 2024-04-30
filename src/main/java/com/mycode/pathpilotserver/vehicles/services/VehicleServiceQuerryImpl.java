@@ -59,11 +59,15 @@ public class VehicleServiceQuerryImpl implements VehicleServiceQuerry {
         }
     }
 
-
-
-
-
-
+    @Override
+    public Optional<List<Vehicle>> getVehiclesByCompanyRegistrationNumber(String registrationNumber) {
+        Optional<List<Vehicle>> vehicles = vehicleRepo.getVehiclesByCompanyRegistrationNumber(registrationNumber);
+        if (vehicles.isPresent()) {
+            return vehicles;
+        } else {
+            throw new VehicleNotFoundException("No vehicles found for company with registration number " + registrationNumber);
+        }
+    }
 
 
 }

@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
@@ -53,6 +54,12 @@ public class ServerControllerDriver {
     public ResponseEntity<String> deleteDriver(@RequestBody RemoveValidationRequest removeValidationRequest, @PathVariable String licenseNumber) {
         driverCommandService.removeByLicenseNumber(removeValidationRequest, licenseNumber);
         return new ResponseEntity<>("Driver with license number: " + licenseNumber + " deleted successfully", HttpStatus.OK);
+    }
+
+
+    @GetMapping("/allByCompany")
+    public ResponseEntity<Optional<List<DriverDTO>>> getDriversByCompany(@RequestParam String registrationNumber){
+        return new ResponseEntity<>(driverServiceQuerry.getAllDriversByCompany(registrationNumber),HttpStatus.OK);
     }
 
 

@@ -4,6 +4,7 @@ package com.mycode.pathpilotserver.user.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mycode.pathpilotserver.address.models.Address;
 import com.mycode.pathpilotserver.company.models.Company;
+import com.mycode.pathpilotserver.image.models.Image;
 import com.mycode.pathpilotserver.system.security.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,7 +18,6 @@ import java.util.Collection;
 @Entity(name = "User")
 @Table(name = "users")
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
@@ -71,6 +71,13 @@ public abstract class User implements UserDetails {
     @JsonBackReference
     private Company company;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_id")
+    private Image image;
+
+
+
+
 
     public User(String username, String password, String email, UserRole role) {
         this.username = username;
@@ -86,6 +93,11 @@ public abstract class User implements UserDetails {
     public String toString() {
        String text = "Email : "+email+" Username : "+username+" Role : "+role;
          return text;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+        image.setUser(this);
     }
 
 

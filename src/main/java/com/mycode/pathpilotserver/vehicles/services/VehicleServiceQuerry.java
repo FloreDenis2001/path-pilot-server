@@ -18,4 +18,9 @@ public interface VehicleServiceQuerry {
 
     Optional<List<Vehicle>> findAll();
 
+
+    Optional<List<Vehicle>> getVehiclesByCompanyRegistrationNumber(String registrationNumber);
+
+
+
 }

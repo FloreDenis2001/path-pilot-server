@@ -28,20 +28,14 @@ public class Customer extends User {
     private Long id;
 
 
+    @Setter
     @Column(name = "subscriptionType", nullable = false)
     @Enumerated(EnumType.STRING)
     private SubscriptionType subscriptionType;
 
-    public Customer(Long id, String firstName, String lastName, String username, String password, String email, String phone, UserRole role, Address address, Company company, SubscriptionType subscriptionType) {
-        super(id, firstName, lastName, username, password, email, phone, role, address, company);
-        this.subscriptionType = subscriptionType;
-    }
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Order> orders;
 
 
-    public void setSubscriptionType(SubscriptionType subscriptionType) {
-        this.subscriptionType = subscriptionType;
-    }
 }

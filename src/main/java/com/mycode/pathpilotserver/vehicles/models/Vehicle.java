@@ -93,24 +93,10 @@ public class Vehicle {
     @JsonBackReference
     private Company company;
 
-
-    public Vehicle(String make, String model, int year, FuelType fuelType, double fuelCapacity, double fuelConsumption, LocalDate lastService, LocalDate nextService, double km, String registrationNumber, int capacity) {
-        this.make = make;
-        this.model = model;
-        this.year = year;
-        this.fuelType = fuelType;
-        this.fuelCapacity = fuelCapacity;
-        this.fuelConsumption = fuelConsumption;
-        this.lastService = lastService;
-        this.nextService = nextService;
-        this.km = km;
-        this.registrationNumber = registrationNumber;
-        this.capacity = capacity;
-    }
-
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Vehicle{");
+        sb.append("id=").append(id);
         sb.append(", make='").append(make).append('\'');
         sb.append(", model='").append(model).append('\'');
         sb.append(", year=").append(year);
@@ -122,7 +108,13 @@ public class Vehicle {
         sb.append(", km=").append(km);
         sb.append(", registrationNumber='").append(registrationNumber).append('\'');
         sb.append(", capacity=").append(capacity);
+        sb.append(", width=").append(width);
+        sb.append(", height=").append(height);
+        sb.append(", length=").append(length);
+        sb.append(", weight=").append(weight);
+        sb.append(", isActive=").append(isActive);
         sb.append(", routes=").append(routes);
+        sb.append(", company=").append(company);
         sb.append('}');
         return sb.toString();
     }

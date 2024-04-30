@@ -1,11 +1,12 @@
 package com.mycode.pathpilotserver.user.web;
 
+import com.mycode.pathpilotserver.image.services.ImageServiceCommandImpl;
 import com.mycode.pathpilotserver.system.jwt.JWTTokenProvider;
-import com.mycode.pathpilotserver.system.security.UserRole;
 import com.mycode.pathpilotserver.user.dto.*;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.services.UserQuerryServiceImpl;
 import com.mycode.pathpilotserver.user.services.UserServiceCommandImpl;
+import com.mycode.pathpilotserver.utils.Convertor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -14,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.service.annotation.DeleteExchange;
+import org.springframework.web.multipart.MultipartFile;
 
 
 @RestController
@@ -25,6 +26,8 @@ import org.springframework.web.service.annotation.DeleteExchange;
 public class ServerControllerUser {
 
     private UserQuerryServiceImpl userQuerryServiceImpl;
+
+    private ImageServiceCommandImpl imageServiceCommand;
 
     private UserServiceCommandImpl userServiceCommand;
 
@@ -67,6 +70,14 @@ public class ServerControllerUser {
     public ResponseEntity<String> deleteUser(@RequestBody LoginUserRequest loginUserRequest) {
         userServiceCommand.deleteUser(loginUserRequest);
         return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
+    }
+
+
+    @PostMapping("/upload/image")
+    public ResponseEntity<String> changeImage(@RequestParam("image") MultipartFile image,
+                                              @RequestParam("email") String email) {
+        String reply = userServiceCommand.uploadImage(image, email);
+        return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 
 }
