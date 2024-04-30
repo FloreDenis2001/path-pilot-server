@@ -1,12 +1,10 @@
 package com.mycode.pathpilotserver.user.web;
 
-import com.mycode.pathpilotserver.image.services.ImageServiceCommandImpl;
 import com.mycode.pathpilotserver.system.jwt.JWTTokenProvider;
 import com.mycode.pathpilotserver.user.dto.*;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.services.UserQuerryServiceImpl;
 import com.mycode.pathpilotserver.user.services.UserServiceCommandImpl;
-import com.mycode.pathpilotserver.utils.Convertor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -27,7 +25,6 @@ public class ServerControllerUser {
 
     private UserQuerryServiceImpl userQuerryServiceImpl;
 
-    private ImageServiceCommandImpl imageServiceCommand;
 
     private UserServiceCommandImpl userServiceCommand;
 

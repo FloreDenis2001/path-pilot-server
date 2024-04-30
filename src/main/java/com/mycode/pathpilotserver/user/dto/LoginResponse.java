@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.user.dto;
 
 import com.mycode.pathpilotserver.company.models.Company;
+import com.mycode.pathpilotserver.image.models.Image;
 import com.mycode.pathpilotserver.system.security.UserRole;
 import lombok.Builder;
 

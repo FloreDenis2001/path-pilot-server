@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.image.utils;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Base64;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
@@ -41,4 +42,9 @@ public class ImageUtils {
         }
         return outputStream.toByteArray();
     }
+
+    public static String encodeToString(byte[] images) {
+        return Base64.getEncoder().encodeToString(images);
+    }
+
 }
