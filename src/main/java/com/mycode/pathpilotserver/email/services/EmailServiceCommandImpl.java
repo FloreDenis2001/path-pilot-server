@@ -1,7 +1,8 @@
 package com.mycode.pathpilotserver.email.services;
 
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ public class EmailServiceCommandImpl implements EmailServiceCommand{
 
     private final JavaMailSender mailSender;
 
-    private final Map<String, LocalDateTime> linkExpirationMap = new HashMap<>();
+    private static final Map<String, LocalDateTime> linkExpirationMap = new HashMap<>();
 
 
     public EmailServiceCommandImpl(JavaMailSender mailSender) {
@@ -26,44 +27,97 @@ public class EmailServiceCommandImpl implements EmailServiceCommand{
 
     @Override
     public void sendEmail(String to,String companyRegistrationNumber) {
-        String link = generateUniqueLink(companyRegistrationNumber);
+        String link = generateUniqueLink("createDriver",companyRegistrationNumber);
         String subject = "Your Driver Creation Link";
-        String body = "Click here to create a Driver: " + link;
+        MimeMessagePreparator preparator = mimeMessage -> {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setFrom("pathpilot116@gmail.com");
+            helper.setTo(to);
+            helper.setSubject(subject);
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("pathpilot116@gmail.com");
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(body);
+            String htmlContent = "<!DOCTYPE html>"
+                    + "<html>"
+                    + "<head>"
+                    + "<title>PathPilot</title>"
+                    + "</head>"
+                    + "<body>"
+                    + "<div style=\"text-align: center;\">"
+                    + "<h2>Welcome to PathPilot</h2>"
+                    + "<p>You've been invited to create a driver account.</p>"
+                    + "<p>Please click the button below to create your account:</p>"
+                    + "<a href=\"" + link + "\" style=\"display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;\">Create Account</a>"
+                    + "</div>"
+                    + "</body>"
+                    + "</html>";
 
-        mailSender.send(message);
+            helper.setText(htmlContent, true);
+        };
+        mailSender.send(preparator);
     }
 
 
-    @Override
-    public boolean isLinkValid(String code) {
+    public static boolean isLinkValid(String code) {
         LocalDateTime expirationTime = linkExpirationMap.get(code);
         return expirationTime != null && expirationTime.isAfter(LocalDateTime.now());
     }
 
-    @Override
     @Scheduled(cron = "0 0 0 * * *")
     public void removeExpiredLinks() {
         linkExpirationMap.entrySet().removeIf(entry -> entry.getValue().isBefore(LocalDateTime.now()));
     }
 
-    private String generateUniqueLink(String companyRegistrationNumber) {
+    private String generateUniqueLink(String linkType, String identifier) {
         String uniqueCode = UUID.randomUUID().toString();
         LocalDateTime expirationTime = LocalDateTime.now().plusDays(1);
         long expirationTimestamp = expirationTime.toEpochSecond(ZoneOffset.UTC);
         linkExpirationMap.put(uniqueCode, expirationTime);
-        return "http://localhost:3000/drivers/add?code=" + uniqueCode + "&expires=" + expirationTimestamp + "&company=" + companyRegistrationNumber;
+
+        String path = "";
+        if (linkType.equals("createDriver")) {
+            path = "/drivers/add";
+        } else if (linkType.equals("resetPassword")) {
+            path = "/reset-password";
+        }
+
+        return "http://localhost:3000" + path + "?code=" + uniqueCode + "&expires=" + expirationTimestamp + "&identifier=" + identifier;
+    }
+
+    public static void removeLinkAfterCreation(String code) {
+        linkExpirationMap.remove(code);
     }
 
     @Override
-    public void removeLinkAfterCreation(String code) {
-        linkExpirationMap.remove(code);
+    public void resetPassword(String email) {
+        String link = generateUniqueLink("resetPassword",email);
+        String subject = "Reset Password";
+
+        MimeMessagePreparator preparator = mimeMessage -> {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setFrom("pathpilot116@gmail.com");
+            helper.setTo(email);
+            helper.setSubject(subject);
+
+            String htmlContent = "<!DOCTYPE html>"
+                    + "<html>"
+                    + "<head>"
+                    + "<title>PathPilot</title>"
+                    + "</head>"
+                    + "<body>"
+                    + "<div style=\"text-align: center;\">"
+                    + "<h2>Password Reset</h2>"
+                    + "<p>You've requested to reset your password.</p>"
+                    + "<p>Please click the button below to reset your password:</p>"
+                    + "<a href=\"" + link + "\" style=\"display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px;\">Reset Password</a>"
+                    + "</div>"
+                    + "</body>"
+                    + "</html>";
+
+            helper.setText(htmlContent, true);
+        };
+
+        mailSender.send(preparator);
     }
+
 
 
 

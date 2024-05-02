@@ -50,9 +50,9 @@ public class ServerControllerDriver {
     }
 
 
-    @DeleteMapping("/delete/{licenseNumber}")
-    public ResponseEntity<String> deleteDriver(@RequestBody RemoveValidationRequest removeValidationRequest, @PathVariable String licenseNumber) {
-        driverCommandService.removeByLicenseNumber(removeValidationRequest, licenseNumber);
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteDriver(@RequestParam("email") String email, @RequestParam("licenseNumber") String licenseNumber) {
+        driverCommandService.removeByLicenseNumber(email, licenseNumber);
         return new ResponseEntity<>("Driver with license number: " + licenseNumber + " deleted successfully", HttpStatus.OK);
     }
 

@@ -11,6 +11,7 @@ import com.mycode.pathpilotserver.driver.exceptions.DriverNotFoundException;
 import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.driver.repository.DriverRepo;
 import com.mycode.pathpilotserver.system.security.UserRole;
+import com.mycode.pathpilotserver.user.exceptions.UserNotFoundException;
 import com.mycode.pathpilotserver.user.exceptions.WrongPasswordException;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
@@ -94,14 +95,16 @@ public class DriverCommandServiceImpl implements DriverCommandService {
     }
 
     @Override
-    public void removeByLicenseNumber(RemoveValidationRequest removeValidationRequest, String licenseNumber) {
+    public void removeByLicenseNumber(String email, String licenseNumber) {
         Optional<Driver> driver = driverRepo.findByLicenseNumber(licenseNumber);
-        Optional<User> user = userRepo.findByEmail(removeValidationRequest.email());
+        Optional<User> user = userRepo.findByEmail(email);
         if(driver.isEmpty()) {
             throw new DriverNotFoundException("Driver with license number: " + licenseNumber + " not found");
         }
 
-        validatePassword(user.get(), removeValidationRequest.password());
+        if(user.isEmpty()){
+            throw new UserNotFoundException("User with email: " + email + " not found");
+        }
 
         if(user.get().getRole()==UserRole.CUSTOMER || user.get().equals(driver.get())){
             driver.ifPresentOrElse(driverRepo::delete, () -> {
@@ -113,10 +116,5 @@ public class DriverCommandServiceImpl implements DriverCommandService {
         }
     }
 
-    private void validatePassword(User user, String password) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if (!encoder.matches(password, user.getPassword())) {
-            throw new WrongPasswordException("Invalid password for user: " + user.getEmail());
-        }
-    }
+
 }

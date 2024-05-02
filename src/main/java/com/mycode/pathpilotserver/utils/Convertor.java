@@ -1,6 +1,8 @@
 package com.mycode.pathpilotserver.utils;
 
 import com.mycode.pathpilotserver.address.dto.PackageAddress;
+import com.mycode.pathpilotserver.company.dto.CompanyDTO;
+import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.image.models.Image;
 import com.mycode.pathpilotserver.packages.dto.PackageDTO;
 import com.mycode.pathpilotserver.packages.dto.PackageDetails;
@@ -79,5 +81,17 @@ public class Convertor {
         }
         return image;
     }
-
+    public static CompanyDTO convertCompanyToCompanyDTO(Company company) {
+        return CompanyDTO.builder()
+                .address(company.getAddress())
+                .capital(company.getCapital())
+                .email(company.getEmail())
+                .name(company.getName())
+                .phone(company.getPhone())
+                .registrationNumber(company.getRegistrationNumber())
+                .industry(company.getIndustry())
+                .address(company.getAddress())
+                .website(company.getWebsite())
+                .build();
+    }
 }

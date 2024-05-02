@@ -2,6 +2,7 @@ package com.mycode.pathpilotserver.company.web;
 
 
 import com.mycode.pathpilotserver.company.dto.CompanyCreateRequest;
+import com.mycode.pathpilotserver.company.dto.CompanyDTO;
 import com.mycode.pathpilotserver.company.dto.UpdateCompanyRequest;
 import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.company.services.CompanyCommandServiceImpl;
@@ -47,9 +48,8 @@ public class ServerControllerCompany {
     }
 
 
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/findByRegistrationNumber={registrationNumber}")
-    public ResponseEntity<Optional<Company>> findByRegistrationNumber(@PathVariable String registrationNumber) {
+    @GetMapping("/findByRegistrationNumber/{registrationNumber}")
+    public ResponseEntity<Optional<CompanyDTO>> findByRegistrationNumber(@PathVariable String registrationNumber) {
         return ResponseEntity.ok(companyQuerryService.findByRegistrationNumber(registrationNumber));
     }
 

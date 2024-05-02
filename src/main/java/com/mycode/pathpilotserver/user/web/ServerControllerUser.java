@@ -69,6 +69,12 @@ public class ServerControllerUser {
         return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
     }
 
+    @PutMapping("/reset/password")
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+        userServiceCommand.resetPassword(resetPasswordRequest);
+        return new ResponseEntity<>("Password reset successfully", HttpStatus.OK);
+    }
+
 
     @PostMapping("/upload/image")
     public ResponseEntity<String> changeImage(@RequestParam("image") MultipartFile image,

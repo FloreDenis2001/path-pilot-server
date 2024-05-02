@@ -1,8 +1,10 @@
 package com.mycode.pathpilotserver.company.services;
 
+import com.mycode.pathpilotserver.company.dto.CompanyDTO;
 import com.mycode.pathpilotserver.company.exceptions.CompanyNotFoundException;
 import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.company.repository.CompanyRepo;
+import com.mycode.pathpilotserver.utils.Convertor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.Optional;
 public class CompanyQuerryServiceImpl implements CompanyQuerryService {
 
     private final CompanyRepo companyRepo;
+
 
     public CompanyQuerryServiceImpl(CompanyRepo companyRepo) {
         this.companyRepo = companyRepo;
@@ -49,11 +52,14 @@ public class CompanyQuerryServiceImpl implements CompanyQuerryService {
         }
     }
 
+
+  //todo : apare erroare din cauza volumului de date
+
     @Override
-    public Optional<Company> findByRegistrationNumber(String registrationNumber) {
+    public Optional<CompanyDTO> findByRegistrationNumber(String registrationNumber) {
         Optional<Company> company = companyRepo.findByRegistrationNumber(registrationNumber);
         if (company.isPresent()) {
-            return company;
+            return Optional.of(Convertor.convertCompanyToCompanyDTO(company.get()));
         } else {
             throw new CompanyNotFoundException("Company with registration number: " + registrationNumber + " not found");
         }

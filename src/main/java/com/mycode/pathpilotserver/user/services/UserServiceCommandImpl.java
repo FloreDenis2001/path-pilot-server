@@ -4,14 +4,12 @@ import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.company.repository.CompanyRepo;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.customers.models.SubscriptionType;
+import com.mycode.pathpilotserver.email.services.EmailServiceCommandImpl;
 import com.mycode.pathpilotserver.image.models.Image;
 import com.mycode.pathpilotserver.image.repository.ImageRepo;
 import com.mycode.pathpilotserver.image.utils.ImageUtils;
 import com.mycode.pathpilotserver.system.security.UserRole;
-import com.mycode.pathpilotserver.user.dto.LoginUserRequest;
-import com.mycode.pathpilotserver.user.dto.RegisterDTO;
-import com.mycode.pathpilotserver.user.dto.UpdateImageDTO;
-import com.mycode.pathpilotserver.user.dto.UpdateUserRequest;
+import com.mycode.pathpilotserver.user.dto.*;
 import com.mycode.pathpilotserver.user.exceptions.UserNotFoundException;
 import com.mycode.pathpilotserver.user.exceptions.WrongPasswordException;
 import com.mycode.pathpilotserver.user.models.User;
@@ -121,6 +119,19 @@ public class UserServiceCommandImpl implements UserServiceCommand {
         Customer customer = getCustomer(registerDTO);
         customer.setCompany(company);
         userRepo.saveAndFlush(customer);
+    }
+
+    @Override
+    public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        Optional<User> user = userRepo.findByEmail(resetPasswordRequest.email());
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("User not found for email: " + resetPasswordRequest.email());
+        }
+
+        EmailServiceCommandImpl.isLinkValid(resetPasswordRequest.code());
+        user.get().setPassword(resetPasswordRequest.password());
+        userRepo.save(user.get());
+        EmailServiceCommandImpl.removeLinkAfterCreation(resetPasswordRequest.code());
     }
 
     @NotNull

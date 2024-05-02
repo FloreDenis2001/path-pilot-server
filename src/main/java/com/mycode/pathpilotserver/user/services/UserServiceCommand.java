@@ -16,6 +16,8 @@ public interface UserServiceCommand {
 
     void registerUser(RegisterDTO registerDTO);
 
+    void resetPassword(ResetPasswordRequest resetPasswordRequest);
+
 
 
 }
