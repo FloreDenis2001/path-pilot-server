@@ -1,5 +1,6 @@
 package com.mycode.pathpilotserver.email.services;
 
+import com.mycode.pathpilotserver.user.repository.UserRepo;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
@@ -10,6 +11,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import com.mycode.pathpilotserver.user.models.User;
+import com.mycode.pathpilotserver.user.exceptions.UserNotFoundException;
 import java.util.UUID;
 
 
@@ -18,11 +22,14 @@ public class EmailServiceCommandImpl implements EmailServiceCommand{
 
     private final JavaMailSender mailSender;
 
+    private final UserRepo userRepo;
+
     private static final Map<String, LocalDateTime> linkExpirationMap = new HashMap<>();
 
 
-    public EmailServiceCommandImpl(JavaMailSender mailSender) {
+    public EmailServiceCommandImpl(JavaMailSender mailSender, UserRepo userRepo) {
         this.mailSender = mailSender;
+        this.userRepo = userRepo;
     }
 
     @Override
@@ -88,6 +95,11 @@ public class EmailServiceCommandImpl implements EmailServiceCommand{
 
     @Override
     public void resetPassword(String email) {
+        Optional<User> user = userRepo.findByEmail(email);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("User not found for email: " + email);
+        }
+        
         String link = generateUniqueLink("resetPassword",email);
         String subject = "Reset Password";
 

@@ -16,6 +16,9 @@ import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
 import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,10 +37,14 @@ public class UserServiceCommandImpl implements UserServiceCommand {
 
     private final CompanyRepo companyRepo;
 
-    public UserServiceCommandImpl(UserRepo userRepo, ImageRepo imageRepo, CompanyRepo companyRepo) {
+    private  final JavaMailSender mailSender;
+
+
+    public UserServiceCommandImpl(UserRepo userRepo, ImageRepo imageRepo, CompanyRepo companyRepo, JavaMailSender mailSender) {
         this.userRepo = userRepo;
         this.imageRepo = imageRepo;
         this.companyRepo = companyRepo;
+        this.mailSender = mailSender;
     }
 
 
@@ -130,8 +137,47 @@ public class UserServiceCommandImpl implements UserServiceCommand {
 
         EmailServiceCommandImpl.isLinkValid(resetPasswordRequest.code());
         user.get().setPassword(resetPasswordRequest.password());
+
+
+
+
         userRepo.save(user.get());
         EmailServiceCommandImpl.removeLinkAfterCreation(resetPasswordRequest.code());
+        sendPasswordChangedNotification(user.get().getEmail());
+    }
+
+
+    private void sendPasswordChangedNotification(String userEmail) {
+        String subject = "Password Changed";
+        String message = "<!DOCTYPE html>"
+                + "<html>"
+                + "<head>"
+                + "<title>Password Changed</title>"
+                + "<style>"
+                + "body { font-family: Arial, sans-serif; }"
+                + ".container { text-align: center; }"
+                + ".message { margin-top: 20px; background-color: #f2f2f2; padding: 20px; border-radius: 10px; }"
+                + "</style>"
+                + "</head>"
+                + "<body>"
+                + "<div class=\"container\">"
+                + "<h2 style=\"color: #007bff;\">Password Changed</h2>"
+                + "<div class=\"message\">"
+                + "<p>Your password has been successfully changed.</p>"
+                + "</div>"
+                + "</div>"
+                + "</body>"
+                + "</html>";
+
+        MimeMessagePreparator preparator = mimeMessage -> {
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage);
+            helper.setFrom("pathpilot116@gmail.com");
+            helper.setTo(userEmail);
+            helper.setSubject(subject);
+            helper.setText(message, true);
+        };
+
+        mailSender.send(preparator);
     }
 
     @NotNull
