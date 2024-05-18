@@ -42,7 +42,7 @@ public class ServerControllerPackage {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAnyRole('ROLE_CUSTOMER', 'ROLE_ADMIN')")
+//    @PreAuthorize("hasAnyRole('ROLE_CUSTOMER', 'ROLE_ADMIN')")
     @DeleteMapping("/delete/{awb}")
     public ResponseEntity<String> delete(@PathVariable String awb) {
         packageServiceCommand.deletePackage(awb);

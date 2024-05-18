@@ -1,5 +1,6 @@
 package com.mycode.pathpilotserver.packages.services;
 
+import com.google.maps.model.DirectionsResult;
 import com.mycode.pathpilotserver.customers.exceptions.CustomerNotFoundException;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.intercom.maps.DirectionsService;
@@ -41,8 +42,8 @@ public class PackageCommandServiceImpl implements PackageCommandService {
     private static Optional<Shipment> getShipments(PackageRequest packageRequest) {
         try {
 
-//            DirectionsResult directionsResult = directionsService.getDirections(packageDTO.origin().toString(),packageDTO.destination().toString());
-//
+//            DirectionsResult directionsResult = directionsService.getDirections(packageRequest.origin().toString(),packageRequest.destination().toString());
+
 //            double totalDistanceInKm = 0.0;
 //            for (int i = 0; i < directionsResult.routes.length; i++) {
 //                totalDistanceInKm += directionsResult.routes[i].legs[0].distance.inMeters;

@@ -21,6 +21,9 @@ public interface  VehicleRepo extends JpaRepository<Vehicle, Long> {
     @EntityGraph(attributePaths = {"company"},type = EntityGraph.EntityGraphType.LOAD)
     Optional<List<Vehicle>> getVehiclesByCompanyRegistrationNumber(String registrationNumber);
 
+    @EntityGraph(attributePaths = {"company"},type = EntityGraph.EntityGraphType.LOAD)
+    Optional<List<Vehicle>> getInactiveVehiclesByCompanyRegistrationNumber(String registrationNumber);
+
 
 
 

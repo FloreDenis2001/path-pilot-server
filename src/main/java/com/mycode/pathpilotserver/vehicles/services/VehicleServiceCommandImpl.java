@@ -87,7 +87,7 @@ public class VehicleServiceCommandImpl implements VehicleServiceCommand {
 
 
     private static Vehicle createVehicle(CreateVehicleRequest createVehicleRequest, Company company) {
-        return Vehicle.builder().registrationNumber(createVehicleRequest.registrationNumber()).fuelType(createVehicleRequest.fuelType()).make(createVehicleRequest.make()).model(createVehicleRequest.model()).year(createVehicleRequest.year()).km(createVehicleRequest.km()).fuelCapacity(createVehicleRequest.fuelCapacity()).fuelConsumption(createVehicleRequest.fuelConsumption()).lastService(createVehicleRequest.lastService()).nextService(createVehicleRequest.nextService()).capacity(createVehicleRequest.capacity()).width(createVehicleRequest.width()).height(createVehicleRequest.height()).length(createVehicleRequest.length()).isActive(false).company(company).build();
+        return Vehicle.builder().registrationNumber(createVehicleRequest.registrationNumber()).fuelType(createVehicleRequest.fuelType()).make(createVehicleRequest.make()).model(createVehicleRequest.model()).year(createVehicleRequest.year()).km(createVehicleRequest.km()).fuelCapacity(createVehicleRequest.fuelCapacity()).fuelConsumption(createVehicleRequest.fuelConsumption()).lastService(createVehicleRequest.lastService()).nextService(createVehicleRequest.nextService()).capacity(createVehicleRequest.capacity()).weight(createVehicleRequest.weight()).width(createVehicleRequest.width()).height(createVehicleRequest.height()).length(createVehicleRequest.length()).isActive(false).company(company).build();
     }
 
 

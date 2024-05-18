@@ -4,7 +4,10 @@ import com.mycode.pathpilotserver.company.repository.CompanyRepo;
 import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.driver.repository.DriverRepo;
 import com.mycode.pathpilotserver.orders.repository.OrderRepo;
+import com.mycode.pathpilotserver.packages.models.Package;
+import com.mycode.pathpilotserver.packages.repository.PackageRepo;
 import com.mycode.pathpilotserver.routes.repository.RouteRepo;
+import com.mycode.pathpilotserver.routes.services.RouteServiceCommandImpl;
 import com.mycode.pathpilotserver.shipments.repository.ShipmentRepo;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
@@ -42,9 +45,12 @@ public class PathPilotServerApplication {
     @Transactional
     CommandLineRunner commandLineRunner(CompanyRepo companyRepo, UserRepo userRepo
             , DriverRepo driverRepo, VehicleRepo vehicleRepo, UserServiceCommandImpl userServiceCommandImpl
-            , ShipmentRepo shipmentRepo, RouteRepo routeRepo, OrderRepo orderRepo) {
+         ,PackageRepo packageRepo, ShipmentRepo shipmentRepo, RouteRepo routeRepo, OrderRepo orderRepo , RouteServiceCommandImpl routeServiceCommandImpl) {
         return args -> {
+//           Optional<List<Package>> packages=  packageRepo.getAllUnassignedPackages("111111") ;
+//            System.out.println("Generating route for " + packages.get().size() + " packages");
 
+            routeServiceCommandImpl.generateRoute("111111");
         };
     }
     @Bean
