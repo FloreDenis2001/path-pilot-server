@@ -1,9 +1,6 @@
 package com.mycode.pathpilotserver.customers.models;
 
-import com.mycode.pathpilotserver.address.models.Address;
-import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.orders.models.Order;
-import com.mycode.pathpilotserver.system.security.UserRole;
 import com.mycode.pathpilotserver.user.models.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity(name = "Customers")
 @Table(name = "customers")
 @Setter

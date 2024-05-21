@@ -8,6 +8,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity(name = "Driver")
 @Table(name = "drivers")
 @NoArgsConstructor
