@@ -4,13 +4,11 @@ import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.orders.models.Order;
 import com.mycode.pathpilotserver.vehicles.models.Vehicle;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Table(name = "route")
@@ -29,7 +27,12 @@ public class Route {
     private Long id;
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Order> orders;
+    @Builder.Default
+    private Set<Order> orders = new HashSet<>();
+    public void addOrder(Order order) {
+        orders.add(order);
+        order.setRoute(this);
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_id",referencedColumnName ="id",nullable = false)
@@ -58,4 +61,5 @@ public class Route {
         sb.append('}');
         return sb.toString();
     }
+
 }

@@ -8,8 +8,10 @@ import com.mycode.pathpilotserver.email.services.EmailServiceCommandImpl;
 import com.mycode.pathpilotserver.image.models.Image;
 import com.mycode.pathpilotserver.image.repository.ImageRepo;
 import com.mycode.pathpilotserver.image.utils.ImageUtils;
+import com.mycode.pathpilotserver.system.jwt.JWTTokenProvider;
 import com.mycode.pathpilotserver.system.security.UserRole;
 import com.mycode.pathpilotserver.user.dto.*;
+import com.mycode.pathpilotserver.user.exceptions.UnauthorizedAccessException;
 import com.mycode.pathpilotserver.user.exceptions.UserNotFoundException;
 import com.mycode.pathpilotserver.user.exceptions.WrongPasswordException;
 import com.mycode.pathpilotserver.user.models.User;
@@ -37,30 +39,38 @@ public class UserServiceCommandImpl implements UserServiceCommand {
 
     private final CompanyRepo companyRepo;
 
-    private  final JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
+    private final JWTTokenProvider jwtTokenProvider;
 
 
-    public UserServiceCommandImpl(UserRepo userRepo, ImageRepo imageRepo, CompanyRepo companyRepo, JavaMailSender mailSender) {
+    public UserServiceCommandImpl(UserRepo userRepo, ImageRepo imageRepo, CompanyRepo companyRepo, JavaMailSender mailSender, JWTTokenProvider jwtTokenProvider) {
         this.userRepo = userRepo;
         this.imageRepo = imageRepo;
         this.companyRepo = companyRepo;
         this.mailSender = mailSender;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
 
     @Override
-    public void deleteUser(LoginUserRequest loginUserRequest) {
-        Optional<User> user = userRepo.findByEmail(loginUserRequest.email());
-        validatePassword(user.get(), loginUserRequest.password());
-        user.ifPresentOrElse(userRepo::delete, () -> {
-            throw new UserNotFoundException("User not found for email: " + loginUserRequest.email());
-        });
+    public void deleteUser(DeleteUserRequest deleteUserRequest) {
+        if (jwtTokenProvider.isTokenValid(deleteUserRequest.email(), deleteUserRequest.token())) {
+            Optional<User> userOptional = userRepo.findByEmail(deleteUserRequest.email());
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                userRepo.delete(user);
+            } else {
+                throw new UserNotFoundException("User not found for email: " + deleteUserRequest.email());
+            }
+        } else {
+            throw new UnauthorizedAccessException("Unauthorized access: Invalid token");
+        }
     }
+
 
     @Override
     public void updateUser(UpdateUserRequest request) {
         User user = findUserByEmail(request.email());
-        validatePassword(user, request.password());
         applyNewDetailsToUser(user, request.newUser());
         userRepo.save(user);
     }
@@ -137,8 +147,6 @@ public class UserServiceCommandImpl implements UserServiceCommand {
 
         EmailServiceCommandImpl.isLinkValid(resetPasswordRequest.code());
         user.get().setPassword(resetPasswordRequest.password());
-
-
 
 
         userRepo.save(user.get());

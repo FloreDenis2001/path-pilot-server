@@ -66,7 +66,6 @@ public class OrderCommandServiceImpl implements OrderCommandService {
         order.setShipment(shipment.get());
         order.setHeight(orderDTO.height());
         order.setWeight(orderDTO.weight());
-        order.setType(orderDTO.type());
         order.setWidth(orderDTO.width());
         order.setDeliveryDescription(orderDTO.deliveryDescription());
         order.setOrderDate(LocalDateTime.now());

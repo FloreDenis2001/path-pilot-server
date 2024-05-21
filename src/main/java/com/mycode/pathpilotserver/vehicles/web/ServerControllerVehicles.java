@@ -62,16 +62,16 @@ public class ServerControllerVehicles {
 
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/delete={registrationNumber}")
-    public ResponseEntity<Vehicle> delete(@PathVariable String registrationNumber) {
+    public ResponseEntity<String> delete(@PathVariable String registrationNumber) {
         vehicleCommandService.delete(registrationNumber);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Vehicle with registration number " + registrationNumber + " was deleted");
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/update")
-    public ResponseEntity<Vehicle> update(@RequestBody UpdatedVehicleRequest vehicle) {
+    public ResponseEntity<UpdatedVehicleRequest> update(@RequestBody UpdatedVehicleRequest vehicle) {
         vehicleCommandService.update(vehicle);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(vehicle);
     }
 
     @ResponseStatus(HttpStatus.OK)

@@ -1,14 +1,12 @@
 package com.mycode.pathpilotserver.utils;
 
-import com.mycode.pathpilotserver.address.dto.PackageAddress;
 import com.mycode.pathpilotserver.company.dto.CompanyDTO;
 import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.image.models.Image;
+import com.mycode.pathpilotserver.orders.models.Order;
 import com.mycode.pathpilotserver.packages.dto.PackageDTO;
 import com.mycode.pathpilotserver.packages.dto.PackageDetails;
 import com.mycode.pathpilotserver.packages.models.Package;
-
-import com.mycode.pathpilotserver.packages.dto.PackageRequest;
 import com.mycode.pathpilotserver.shipments.dto.ShipmentDTO;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,12 +15,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Convertor {
 
 
-    public static double convertToKm(double distance) {
-        return distance / 1000;
-    }
 
     public static ShipmentDTO convertToShipmentDTO(Shipment s) {
 
@@ -34,7 +30,7 @@ public class Convertor {
                 .origin(s.getOriginAddress())
                 .destination(s.getDestinationAddress())
                 .status(s.getStatus().toString())
-                .totalDistance(convertToKm(s.getTotalDistance()))
+                .totalDistance(s.getTotalDistance())
                 .build();
 
         return shipmentDTO;
@@ -93,5 +89,20 @@ public class Convertor {
                 .address(company.getAddress())
                 .website(company.getWebsite())
                 .build();
+    }
+
+    public static Order convertPackageToOrder(Package pack) {
+        Order order = new Order();
+        order.setCustomer(pack.getCustomer());
+        order.setShipment(pack.getShipment());
+        order.setDeliveryDescription(pack.getDeliveryDescription());
+        order.setHeight(pack.getHeight());
+        order.setOrderDate(pack.getOrderDate());
+        order.setTotalAmount(pack.getTotalAmount());
+        order.setWeight(pack.getWeight());
+        order.setWidth(pack.getWidth());
+
+        return order;
+
     }
 }

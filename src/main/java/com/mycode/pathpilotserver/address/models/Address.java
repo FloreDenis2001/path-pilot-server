@@ -59,4 +59,16 @@ public class Address {
 
         return new Address(country, city, street, streetNumber, postalCode);
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Address{");
+        sb.append("country='").append(country).append('\'');
+        sb.append(", city='").append(city).append('\'');
+        sb.append(", street='").append(street).append('\'');
+        sb.append(", streetNumber='").append(streetNumber).append('\'');
+        sb.append(", postalCode='").append(postalCode).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }

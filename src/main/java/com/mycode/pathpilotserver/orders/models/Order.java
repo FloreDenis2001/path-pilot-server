@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
 
@@ -20,7 +21,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 @SuperBuilder
-public class Order {
+public class Order  {
 
     @Id
     @SequenceGenerator(name = "order_sequence", sequenceName = "order_sequence", allocationSize = 1)
@@ -38,13 +39,9 @@ public class Order {
     @Column(name = "width", nullable = false)
     private double width;
 
-    @Column(name="type",nullable = false)
-    private OrderType type;
-
 
     @Column(name = "delivery_description", nullable = false)
     private String deliveryDescription;
-
 
 
     @Column(name = "order_date", nullable = false)
@@ -54,15 +51,15 @@ public class Order {
     private double totalAmount;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id",referencedColumnName ="id",nullable = false)
+    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
     private Customer customer;
 
     @OneToOne
-    @JoinColumn(name = "shipment_id",referencedColumnName ="id",nullable = false)
+    @JoinColumn(name = "shipment_id", referencedColumnName = "id", nullable = false)
     private Shipment shipment;
 
     @ManyToOne
-    @JoinColumn(name = "route_id",referencedColumnName ="id")
+    @JoinColumn(name = "route_id", referencedColumnName = "id")
     private Route route;
 
 
@@ -74,7 +71,7 @@ public class Order {
 
     @Override
     public String toString() {
-        String text = "Order Date :"+orderDate+" Total Amount :"+totalAmount+" Customer :"+customer+" Shipment :"+shipment;
+        String text = "Order Date :" + orderDate + " Total Amount :" + totalAmount + " Customer :" + customer + " Shipment :" + shipment;
         return text;
     }
 

@@ -15,6 +15,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Map;
+
 
 @RestController
 @CrossOrigin
@@ -64,8 +66,8 @@ public class ServerControllerUser {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteUser(@RequestBody LoginUserRequest loginUserRequest) {
-        userServiceCommand.deleteUser(loginUserRequest);
+    public ResponseEntity<String> deleteUser(@RequestBody DeleteUserRequest request) {
+        userServiceCommand.deleteUser(request);
         return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
     }
 
