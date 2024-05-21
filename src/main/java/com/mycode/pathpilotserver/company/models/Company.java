@@ -1,7 +1,9 @@
 package com.mycode.pathpilotserver.company.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.mycode.pathpilotserver.address.models.Address;
 import com.mycode.pathpilotserver.system.audit.AbstractAuditingEntity;
 import com.mycode.pathpilotserver.user.models.User;
@@ -19,11 +21,14 @@ import java.util.Set;
 @Setter
 @Builder
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Company extends AbstractAuditingEntity {
 
     @Id
     @SequenceGenerator(name = "company_sequence", sequenceName = "company_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "company_sequence")
+    @EqualsAndHashCode.Include
     private Long id;
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.image.models;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mycode.pathpilotserver.user.models.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,6 +36,7 @@ public class Image {
     private byte[] data;
 
     @OneToOne(mappedBy = "image", cascade = CascadeType.ALL)
+    @JsonBackReference
     private User user;
 
 

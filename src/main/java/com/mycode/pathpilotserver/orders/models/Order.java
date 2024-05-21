@@ -1,18 +1,15 @@
 package com.mycode.pathpilotserver.orders.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.routes.models.Route;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
-import com.mycode.pathpilotserver.system.enums.OrderType;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity(name = "Order")
 @Table(name = "orders")
@@ -21,12 +18,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Data
 @SuperBuilder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Order  {
 
     @Id
     @SequenceGenerator(name = "order_sequence", sequenceName = "order_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_sequence")
     @Column(name = "id", updatable = false)
+    @EqualsAndHashCode.Include
     private Long id;
 
 
@@ -45,6 +44,7 @@ public class Order  {
 
 
     @Column(name = "order_date", nullable = false)
+    @EqualsAndHashCode.Include
     private LocalDateTime orderDate;
 
     @Column(name = "total_amount", nullable = false)
@@ -52,14 +52,17 @@ public class Order  {
 
     @ManyToOne
     @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private Customer customer;
 
     @OneToOne
     @JoinColumn(name = "shipment_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
     private Shipment shipment;
 
     @ManyToOne
     @JoinColumn(name = "route_id", referencedColumnName = "id")
+    @JsonBackReference
     private Route route;
 
 
@@ -74,5 +77,6 @@ public class Order  {
         String text = "Order Date :" + orderDate + " Total Amount :" + totalAmount + " Customer :" + customer + " Shipment :" + shipment;
         return text;
     }
+
 
 }

@@ -73,6 +73,7 @@ public abstract class User implements UserDetails {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
+    @JsonBackReference
     private Image image;
 
 

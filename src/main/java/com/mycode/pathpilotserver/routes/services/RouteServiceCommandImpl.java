@@ -6,6 +6,7 @@ import com.mycode.pathpilotserver.orders.models.Order;
 import com.mycode.pathpilotserver.orders.repository.OrderRepo;
 import com.mycode.pathpilotserver.packages.exceptions.PackageNotFoundException;
 import com.mycode.pathpilotserver.packages.models.Package;
+import com.mycode.pathpilotserver.packages.models.PackageStatus;
 import com.mycode.pathpilotserver.packages.repository.PackageRepo;
 import com.mycode.pathpilotserver.routes.models.Route;
 import com.mycode.pathpilotserver.routes.repository.RouteRepo;
@@ -78,11 +79,8 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
     }
 
     private void createRoute(String companyRegistrationNumber, List<Vehicle> suitableVehicles, double totalWidth, double totalHeight, double totalLength, double totalWeight, Optional<List<Package>> packages) {
-        System.out.println("Selected vehicle is enough to carry all packages");
         Vehicle selectedVehicle = getSelectedVehicle(suitableVehicles, totalWidth, totalHeight, totalLength, totalWeight);
         Driver driver = driverRepo.findAllByCompanyRegistrationNumberAndIsAvailableTrue(companyRegistrationNumber).get().get(0);
-        System.out.println("Selected vehicle : " + selectedVehicle.getRegistrationNumber());
-        System.out.println("Selected driver : " + driver);
         assignedOrdersToRoute(selectedVehicle, driver, packages);
     }
 
@@ -128,8 +126,9 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
         route.setArrivalTime(LocalDateTime.now().plusDays(3));
         route.setDepartureDate(LocalDateTime.now().plusHours(3));
         for (Package p : packages.get()) {
-            Order order = Convertor.convertPackageToOrder(p);
-            route.addOrder(order);
+            route.addOrder(Convertor.convertPackageToOrder(p));
+            p.setStatus(PackageStatus.ASSIGNED);
+            packageRepo.saveAndFlush(p);
         }
         routeRepo.saveAndFlush(route);
     }

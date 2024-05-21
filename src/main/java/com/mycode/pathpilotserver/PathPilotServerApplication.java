@@ -47,6 +47,7 @@ public class PathPilotServerApplication {
             , DriverRepo driverRepo, VehicleRepo vehicleRepo, UserServiceCommandImpl userServiceCommandImpl
          ,PackageRepo packageRepo, ShipmentRepo shipmentRepo, RouteRepo routeRepo, OrderRepo orderRepo , RouteServiceCommandImpl routeServiceCommandImpl) {
         return args -> {
+           routeServiceCommandImpl.generateRoute("111111");
         };
     }
     @Bean
