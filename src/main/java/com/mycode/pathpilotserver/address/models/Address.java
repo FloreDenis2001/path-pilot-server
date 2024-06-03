@@ -26,26 +26,6 @@ public class Address {
         this.postalCode = postalCode;
     }
 
-    public String getCountry() {
-        return country;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public String getStreetNumber() {
-        return streetNumber;
-    }
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
     public static Address convertToAddress(String addressString) {
         String[] addressParts = addressString.split(",");
         if (addressParts.length < 5) {

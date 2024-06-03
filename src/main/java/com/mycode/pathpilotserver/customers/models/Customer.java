@@ -1,5 +1,7 @@
 package com.mycode.pathpilotserver.customers.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mycode.pathpilotserver.orders.models.Order;
 import com.mycode.pathpilotserver.user.models.User;
 import jakarta.persistence.*;
@@ -33,6 +35,8 @@ public class Customer extends User {
 
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JsonManagedReference
     private Set<Order> orders;
 
 

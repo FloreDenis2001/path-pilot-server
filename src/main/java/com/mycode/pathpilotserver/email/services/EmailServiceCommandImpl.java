@@ -1,5 +1,7 @@
 package com.mycode.pathpilotserver.email.services;
 
+import com.mycode.pathpilotserver.user.exceptions.UserNotFoundException;
+import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -12,8 +14,6 @@ import java.time.ZoneOffset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import com.mycode.pathpilotserver.user.models.User;
-import com.mycode.pathpilotserver.user.exceptions.UserNotFoundException;
 import java.util.UUID;
 
 

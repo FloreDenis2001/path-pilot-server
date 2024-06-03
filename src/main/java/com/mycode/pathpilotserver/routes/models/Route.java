@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.routes.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.orders.models.Order;
 import com.mycode.pathpilotserver.vehicles.models.Vehicle;
@@ -53,7 +54,7 @@ public class Route {
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
-    @JsonBackReference
+    @JsonManagedReference
     private Set<Order> orders = new HashSet<>();
 
     public void addOrder(Order order) {

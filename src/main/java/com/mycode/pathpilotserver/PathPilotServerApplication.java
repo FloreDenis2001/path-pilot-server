@@ -1,20 +1,19 @@
 package com.mycode.pathpilotserver;
 
 import com.mycode.pathpilotserver.company.repository.CompanyRepo;
-import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.driver.repository.DriverRepo;
+import com.mycode.pathpilotserver.graph.models.CountryGraphBuilder;
 import com.mycode.pathpilotserver.orders.repository.OrderRepo;
-import com.mycode.pathpilotserver.packages.models.Package;
-import com.mycode.pathpilotserver.packages.repository.PackageRepo;
 import com.mycode.pathpilotserver.routes.repository.RouteRepo;
 import com.mycode.pathpilotserver.routes.services.RouteServiceCommandImpl;
 import com.mycode.pathpilotserver.shipments.repository.ShipmentRepo;
-import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
 import com.mycode.pathpilotserver.user.services.UserServiceCommandImpl;
-import com.mycode.pathpilotserver.vehicles.models.Vehicle;
 import com.mycode.pathpilotserver.vehicles.repository.VehicleRepo;
 import jakarta.transaction.Transactional;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.json.JSONException;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -28,8 +27,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 @SpringBootApplication
 @EnableFeignClients
@@ -45,11 +42,28 @@ public class PathPilotServerApplication {
     @Transactional
     CommandLineRunner commandLineRunner(CompanyRepo companyRepo, UserRepo userRepo
             , DriverRepo driverRepo, VehicleRepo vehicleRepo, UserServiceCommandImpl userServiceCommandImpl
-         ,PackageRepo packageRepo, ShipmentRepo shipmentRepo, RouteRepo routeRepo, OrderRepo orderRepo , RouteServiceCommandImpl routeServiceCommandImpl) {
+         , ShipmentRepo shipmentRepo, RouteRepo routeRepo, OrderRepo orderRepo , RouteServiceCommandImpl routeServiceCommandImpl) {
         return args -> {
-           routeServiceCommandImpl.generateRoute("111111");
+
+            CountryGraphBuilder countryGraphBuilder = new CountryGraphBuilder();
+            countryGraphBuilder.buildGraph();
+            Graph<String, DefaultWeightedEdge> graph = countryGraphBuilder.getGraph();
+            for (DefaultWeightedEdge edge : graph.edgeSet()) {
+                String source = graph.getEdgeSource(edge);
+                String target = graph.getEdgeTarget(edge);
+                double distance = graph.getEdgeWeight(edge);
+                System.out.println("Distanța dintre " + source + " și " + target + " este " + distance + " km.");
+            }
         };
     }
+
+    @Bean
+    public  CountryGraphBuilder generateGraph() throws JSONException {
+        CountryGraphBuilder countryGraphBuilder = new CountryGraphBuilder();
+        countryGraphBuilder.buildGraph();
+        return countryGraphBuilder;
+    }
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
@@ -70,4 +84,5 @@ public class PathPilotServerApplication {
         urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return new CorsFilter(urlBasedCorsConfigurationSource);
     }
+
 }

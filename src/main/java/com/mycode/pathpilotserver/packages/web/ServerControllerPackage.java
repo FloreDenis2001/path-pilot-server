@@ -42,6 +42,12 @@ public class ServerControllerPackage {
     }
 
     @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/findAllUnassignedPackages={registerCompany}")
+    public ResponseEntity<List<Package>> findAllUnassignedPackages(@PathVariable String registerCompany) {
+        return ResponseEntity.ok(packageServiceQuerry.getAllUnassignedPackages(registerCompany).get());
+    }
+
+    @ResponseStatus(HttpStatus.OK)
 //    @PreAuthorize("hasAnyRole('ROLE_CUSTOMER', 'ROLE_ADMIN')")
     @DeleteMapping("/delete/{awb}")
     public ResponseEntity<String> delete(@PathVariable String awb) {

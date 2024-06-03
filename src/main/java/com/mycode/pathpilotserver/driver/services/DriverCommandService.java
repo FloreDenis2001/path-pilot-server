@@ -1,6 +1,5 @@
 package com.mycode.pathpilotserver.driver.services;
 
-import com.mycode.pathpilotserver.customers.dto.RemoveValidationRequest;
 import com.mycode.pathpilotserver.driver.dto.DriverCreateRequest;
 import com.mycode.pathpilotserver.driver.dto.DriverUpdateRequest;
 

@@ -15,8 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Map;
-
 
 @RestController
 @CrossOrigin
@@ -79,6 +77,7 @@ public class ServerControllerUser {
 
 
     @PostMapping("/upload/image")
+
     public ResponseEntity<String> changeImage(@RequestParam("image") MultipartFile image,
                                               @RequestParam("email") String email) {
         String reply = userServiceCommand.uploadImage(image, email);

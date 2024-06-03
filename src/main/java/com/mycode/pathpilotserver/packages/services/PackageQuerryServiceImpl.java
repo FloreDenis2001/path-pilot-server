@@ -32,6 +32,14 @@ public class PackageQuerryServiceImpl implements PackageQuerryService {
         return Optional.of(packageDTOS);
     }
 
+    @Override
+    public Optional<List<Package>> getAllUnassignedPackages(String registerCompany) {
+        Optional<List<Package>> packages = packageRepo.getAllUnassignedPackages(registerCompany);
+        if (packages.isEmpty()) {
+            throw new UserNotFoundException("Packages for company with registration number: " + registerCompany + " not found");
+        }
+        return packages;
+    }
 
 
 }
