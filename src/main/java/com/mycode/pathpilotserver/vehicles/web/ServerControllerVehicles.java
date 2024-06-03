@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/vehicles")
@@ -62,21 +63,22 @@ public class ServerControllerVehicles {
 
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/delete={registrationNumber}")
-    public ResponseEntity<Vehicle> delete(@PathVariable String registrationNumber) {
+    public ResponseEntity<String> delete(@PathVariable String registrationNumber) {
         vehicleCommandService.delete(registrationNumber);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("Vehicle with registration number " + registrationNumber + " was deleted");
     }
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/update")
-    public ResponseEntity<Vehicle> update(@RequestBody UpdatedVehicleRequest vehicle) {
+    public ResponseEntity<UpdatedVehicleRequest> update(@RequestBody UpdatedVehicleRequest vehicle) {
         vehicleCommandService.update(vehicle);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(vehicle);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/getVehiclesByCompanyRegistrationNumber={registrationNumber}")
-    public ResponseEntity<List<Vehicle>> getVehiclesByCompanyRegistrationNumber(@PathVariable String registrationNumber) {
-        return ResponseEntity.ok(vehicleServiceQuerry.getVehiclesByCompanyRegistrationNumber(registrationNumber).get());
+    public ResponseEntity<Optional<List<Vehicle>>> getVehiclesByCompanyRegistrationNumber(@PathVariable String registrationNumber) {
+        Optional<List<Vehicle>> vehicles = vehicleServiceQuerry.getVehiclesByCompanyRegistrationNumber(registrationNumber);
+        return ResponseEntity.ok(vehicles);
     }
 }

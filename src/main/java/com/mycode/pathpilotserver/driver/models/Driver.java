@@ -1,5 +1,7 @@
 package com.mycode.pathpilotserver.driver.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mycode.pathpilotserver.routes.models.Route;
 import com.mycode.pathpilotserver.user.models.User;
 import jakarta.persistence.*;
@@ -8,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.Set;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity(name = "Driver")
 @Table(name = "drivers")
 @NoArgsConstructor
@@ -43,6 +46,7 @@ public class Driver extends User{
 
 
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<Route> routes;
 
 

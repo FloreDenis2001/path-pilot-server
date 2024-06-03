@@ -1,5 +1,7 @@
 package com.mycode.pathpilotserver.packages.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
 import jakarta.persistence.*;
@@ -59,22 +61,35 @@ public class Package {
 
     @ManyToOne
     @JoinColumn(name = "customer_id",referencedColumnName ="id",nullable = false)
+    @JsonBackReference
     private Customer customer;
 
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     @JoinColumn(name = "shipment_id",referencedColumnName ="id",nullable = false)
+    @JsonBackReference
     private Shipment shipment;
 
-
-    @Override
-    public String toString() {
-        String text = "Order Date :"+orderDate+" Total Amount :"+totalAmount+" Customer :"+customer+" Shipment :"+shipment;
-        return text;
-    }
 
     @Override
     public boolean equals(Object obj) {
         Package pack = (Package) obj;
         return this.awb.equals(pack.getAwb());
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("Package{");
+        sb.append("awb='").append(awb).append('\'');
+        sb.append(", weight=").append(weight);
+        sb.append(", height=").append(height);
+        sb.append(", width=").append(width);
+        sb.append(", length=").append(length);
+        sb.append(", status=").append(status);
+        sb.append(", deliveryDescription='").append(deliveryDescription).append('\'');
+        sb.append(", orderDate=").append(orderDate);
+        sb.append(", totalAmount=").append(totalAmount);
+        sb.append(", shipment=").append(shipment);
+        sb.append('}');
+        return sb.toString();
     }
 }

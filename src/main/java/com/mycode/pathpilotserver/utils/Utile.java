@@ -1,7 +1,11 @@
 package com.mycode.pathpilotserver.utils;
 
 public class Utile {
-    public static final String API_KEY="AIzaSyAbyUrZndq4ZPLjIvBO_HeFy4r3heapRg0";
+    public static final String API_KEY_GOOGLE="AIzaSyAbyUrZndq4ZPLjIvBO_HeFy4r3heapRg0";
+
+    public static final String API_URL = "https://roloca.coldfuse.io/judete";
+
+    private static final String API_KEY_OPENAI = "sk-proj-T1vmX9xVWzcCPCnmz2T0T3BlbkFJ2bITu5XDn2p5cdqQjvnl";
 
     public static final String USERNAME_ALREADY_EXISTS = "Username already exists";
     public static final String EMAIL_ALREADY_EXISTS = "Email already exists";

@@ -1,7 +1,6 @@
 package com.mycode.pathpilotserver.image.web;
 
 import com.mycode.pathpilotserver.image.services.ImageServiceQuerryImpl;
-import feign.Response;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

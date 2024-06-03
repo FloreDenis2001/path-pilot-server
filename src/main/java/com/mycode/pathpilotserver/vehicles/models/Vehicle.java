@@ -1,6 +1,9 @@
 package com.mycode.pathpilotserver.vehicles.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.packages.models.Package;
 import com.mycode.pathpilotserver.routes.models.Route;
@@ -87,6 +90,7 @@ public class Vehicle {
 
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<Route> routes;
 
 
@@ -120,6 +124,4 @@ public class Vehicle {
         sb.append('}');
         return sb.toString();
     }
-
-
 }

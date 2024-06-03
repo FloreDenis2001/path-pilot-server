@@ -64,8 +64,8 @@ public class ServerControllerUser {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteUser(@RequestBody LoginUserRequest loginUserRequest) {
-        userServiceCommand.deleteUser(loginUserRequest);
+    public ResponseEntity<String> deleteUser(@RequestBody DeleteUserRequest request) {
+        userServiceCommand.deleteUser(request);
         return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
     }
 
@@ -77,6 +77,7 @@ public class ServerControllerUser {
 
 
     @PostMapping("/upload/image")
+
     public ResponseEntity<String> changeImage(@RequestParam("image") MultipartFile image,
                                               @RequestParam("email") String email) {
         String reply = userServiceCommand.uploadImage(image, email);

@@ -9,5 +9,8 @@ import java.util.Optional;
 
 public interface PackageQuerryService {
 
-    Optional<List<PackageDTO>> getAllPackagesByCustomer(Long customerId);;
+    Optional<List<PackageDTO>> getAllPackagesByCustomer(Long customerId);
+
+    Optional<List<Package>> getAllUnassignedPackages(String registerCompany);
+
 }

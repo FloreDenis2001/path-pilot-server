@@ -27,14 +27,14 @@ public class PackageCommandServiceImpl implements PackageCommandService {
     private final PackageRepo packRepo;
     private final UserRepo customerRepo;
 
-//    private static DirectionsService directionsService = new DirectionsService();
+    private static DirectionsService directionsService = new DirectionsService();
 
     private final ShipmentRepo shipmentRepo;
 
     public PackageCommandServiceImpl(PackageRepo packRepo, UserRepo customerRepo, DirectionsService directionsService, ShipmentRepo shipmentRepo) {
         this.packRepo = packRepo;
         this.customerRepo = customerRepo;
-//        this.directionsService = directionsService;
+        this.directionsService = directionsService;
         this.shipmentRepo = shipmentRepo;
     }
 
@@ -42,14 +42,9 @@ public class PackageCommandServiceImpl implements PackageCommandService {
     private static Optional<Shipment> getShipments(PackageRequest packageRequest) {
         try {
 
-//            DirectionsResult directionsResult = directionsService.getDirections(packageRequest.origin().toString(),packageRequest.destination().toString());
-
-//            double totalDistanceInKm = 0.0;
-//            for (int i = 0; i < directionsResult.routes.length; i++) {
-//                totalDistanceInKm += directionsResult.routes[i].legs[0].distance.inMeters;
-//            }
-
-            Shipment shipment = new Shipment().builder().destinationName(packageRequest.destination().name())
+//            long totalDistanceInMeters = directionsService.getDistanceInMeters(packageRequest.origin().address().toString(), packageRequest.destination().address().toString());
+            long totalDistanceInMeters = 0;
+            Shipment shipment = Shipment.builder().destinationName(packageRequest.destination().name())
                     .originName(packageRequest.origin().name())
                     .destinationPhone(packageRequest.destination().phone())
                     .originPhone(packageRequest.origin().phone())
@@ -57,7 +52,7 @@ public class PackageCommandServiceImpl implements PackageCommandService {
                     .originAddress(packageRequest.origin().address())
                     .status(StatusType.PICKED)
                     .estimatedDeliveryDate(LocalDateTime.now().plusDays(3))
-                    .totalDistance(0)
+                    .totalDistance(totalDistanceInMeters)
                     .build();
 
             return Optional.of(shipment);
@@ -68,7 +63,7 @@ public class PackageCommandServiceImpl implements PackageCommandService {
 
     private static Package getPackage(PackageRequest packageRequest, Optional<User> customer, Optional<Shipment> shipment) {
 
-        Package pack = new Package().builder()
+        return Package.builder()
                 .customer((Customer) customer.get())
                 .shipment(shipment.get())
                 .awb((packageRequest.origin().address().getCity().substring(0, 2).concat(RandomStringUtils.randomAlphabetic(8).concat(String.valueOf(System.currentTimeMillis()).substring(11, 13)))).toUpperCase())
@@ -81,9 +76,8 @@ public class PackageCommandServiceImpl implements PackageCommandService {
                 .width(packageRequest.packageDetails().width())
                 .length(packageRequest.packageDetails().length())
                 .build();
-
-        return pack;
     }
+
 
 
     @Override
