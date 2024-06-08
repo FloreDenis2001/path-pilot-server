@@ -80,7 +80,7 @@ public class Convertor {
     public static CompanyDTO convertCompanyToCompanyDTO(Company company) {
         return CompanyDTO.builder()
                 .address(company.getAddress())
-                .capital(company.getCapital())
+                .capital(company.getIncome())
                 .email(company.getEmail())
                 .name(company.getName())
                 .phone(company.getPhone())
@@ -101,6 +101,8 @@ public class Convertor {
         order.setTotalAmount(pack.getTotalAmount());
         order.setWeight(pack.getWeight());
         order.setWidth(pack.getWidth());
+        order.setLength(pack.getLength());
+        order.setAwb(pack.getAwb());
 
         return order;
 

@@ -95,10 +95,19 @@ public abstract class User implements UserDetails {
     public void setPassword(String password) {
         this.password =new BCryptPasswordEncoder().encode(password);
     }
+
     @Override
     public String toString() {
-       String text = "Email : "+email+" Username : "+username+" Role : "+role;
-         return text;
+        StringBuilder sb = new StringBuilder("User{");
+        sb.append("firstName='").append(firstName).append('\'');
+        sb.append(", lastName='").append(lastName).append('\'');
+        sb.append(", username='").append(username).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", phone='").append(phone).append('\'');
+        sb.append(", role=").append(role);
+        sb.append(", address=").append(address);
+        sb.append('}');
+        return sb.toString();
     }
 
     public void setImage(Image image) {
@@ -136,4 +145,6 @@ public abstract class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }

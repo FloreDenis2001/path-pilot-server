@@ -24,6 +24,7 @@ public class Shipment {
     @Column(name = "id", updatable = false)
     private Long id;
 
+
     @Column(name="origin_name", nullable = false)
     private String originName;
 
@@ -43,7 +44,15 @@ public class Shipment {
             @AttributeOverride(name = "city", column = @Column(name = "origin_city")),
             @AttributeOverride(name = "street", column = @Column(name = "origin_street")),
             @AttributeOverride(name = "streetNumber", column = @Column(name = "origin_number")),
-            @AttributeOverride(name = "postalCode", column = @Column(name = "origin_postalCode"))
+            @AttributeOverride(name = "postalCode", column = @Column(name = "origin_postalCode")),
+            @AttributeOverride(name = "lat", column = @Column(name = "origin_lat")),
+            @AttributeOverride(name = "lng", column = @Column(name = "origin_lng")),
+            @AttributeOverride(name = "iso2", column = @Column(name = "origin_iso2")),
+            @AttributeOverride(name = "admin_name", column = @Column(name = "origin_admin_name")),
+            @AttributeOverride(name = "capital", column = @Column(name = "origin_capital")),
+            @AttributeOverride(name = "population", column = @Column(name = "origin_population")),
+            @AttributeOverride(name = "population_proper", column = @Column(name = "origin_population_proper"))
+
     })
     private Address originAddress;
 
@@ -53,7 +62,14 @@ public class Shipment {
             @AttributeOverride(name = "city", column = @Column(name = "destination_city")),
             @AttributeOverride(name = "street", column = @Column(name = "destination_street")),
             @AttributeOverride(name = "streetNumber", column = @Column(name = "destination_number")),
-            @AttributeOverride(name = "postalCode", column = @Column(name = "destination_postalCode"))
+            @AttributeOverride(name = "postalCode", column = @Column(name = "destination_postalCode")),
+            @AttributeOverride(name = "lat", column = @Column(name = "destination_lat")),
+            @AttributeOverride(name = "lng", column = @Column(name = "destination_lng")),
+            @AttributeOverride(name = "iso2", column = @Column(name = "destination_iso2")),
+            @AttributeOverride(name = "admin_name", column = @Column(name = "destination_admin_name")),
+            @AttributeOverride(name = "capital", column = @Column(name = "destination_capital")),
+            @AttributeOverride(name = "population", column = @Column(name = "destination_population")),
+            @AttributeOverride(name = "population_proper", column = @Column(name = "destination_population_proper"))
     })
     private Address destinationAddress;
 

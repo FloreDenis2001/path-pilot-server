@@ -50,13 +50,16 @@ public class Driver extends User{
     private Set<Route> routes;
 
 
-
     @Override
     public String toString() {
-        String text = super.toString();
-        text+= "License Number :"+licenseNumber;
-        return text;
+        StringBuilder sb = new StringBuilder(super.toString());
+        sb.setLength(sb.length() - 1);
+        sb.append("licenseNumber='").append(licenseNumber).append('\'');
+        sb.append(", salary=").append(salary);
+        sb.append(", isAvailable=").append(isAvailable);
+        sb.append(", rating=").append(rating);
+        sb.append(", experience=").append(experience);
+        sb.append('}');
+        return sb.toString();
     }
-
-
 }

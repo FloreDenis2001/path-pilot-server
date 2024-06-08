@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/orders")
 @Slf4j
@@ -36,6 +38,12 @@ public class ServerControllerOrder {
     public ResponseEntity<Order> create(@RequestBody OrderDTO order) {
         orderServiceCommand.createOrder(order);
         return ResponseEntity.ok().build();
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/findAllByCustomerEmail={email}")
+    public ResponseEntity<List<Order>> findAllByCustomerEmail(@PathVariable String email) {
+        return ResponseEntity.ok(orderServiceQuerry.findAllByCustomerEmail(email).get());
     }
 
 

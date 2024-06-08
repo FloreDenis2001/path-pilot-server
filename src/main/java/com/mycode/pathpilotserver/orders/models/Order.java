@@ -28,6 +28,9 @@ public class Order  {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @Column(name = "awb", nullable = false)
+    private String awb;
+
 
     @Column(name = "weight", nullable = false)
     private double weight;
@@ -38,6 +41,8 @@ public class Order  {
     @Column(name = "width", nullable = false)
     private double width;
 
+    @Column(name="length", nullable = false)
+    private double length;
 
     @Column(name = "delivery_description", nullable = false)
     private String deliveryDescription;
@@ -74,9 +79,16 @@ public class Order  {
 
     @Override
     public String toString() {
-        String text = "Order Date :" + orderDate + " Total Amount :" + totalAmount + " Customer :" + customer + " Shipment :" + shipment;
-        return text;
+        final StringBuilder sb = new StringBuilder("Order{");
+        sb.append("awb='").append(awb).append('\'');
+        sb.append(", weight=").append(weight);
+        sb.append(", height=").append(height);
+        sb.append(", width=").append(width);
+        sb.append(", length=").append(length);
+        sb.append(", deliveryDescription='").append(deliveryDescription).append('\'');
+        sb.append(", orderDate=").append(orderDate);
+        sb.append(", totalAmount=").append(totalAmount);
+        sb.append('}');
+        return sb.toString();
     }
-
-
 }

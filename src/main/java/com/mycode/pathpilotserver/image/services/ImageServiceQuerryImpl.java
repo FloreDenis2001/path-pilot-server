@@ -18,8 +18,13 @@ public class ImageServiceQuerryImpl implements ImageServiceQuerry{
     @Override
     public String findImageByUserAfterEmail(String email) {
         Optional<Image> dbImageData = imageRepo.findImageByUserEmail(email);
+        if (dbImageData.isEmpty()){
+            return null;
+        }
         byte[] images = ImageUtils.decompressImage(dbImageData.get().getData());
-        String base64Image = ImageUtils.encodeToString(images);
-        return base64Image;
+
+        return ImageUtils.encodeToString(images);
+
+
     }
 }
