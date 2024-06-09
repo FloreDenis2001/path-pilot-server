@@ -117,7 +117,8 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
             previousCity = currentCity;
         }
 
-        route.setTotalDistance(totalTravelDistance/1000);
+        route.setTotalDistance(Double.parseDouble(String.format("%.2f", totalTravelDistance / 1000)));
+
 
         for (Package p : routePackages) {
             p.setStatus(PackageStatus.ASSIGNED);
