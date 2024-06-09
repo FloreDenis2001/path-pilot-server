@@ -31,7 +31,6 @@ public class Package {
     @Column(name = "awb", nullable = false)
     private String awb;
 
-
     @Column(name = "weight", nullable = false)
     private double weight;
 
@@ -74,6 +73,10 @@ public class Package {
     public boolean equals(Object obj) {
         Package pack = (Package) obj;
         return this.awb.equals(pack.getAwb());
+    }
+
+    public double getVolume() {
+        return this.height * this.width * this.length;
     }
 
     @Override

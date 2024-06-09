@@ -65,7 +65,7 @@ public class CompanyCommandServiceImpl implements CompanyCommandService {
 
         User user = userRepo.findByEmail(userEmail).get();
 
-        Company company = Company.builder().address(companyCreateRequest.address()).capital(companyCreateRequest.capital()).email(companyCreateRequest.email()).name(companyCreateRequest.name()).phone(companyCreateRequest.phone()).registrationNumber(companyCreateRequest.registrationNumber()).industry(companyCreateRequest.industry()).address(companyCreateRequest.address()).website(companyCreateRequest.website()).build();
+        Company company = Company.builder().address(companyCreateRequest.address()).income(companyCreateRequest.capital()).email(companyCreateRequest.email()).name(companyCreateRequest.name()).phone(companyCreateRequest.phone()).registrationNumber(companyCreateRequest.registrationNumber()).industry(companyCreateRequest.industry()).address(companyCreateRequest.address()).website(companyCreateRequest.website()).build();
         company.setLastModifiedBy(user.getUsername());
         company.setCreatedBy(user.getUsername());
         company.setCreatedDate(LocalDateTime.now());
@@ -82,8 +82,8 @@ public class CompanyCommandServiceImpl implements CompanyCommandService {
             company.setAddress(updateCompanyRequest.updatedCompany().getAddress());
         }
 
-        if(updateCompanyRequest.updatedCompany().getCapital() != 0){
-            company.setCapital(updateCompanyRequest.updatedCompany().getCapital());
+        if(updateCompanyRequest.updatedCompany().getIncome() != 0){
+            company.setIncome(updateCompanyRequest.updatedCompany().getIncome());
         }
 
         if(updateCompanyRequest.updatedCompany().getEmail() != null){

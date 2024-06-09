@@ -199,7 +199,7 @@ public class UserServiceCommandImpl implements UserServiceCommand {
         company.setIndustry(registerDTO.company().industry());
         company.setPhone(registerDTO.company().phone());
         company.setEmail(registerDTO.company().email());
-        company.setCapital(registerDTO.company().capital());
+        company.setIncome(registerDTO.company().capital());
         company.setAddress(registerDTO.company().address());
         company.setWebsite(registerDTO.company().website());
         company.setCreatedBy(registerDTO.user().username());

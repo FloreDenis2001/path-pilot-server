@@ -99,6 +99,11 @@ public class Vehicle {
     @JsonBackReference
     private Company company;
 
+
+    public double getVolume() {
+        return this.height * this.width * this.length;
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Vehicle{");
@@ -119,8 +124,6 @@ public class Vehicle {
         sb.append(", length=").append(length);
         sb.append(", weight=").append(weight);
         sb.append(", isActive=").append(isActive);
-        sb.append(", routes=").append(routes);
-        sb.append(", company=").append(company);
         sb.append('}');
         return sb.toString();
     }

@@ -61,8 +61,8 @@ public class Company extends AbstractAuditingEntity {
     @Column(name = "industry", nullable = false)
     private String industry;
 
-    @Column(name = "capital", nullable = false)
-    private double capital;
+    @Column(name = "income", nullable = false)
+    private double income;
 
 
     @Column(name = "phone", nullable = false)
@@ -76,12 +76,18 @@ public class Company extends AbstractAuditingEntity {
 
     @Override
     public String toString() {
-        String text = "Name : "+name+" Registration Number : "+registrationNumber+" Industry : "+industry+" Capital : "+capital+" Phone : "+phone+" Email : "+email+" Website : "+website;
-        return text;
+        final StringBuilder sb = new StringBuilder("Company{");
+        sb.append(", users=").append(users);
+        sb.append(", vehicles=").append(vehicles);
+        sb.append(", address=").append(address);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", registrationNumber='").append(registrationNumber).append('\'');
+        sb.append(", industry='").append(industry).append('\'');
+        sb.append(", income=").append(income);
+        sb.append(", phone='").append(phone).append('\'');
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", website='").append(website).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
-
-
-
-
-
 }

@@ -2,18 +2,23 @@ package com.mycode.pathpilotserver.utils;
 
 import com.mycode.pathpilotserver.company.dto.CompanyDTO;
 import com.mycode.pathpilotserver.company.models.Company;
+import com.mycode.pathpilotserver.driver.dto.DriverDTO;
 import com.mycode.pathpilotserver.image.models.Image;
 import com.mycode.pathpilotserver.orders.models.Order;
 import com.mycode.pathpilotserver.packages.dto.PackageDTO;
 import com.mycode.pathpilotserver.packages.dto.PackageDetails;
 import com.mycode.pathpilotserver.packages.models.Package;
+import com.mycode.pathpilotserver.routes.dto.RouteDTO;
+import com.mycode.pathpilotserver.routes.models.Route;
 import com.mycode.pathpilotserver.shipments.dto.ShipmentDTO;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
+import com.mycode.pathpilotserver.vehicles.models.Vehicle;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 public class Convertor {
@@ -22,7 +27,7 @@ public class Convertor {
 
     public static ShipmentDTO convertToShipmentDTO(Shipment s) {
 
-        ShipmentDTO shipmentDTO = ShipmentDTO.builder()
+        return ShipmentDTO.builder()
                 .originName(s.getOriginName())
                 .destinationName(s.getDestinationName())
                 .originPhone(s.getOriginPhone())
@@ -32,8 +37,6 @@ public class Convertor {
                 .status(s.getStatus().toString())
                 .totalDistance(s.getTotalDistance())
                 .build();
-
-        return shipmentDTO;
     }
 
 
@@ -80,7 +83,7 @@ public class Convertor {
     public static CompanyDTO convertCompanyToCompanyDTO(Company company) {
         return CompanyDTO.builder()
                 .address(company.getAddress())
-                .capital(company.getCapital())
+                .capital(company.getIncome())
                 .email(company.getEmail())
                 .name(company.getName())
                 .phone(company.getPhone())
@@ -101,8 +104,27 @@ public class Convertor {
         order.setTotalAmount(pack.getTotalAmount());
         order.setWeight(pack.getWeight());
         order.setWidth(pack.getWidth());
+        order.setLength(pack.getLength());
+        order.setAwb(pack.getAwb());
 
         return order;
 
+    }
+
+    public static Optional<List<RouteDTO>> convertRouteToRouteDTO(List<Route> routes){
+         List<RouteDTO> routeDTOList=new ArrayList<>();
+         for(Route r: routes){
+             DriverDTO driverDTO = DriverDTO.from(r.getDriver());
+             RouteDTO routeDTO=RouteDTO.builder()
+                     .driverDTO(driverDTO)
+                     .vehicle(r.getVehicle())
+                     .orders(r.getOrders())
+                     .id(r.getId())
+                     .totalDistance(r.getTotalDistance())
+                     .build();
+             routeDTOList.add(routeDTO);
+         }
+
+         return Optional.of(routeDTOList);
     }
 }

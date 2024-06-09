@@ -12,7 +12,7 @@ public record DriverDTO(String username, String email, String firstName, String 
         return drivers.stream().map(DriverDTO::from).toList();
     }
 
-    private static DriverDTO from(Driver driver) {
+    public static DriverDTO from(Driver driver) {
         return new DriverDTO(driver.getUsername(), driver.getEmail(), driver.getFirstName(), driver.getLastName(), driver.getPhone(), driver.getSalary(), driver.getRating(), driver.getExperience(), driver.getLicenseNumber(), driver.isAvailable(), driver.getRoutes());
     }
 }

@@ -2,6 +2,7 @@ package com.mycode.pathpilotserver.routes.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.orders.models.Order;
 import com.mycode.pathpilotserver.vehicles.models.Vehicle;
@@ -43,6 +44,12 @@ public class Route {
     @JsonBackReference
     private Driver driver;
 
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", referencedColumnName = "id", nullable = false)
+    @JsonBackReference
+    private Company company;
+
     @Column(name = "departure_date", nullable = false)
     @EqualsAndHashCode.Include
     private LocalDateTime departureDate;
@@ -50,6 +57,11 @@ public class Route {
     @Column(name = "arrival_time", nullable = false)
     @EqualsAndHashCode.Include
     private LocalDateTime arrivalTime;
+
+
+    @Column(name="total_distance", nullable = false)
+    private double totalDistance;
+
 
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
