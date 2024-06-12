@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.routes.web;
 
 
+import com.mycode.pathpilotserver.routes.dto.RouteDTO;
 import com.mycode.pathpilotserver.routes.services.RouteServiceCommandImpl;
 import com.mycode.pathpilotserver.routes.services.RouteServiceQuerry;
 import com.mycode.pathpilotserver.routes.services.RouteServiceQuerryImpl;
@@ -16,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -37,8 +40,8 @@ public class ServerControllerRoute {
 
 
     @GetMapping("/findAllByCompanyRegistrationNumber={companyRegistrationNumber}")
-    public ResponseEntity<String> findAllByCompanyRegistrationNumber(@PathVariable String companyRegistrationNumber) {
-        return ResponseEntity.ok(routeServiceQuerry.findAllByCompanyRegistrationNumber(companyRegistrationNumber).get().toString());
+    public ResponseEntity<List<RouteDTO>> findAllByCompanyRegistrationNumber(@PathVariable String companyRegistrationNumber) {
+        return ResponseEntity.ok(routeServiceQuerry.findAllByCompanyRegistrationNumber(companyRegistrationNumber).get());
     }
 
 }

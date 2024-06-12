@@ -1,9 +1,6 @@
 package com.mycode.pathpilotserver.vehicles.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.packages.models.Package;
 import com.mycode.pathpilotserver.routes.models.Route;
@@ -24,6 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @SuperBuilder
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Vehicle {
 
     @Id

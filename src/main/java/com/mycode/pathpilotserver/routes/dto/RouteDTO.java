@@ -8,5 +8,5 @@ import lombok.Builder;
 import java.util.Set;
 
 @Builder
-public record RouteDTO(Long id, double totalDistance, Vehicle vehicle, DriverDTO driverDTO , Set<Order> orders) {
+public record RouteDTO(Long id, double totalDistance, Vehicle vehicle, DriverDTO driver , Set<Order> orders) {
 }
