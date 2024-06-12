@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.orders.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.routes.models.Route;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
@@ -26,6 +27,7 @@ public class Order  {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_sequence")
     @Column(name = "id", updatable = false)
     @EqualsAndHashCode.Include
+    @JsonIgnore
     private Long id;
 
     @Column(name = "awb", nullable = false)

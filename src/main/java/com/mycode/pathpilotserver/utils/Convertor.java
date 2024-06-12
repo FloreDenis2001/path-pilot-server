@@ -116,7 +116,7 @@ public class Convertor {
          for(Route r: routes){
              DriverDTO driverDTO = DriverDTO.from(r.getDriver());
              RouteDTO routeDTO=RouteDTO.builder()
-                     .driverDTO(driverDTO)
+                     .driver(driverDTO)
                      .vehicle(r.getVehicle())
                      .orders(r.getOrders())
                      .id(r.getId())

@@ -1,10 +1,12 @@
 package com.mycode.pathpilotserver.user.web;
 
+import com.mycode.pathpilotserver.address.dto.AddressDTO;
 import com.mycode.pathpilotserver.system.jwt.JWTTokenProvider;
 import com.mycode.pathpilotserver.user.dto.*;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.services.UserQuerryServiceImpl;
 import com.mycode.pathpilotserver.user.services.UserServiceCommandImpl;
+import com.mycode.pathpilotserver.utils.Convertor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -49,7 +51,7 @@ public class ServerControllerUser {
         authenticate(loginUserRequest.email(),loginUserRequest.password());
         User user = userQuerryServiceImpl.findByEmail(loginUserRequest.email()).get();
         HttpHeaders jwtHeader = getJwtHeader(user);
-        LoginResponse loginResponse = new LoginResponse(user.getId(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getRole(),user.getEmail(),user.getPhone(),user.getCompany().getRegistrationNumber(),jwtHeader.getFirst(HttpHeaders.AUTHORIZATION));
+        LoginResponse loginResponse = new LoginResponse(user.getId(),user.getUsername(),user.getFirstName(),user.getLastName(),user.getRole(),user.getEmail(),user.getPhone(),user.getCompany().getRegistrationNumber(),AddressDTO.from(user.getAddress()),jwtHeader.getFirst(HttpHeaders.AUTHORIZATION));
         return new ResponseEntity<>(loginResponse, jwtHeader, HttpStatus.OK);
     }
 
