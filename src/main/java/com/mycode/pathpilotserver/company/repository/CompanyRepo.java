@@ -23,6 +23,4 @@ public interface CompanyRepo extends JpaRepository<Company, Long>{
 
     Optional<List<Company>> findCompaniesByIndustry(String industry);
 
-
-
 }

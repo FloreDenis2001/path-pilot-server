@@ -10,8 +10,7 @@ import java.io.IOException;
 
 public class ChatGbtIntegration {
 
-//    private static final String API_KEY = "sk-proj-T1vmX9xVWzcCPCnmz2T0T3BlbkFJ2bITu5XDn2p5cdqQjvnl";
-    private static final String API_KEY= "sk-proj-1J9J9Z2Q9";
+    private static final String API_KEY = "sk-proj-T1vmX9xVWzcCPCnmz2T0T3BlbkFJ2bITu5XDn2p5cdqQjvnl";
     private static final String API_URL = "https://api.openai.com/v1/chat/completions";
 
     public static String getOptimalRoute(String prompt) throws IOException, JSONException {

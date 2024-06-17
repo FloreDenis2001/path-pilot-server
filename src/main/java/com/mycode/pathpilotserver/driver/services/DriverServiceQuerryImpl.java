@@ -18,17 +18,6 @@ public class DriverServiceQuerryImpl implements DriverQuerryService {
         this.driverRepo = driverRepo;
     }
 
-
-    @Override
-    public Optional<Driver> findByLicenseNumber(String licenseNumber) {
-        Optional<Driver> driver = driverRepo.findByLicenseNumber(licenseNumber);
-        if (driver.isPresent()) {
-            return driver;}
-        else {
-            throw new DriverNotFoundException("Driver with license number: " + licenseNumber + " not found");
-        }
-    }
-
     @Override
     public Optional<List<DriverDTO>> getAllDrivers() {
         List<Driver> drivers = driverRepo.findAll();
@@ -48,5 +37,16 @@ public class DriverServiceQuerryImpl implements DriverQuerryService {
             return Optional.of(DriverDTO.fromList(drivers.get()));
         }
     }
+
+    @Override
+    public Optional<Driver> findByLicenseNumber(String licenseNumber) {
+        Optional<Driver> driver = driverRepo.findByLicenseNumber(licenseNumber);
+        if (driver.isPresent()) {
+            return driver;}
+        else {
+            throw new DriverNotFoundException("Driver with license number: " + licenseNumber + " not found");
+        }
+    }
+
 
 }
