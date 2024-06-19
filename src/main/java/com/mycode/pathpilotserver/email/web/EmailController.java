@@ -2,17 +2,21 @@ package com.mycode.pathpilotserver.email.web;
 
 import com.mycode.pathpilotserver.email.models.Email;
 import com.mycode.pathpilotserver.email.services.EmailServiceCommandImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/api/v1/email")
+@Slf4j
 public class EmailController {
 
-    @Autowired
-    private EmailServiceCommandImpl emailServiceCommand;
+    private final EmailServiceCommandImpl emailServiceCommand;
+
+    public EmailController(EmailServiceCommandImpl emailServiceCommand) {
+        this.emailServiceCommand = emailServiceCommand;
+    }
 
     @PostMapping("/send")
     public ResponseEntity<String> sendEmail(@RequestBody Email email , @RequestParam String companyRegistrationNumber) {

@@ -3,7 +3,6 @@ package com.mycode.pathpilotserver.intercom.maps;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.DirectionsResult;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -14,8 +13,12 @@ import java.io.IOException;
 @CrossOrigin
 public class DirectionsController {
 
-    @Autowired
-    private DirectionsService directionsService;
+
+    private final DirectionsService directionsService;
+
+    public DirectionsController(DirectionsService directionsService) {
+        this.directionsService = directionsService;
+    }
 
     @GetMapping("/directions")
     public DirectionsResult getDirections(@RequestParam String origin, @RequestParam String destination) {

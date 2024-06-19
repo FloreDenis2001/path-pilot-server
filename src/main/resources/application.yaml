@@ -14,7 +14,6 @@ spring:
     properties:
       hibernate-dialect: org.hibernate.dialect.MySQL5Dialect
       hibernate.format_sql: true
-
     show-sql: true
 
   liquibase:
@@ -51,11 +50,9 @@ api:
     externalDocUrl: MY WIKI URL
     contact:
       name: Flore Denis
-      url:
       email: floredenis907@yahoo.com
   responseCodes:
     ok.description: OK
     badRequest.description: Bad Request, invalid format of the request. See response message for more information
     notFound.description: Not found, the specified id does not exist
     unprocessableEntity.description: Unprocessable entity, input parameters caused the processing to fail. See response message for more information
-
