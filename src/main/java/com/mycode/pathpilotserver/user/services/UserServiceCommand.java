@@ -11,14 +11,13 @@ public interface UserServiceCommand {
 
     void deleteUser(DeleteUserRequest deleteUserRequest);
 
-    void updateUser(UpdateUserRequest updateUserRequest);
 
     String uploadImage(MultipartFile file,String email);
 
     void registerUser(RegisterDTO registerDTO);
 
     void resetPassword(ResetPasswordRequest resetPasswordRequest);
-
+    void updateUser(UpdateUserRequest request);
 
 
 }

@@ -73,12 +73,12 @@ public abstract class User implements UserDetails {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", referencedColumnName = "id")
-    @JsonBackReference
+    @JsonBackReference("user-company")
     private Company company;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "image_id")
-    @JsonBackReference
+    @JsonBackReference("user-image")
     private Image image;
 
 

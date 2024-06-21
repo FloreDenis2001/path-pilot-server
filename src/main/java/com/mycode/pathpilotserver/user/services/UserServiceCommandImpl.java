@@ -74,7 +74,7 @@ public class UserServiceCommandImpl implements UserServiceCommand {
     @Override
     public void updateUser(UpdateUserRequest request) {
         User user = findUserByEmail(request.email());
-        applyNewDetailsToUser(user, request.newUser());
+        applyNewDetailsToUser(user, request);
         userRepo.save(user);
     }
 
@@ -111,14 +111,10 @@ public class UserServiceCommandImpl implements UserServiceCommand {
             Image imageData = Image.builder().name(file.getOriginalFilename()).fileType(file.getContentType()).data(compressedData).build();
 
             Image savedImage = imageRepo.save(imageData);
-
             user.get().setImage(savedImage);
+
             userRepo.save(user.get());
-            if (savedImage != null) {
-                return "File created successfully: " + file.getOriginalFilename();
-            } else {
-                return null;
-            }
+            return "File created successfully: " + file.getOriginalFilename();
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -237,10 +233,15 @@ public class UserServiceCommandImpl implements UserServiceCommand {
         }
     }
 
-    private void applyNewDetailsToUser(User user, User newUserDetails) {
-        user.setEmail(newUserDetails.getEmail());
-        user.setPassword(newUserDetails.getPassword());
-        user.setUsername(newUserDetails.getUsername());
+    private void applyNewDetailsToUser(User user, UpdateUserRequest request) {
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
+        user.setPhone(request.phone());
+        user.getAddress().setCity(request.city());
+        user.getAddress().setStreet(request.street());
+        user.getAddress().setCountry(request.country());
+        user.getAddress().setStreetNumber(request.streetNumber());
+        user.getAddress().setPostalCode(request.postalCode());
     }
 
 }

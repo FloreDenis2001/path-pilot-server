@@ -6,17 +6,16 @@ import com.mycode.pathpilotserver.user.dto.*;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.services.UserQuerryServiceImpl;
 import com.mycode.pathpilotserver.user.services.UserServiceCommandImpl;
-import com.mycode.pathpilotserver.utils.Convertor;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 
 @RestController
 @CrossOrigin
@@ -78,12 +77,17 @@ public class ServerControllerUser {
     }
 
 
-    @PostMapping("/upload/image")
-
-    public ResponseEntity<String> changeImage(@RequestParam("image") MultipartFile image,
-                                              @RequestParam("email") String email) {
-        String reply = userServiceCommand.uploadImage(image, email);
+    @PostMapping("/update/image")
+    public ResponseEntity<String> changeImage(@RequestParam("email") String email, @RequestParam("file") MultipartFile file) {
+        String reply = userServiceCommand.uploadImage(file, email);
         return new ResponseEntity<>(reply, HttpStatus.OK);
     }
+
+    @PutMapping("/update" )
+    public ResponseEntity<String> updateUser(@RequestBody UpdateUserRequest request) {
+        userServiceCommand.updateUser(request);
+        return new ResponseEntity<>("User updated successfully", HttpStatus.OK);
+    }
+
 
 }
