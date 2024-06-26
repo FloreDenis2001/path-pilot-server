@@ -1,14 +1,15 @@
 package com.mycode.pathpilotserver.packages.services;
 
+import com.mycode.pathpilotserver.driver.repository.DriverRepo;
 import com.mycode.pathpilotserver.packages.dto.PackageDTO;
-import com.mycode.pathpilotserver.packages.dto.PackageRequest;
+import com.mycode.pathpilotserver.packages.exceptions.PackageNotFoundException;
 import com.mycode.pathpilotserver.packages.models.Package;
 import com.mycode.pathpilotserver.packages.repository.PackageRepo;
 import com.mycode.pathpilotserver.user.exceptions.UserNotFoundException;
-import com.mycode.pathpilotserver.user.repository.UserRepo;
 import com.mycode.pathpilotserver.utils.Convertor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +18,11 @@ public class PackageQuerryServiceImpl implements PackageQuerryService {
 
 
     private final PackageRepo packageRepo;
+    private final DriverRepo driverRepo;
 
-    public PackageQuerryServiceImpl(PackageRepo packageRepo) {
+    public PackageQuerryServiceImpl(PackageRepo packageRepo, DriverRepo driverRepo) {
         this.packageRepo = packageRepo;
+        this.driverRepo = driverRepo;
     }
 
     @Override
@@ -40,6 +43,7 @@ public class PackageQuerryServiceImpl implements PackageQuerryService {
         }
         return packages;
     }
+
 
 
 }

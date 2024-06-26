@@ -14,4 +14,5 @@ public interface CompanyCommandService {
    void deleteCompany(String registrationNumber);
 
 
+
 }

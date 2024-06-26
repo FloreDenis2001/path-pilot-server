@@ -68,19 +68,17 @@ public class Vehicle {
     @Column(name = "capacity", nullable = false)
     private int capacity;
 
-    @Column(name="width", nullable = false)
+    @Column(name = "width", nullable = false)
     private double width;
 
-    @Column(name="height", nullable = false)
+    @Column(name = "height", nullable = false)
     private double height;
 
-    @Column(name="length", nullable = false)
+    @Column(name = "length", nullable = false)
     private double length;
 
-    @Column(name="weight", nullable = false)
+    @Column(name = "weight", nullable = false)
     private double weight;
-
-
 
 
     @Column(name = "isActive", nullable = false)
@@ -100,6 +98,10 @@ public class Vehicle {
 
     public double getVolume() {
         return this.height * this.width * this.length;
+    }
+
+    public void increaseKilometers(double kilometers) {
+        this.km += kilometers;
     }
 
     @Override

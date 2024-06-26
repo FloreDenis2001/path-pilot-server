@@ -17,9 +17,11 @@ import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
 import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 
