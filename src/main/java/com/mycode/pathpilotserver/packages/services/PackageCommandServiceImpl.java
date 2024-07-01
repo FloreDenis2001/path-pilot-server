@@ -27,6 +27,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.mycode.pathpilotserver.city.utils.Utils.readCitiesFromJsonFile;
+
 @Service
 public class
 PackageCommandServiceImpl implements PackageCommandService {
@@ -218,15 +220,6 @@ PackageCommandServiceImpl implements PackageCommandService {
         packRepo.saveAndFlush(existingPackage);
     }
 
-    private static List<City> readCitiesFromJsonFile() throws IOException {
-        ClassLoader classLoader = PackageCommandServiceImpl.class.getClassLoader();
-        try (InputStream inputStream = classLoader.getResourceAsStream("ro.json")) {
-            if (inputStream == null) {
-                throw new FileNotFoundException("ro.json file not found in resources");
-            }
-            return objectMapper.readValue(inputStream, new TypeReference<List<City>>() {});
-        }
-    }
 
     private City getCityByName(String cityName) {
         return cities.stream()
