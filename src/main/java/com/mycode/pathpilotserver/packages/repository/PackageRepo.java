@@ -24,4 +24,7 @@ public interface PackageRepo extends JpaRepository<Package, Long> {
     @Query("SELECT o FROM Package o WHERE o.customer.company.registrationNumber = :registerCompany AND o.status = 'UNASSIGNED'")
     Optional<List<Package>> getAllUnassignedPackages(String registerCompany);
 
+    @Query("SELECT o FROM Package o WHERE o.customer.company.registrationNumber = :registerCompany")
+    Optional<List<Package>> getAllByRegisterCompany(String registerCompany);
+
 }

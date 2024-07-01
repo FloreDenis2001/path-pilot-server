@@ -117,13 +117,22 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
             previousCity = currentCity;
         }
 
-        route.setTotalDistance(Double.parseDouble(String.format("%.2f", totalTravelDistance / 1000)));
+        double kilometers = Double.parseDouble(String.format("%.2f", totalTravelDistance / 1000));
+        route.setTotalDistance(kilometers);
 
 
         for (Package p : routePackages) {
             p.setStatus(PackageStatus.ASSIGNED);
             packageRepo.saveAndFlush(p);
         }
+
+        driver.setAvailable(false);
+        driver.increaseSalaryByKilometers(kilometers);
+        driverRepo.saveAndFlush(driver);
+
+        selectedVehicle.setActive(true);
+        selectedVehicle.increaseKilometers(kilometers);
+        vehicleRepo.saveAndFlush(selectedVehicle);
 
         routeRepo.saveAndFlush(route);
         System.out.println("Route generated: " + route.toString());

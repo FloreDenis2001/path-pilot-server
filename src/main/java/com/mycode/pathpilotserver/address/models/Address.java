@@ -2,6 +2,7 @@ package com.mycode.pathpilotserver.address.models;
 
 import jakarta.persistence.Embeddable;
 import lombok.*;
+import org.jetbrains.annotations.NotNull;
 
 @Embeddable
 @AllArgsConstructor

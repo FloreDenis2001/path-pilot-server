@@ -26,18 +26,33 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class PackageCommandServiceImpl implements PackageCommandService {
+public class
+PackageCommandServiceImpl implements PackageCommandService {
 
     private final PackageRepo packRepo;
     private final UserRepo customerRepo;
     private final ShipmentRepo shipmentRepo;
-    private final ObjectMapper objectMapper;
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final double DISTANCE_RATE = 1.2;
+    private static final double WEIGHT_RATE = 0.9;
+    private static final double VOLUME_RATE = 0.8;
+    private static final double EARTH_RADIUS = 6371000;
+    private static final int AWB_RANDOM_LETTERS_LENGTH = 8;
 
-    public PackageCommandServiceImpl(PackageRepo packRepo, UserRepo customerRepo, ShipmentRepo shipmentRepo, ObjectMapper objectMapper) {
+    private static final List<City> cities;
+
+    static {
+        try {
+            cities = readCitiesFromJsonFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public PackageCommandServiceImpl(PackageRepo packRepo, UserRepo customerRepo, ShipmentRepo shipmentRepo) {
         this.packRepo = packRepo;
         this.customerRepo = customerRepo;
         this.shipmentRepo = shipmentRepo;
-        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -78,7 +93,7 @@ public class PackageCommandServiceImpl implements PackageCommandService {
             Shipment shipment = buildShipment(packageRequest);
             updateShipment(shipment, packageRequest);
 
-            Package updatedPackage = buildPackage(packageRequest, pack.get().getCustomer(), shipment);
+            Package updatedPackage = editBuilderPackage(packageRequest, pack.get().getCustomer(), shipment);
             updatePackage(pack.get(), updatedPackage);
         } catch (IOException e) {
             throw new RuntimeException("Error reading city data", e);
@@ -86,9 +101,8 @@ public class PackageCommandServiceImpl implements PackageCommandService {
     }
 
     private Shipment buildShipment(PackageRequest packageRequest) throws IOException {
-        List<City> cities = readCitiesFromJsonFile();
-        City origin = getCityByName(packageRequest.origin().addressDTO().city(), cities);
-        City destination = getCityByName(packageRequest.destination().addressDTO().city(), cities);
+        City origin = getCityByName(packageRequest.origin().addressDTO().city());
+        City destination = getCityByName(packageRequest.destination().addressDTO().city());
 
         Address fullDestinationAddress = buildAddress(destination, packageRequest.destination().addressDTO());
         Address fullOriginAddress = buildAddress(origin, packageRequest.origin().addressDTO());
@@ -129,6 +143,30 @@ public class PackageCommandServiceImpl implements PackageCommandService {
     }
 
     private Package buildPackage(PackageRequest packageRequest, User customer, Shipment shipment) {
+
+        double distance = shipment.getTotalDistance() / 1000;
+        double weight = packageRequest.packageDetails().weight();
+        double height = packageRequest.packageDetails().height();
+        double width = packageRequest.packageDetails().width();
+        double length = packageRequest.packageDetails().length();
+        double totalAmount = calculateTotalAmount(distance, weight, height, width, length);
+
+        return Package.builder()
+                .customer((Customer) customer)
+                .shipment(shipment)
+                .awb(generateAWB(packageRequest))
+                .totalAmount(totalAmount)
+                .status(PackageStatus.UNASSIGNED)
+                .deliveryDescription(packageRequest.packageDetails().deliveryDescription())
+                .orderDate(LocalDateTime.now())
+                .height(packageRequest.packageDetails().height())
+                .weight(packageRequest.packageDetails().weight())
+                .width(packageRequest.packageDetails().width())
+                .length(packageRequest.packageDetails().length())
+                .build();
+    }
+
+    private Package editBuilderPackage(PackageRequest packageRequest, User customer, Shipment shipment) {
         return Package.builder()
                 .customer((Customer) customer)
                 .shipment(shipment)
@@ -144,14 +182,17 @@ public class PackageCommandServiceImpl implements PackageCommandService {
                 .build();
     }
 
-    private void updateShipment(Shipment shipment, PackageRequest packageRequest) throws IOException {
-        List<City> cities = readCitiesFromJsonFile();
-        City origin = getCityByName(packageRequest.origin().addressDTO().city(), cities);
-        City destination = getCityByName(packageRequest.destination().addressDTO().city(), cities);
+    private double calculateTotalAmount(double distance, double weight, double height, double width, double length) {
+        double volume = height * width * length / 1000000.0;
+        double value = distance * DISTANCE_RATE + weight * WEIGHT_RATE + volume * VOLUME_RATE;
+        return Double.parseDouble(String.format("%.2f", value));
+    }
 
+    private void updateShipment(Shipment shipment, PackageRequest packageRequest) throws IOException {
+        City origin = getCityByName(packageRequest.origin().addressDTO().city());
+        City destination = getCityByName(packageRequest.destination().addressDTO().city());
         Address fullDestinationAddress = buildAddress(destination, packageRequest.destination().addressDTO());
         Address fullOriginAddress = buildAddress(origin, packageRequest.origin().addressDTO());
-
         shipment.setDestinationName(packageRequest.destination().name());
         shipment.setOriginName(packageRequest.origin().name());
         shipment.setDestinationPhone(packageRequest.destination().phone());
@@ -175,13 +216,13 @@ public class PackageCommandServiceImpl implements PackageCommandService {
         packRepo.saveAndFlush(existingPackage);
     }
 
-    private List<City> readCitiesFromJsonFile() throws IOException {
+    private static List<City> readCitiesFromJsonFile() throws IOException {
         File jsonFile = new File("C:\\Users\\denis\\OneDrive\\Desktop\\LUCRARE LICENTA\\path-pilot-server\\src\\main\\java\\com\\mycode\\pathpilotserver\\resource\\ro.json");
         return objectMapper.readValue(jsonFile, new TypeReference<List<City>>() {
         });
     }
 
-    private City getCityByName(String cityName, List<City> cities) {
+    private City getCityByName(String cityName) {
         return cities.stream()
                 .filter(city -> city.getCity().equals(cityName))
                 .findFirst()
@@ -193,20 +234,14 @@ public class PackageCommandServiceImpl implements PackageCommandService {
         double lon1 = Math.toRadians(originLng);
         double lat2 = Math.toRadians(destLat);
         double lon2 = Math.toRadians(destLng);
-
-        double earthRadius = 6371000;
-        double dlon = lon2 - lon1;
-        double dlat = lat2 - lat1;
-
-        double a = Math.pow(Math.sin(dlat / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin(dlon / 2), 2);
+        double a = Math.pow(Math.sin((lat2 - lat1) / 2), 2) + Math.cos(lat1) * Math.cos(lat2) * Math.pow(Math.sin((lon2 - lon1) / 2), 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        return earthRadius * c;
+        return EARTH_RADIUS * c;
     }
 
     private String generateAWB(PackageRequest packageRequest) {
         String cityAbbreviation = packageRequest.origin().addressDTO().city().substring(0, 2);
-        String randomLetters = RandomStringUtils.randomAlphabetic(8);
+        String randomLetters = RandomStringUtils.randomAlphabetic(AWB_RANDOM_LETTERS_LENGTH);
         String currentTimeMillis = String.valueOf(System.currentTimeMillis()).substring(11, 13);
         return (cityAbbreviation + randomLetters + currentTimeMillis).toUpperCase();
     }
