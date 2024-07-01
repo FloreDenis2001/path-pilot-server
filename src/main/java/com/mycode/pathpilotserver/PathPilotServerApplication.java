@@ -49,21 +49,6 @@ public class PathPilotServerApplication {
             , DriverRepo driverRepo, VehicleRepo vehicleRepo, UserServiceCommandImpl userServiceCommandImpl
          , ShipmentRepo shipmentRepo, RouteRepo routeRepo, OrderRepo orderRepo , RouteServiceCommandImpl routeServiceCommandImpl) {
         return args -> {
-//            String registrationNumber = "1234567890";
-//            double totalSumLastMonthPackages = companyQuerryService.getTotalSumLastMonthPackages(registrationNumber);
-//            int totalNumberOfPackagesLastMonth = companyQuerryService.getTotalNumberOfPackagesLastMonth(registrationNumber);
-//            double totalSumLastMonthOfSalary= companyQuerryService.getTotalSumLastMonthOfSalary(registrationNumber);
-//            double totalSumLastMonthProfit= companyQuerryService.getTotalSumLastMonthProfit(registrationNumber);
-//            Optional<List<DriverDTO>> bestFiveDriversByRanking = companyQuerryService.getBestFiveDriversByRanking(registrationNumber);
-//            Optional<List<PackageDTO>> lastFivePackagesAdded = companyQuerryService.lastFivePackagesAdded(registrationNumber);
-//            CompanyDataDashboard companyDataDashboard = CompanyDataDashboard.builder().
-//                    totalSumLastMonthPackages(totalSumLastMonthPackages).
-//                    totalNumberOfPackagesLastMonth(totalNumberOfPackagesLastMonth).
-//                    totalSumLastMonthOfSalary(totalSumLastMonthOfSalary).
-//                    totalSumLastMonthProfit(totalSumLastMonthProfit).
-//                    bestFiveDriversByRanking(bestFiveDriversByRanking.get()).
-//                    lastFivePackagesAdded(lastFivePackagesAdded.get()).build();
-//            System.out.println(companyDataDashboard);
         };
     }
 

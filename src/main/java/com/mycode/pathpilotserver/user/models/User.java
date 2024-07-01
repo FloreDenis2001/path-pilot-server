@@ -66,7 +66,14 @@ public abstract class User implements UserDetails {
             @AttributeOverride(name = "city", column = @Column(name = "city")),
             @AttributeOverride(name = "street", column = @Column(name = "street")),
             @AttributeOverride(name = "streetNumber", column = @Column(name = "number")),
-            @AttributeOverride(name = "postalCode", column = @Column(name = "postal_code"))
+            @AttributeOverride(name = "postalCode", column = @Column(name = "postalCode")),
+            @AttributeOverride(name = "lat", column = @Column(name = "lat")),
+            @AttributeOverride(name = "lng", column = @Column(name = "lng")),
+            @AttributeOverride(name = "iso2", column = @Column(name = "iso2")),
+            @AttributeOverride(name = "admin_name", column = @Column(name = "admin_name")),
+            @AttributeOverride(name = "capital", column = @Column(name = "capital")),
+            @AttributeOverride(name = "population", column = @Column(name = "population")),
+            @AttributeOverride(name = "population_proper", column = @Column(name = "population_proper"))
     })
     private Address address;
 
