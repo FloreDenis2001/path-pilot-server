@@ -20,7 +20,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -217,9 +219,13 @@ PackageCommandServiceImpl implements PackageCommandService {
     }
 
     private static List<City> readCitiesFromJsonFile() throws IOException {
-        File jsonFile = new File("C:\\Users\\denis\\OneDrive\\Desktop\\LUCRARE LICENTA\\path-pilot-server\\src\\main\\java\\com\\mycode\\pathpilotserver\\resource\\ro.json");
-        return objectMapper.readValue(jsonFile, new TypeReference<List<City>>() {
-        });
+        ClassLoader classLoader = PackageCommandServiceImpl.class.getClassLoader();
+        try (InputStream inputStream = classLoader.getResourceAsStream("ro.json")) {
+            if (inputStream == null) {
+                throw new FileNotFoundException("ro.json file not found in resources");
+            }
+            return objectMapper.readValue(inputStream, new TypeReference<List<City>>() {});
+        }
     }
 
     private City getCityByName(String cityName) {

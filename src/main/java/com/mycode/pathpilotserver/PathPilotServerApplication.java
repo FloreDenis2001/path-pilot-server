@@ -45,9 +45,7 @@ public class PathPilotServerApplication {
 
     @Bean
     @Transactional
-    CommandLineRunner commandLineRunner(CompanyRepo companyRepo, UserRepo userRepo , CompanyQuerryService companyQuerryService
-            , DriverRepo driverRepo, VehicleRepo vehicleRepo, UserServiceCommandImpl userServiceCommandImpl
-         , ShipmentRepo shipmentRepo, RouteRepo routeRepo, OrderRepo orderRepo , RouteServiceCommandImpl routeServiceCommandImpl) {
+    CommandLineRunner commandLineRunner() {
         return args -> {
         };
     }
