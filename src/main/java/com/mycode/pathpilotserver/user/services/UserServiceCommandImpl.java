@@ -268,9 +268,12 @@ public class UserServiceCommandImpl implements UserServiceCommand {
         });
     }
 
-
+    private City getCityByName(String cityName, List<City> cities) {
+        return cities.stream()
+                .filter(city -> city.getCity().equals(cityName))
+                .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("City not found: " + cityName));
-        }
+    }
     private User findUserByEmail(String email) {
         return userRepo.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found for email: " + email));
     }
