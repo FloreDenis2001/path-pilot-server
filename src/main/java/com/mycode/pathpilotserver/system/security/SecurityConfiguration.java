@@ -27,14 +27,14 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration {
 
-    private JWTAuthorizationFilter jwtAuthorizationFilter;
-    private JWTAccessDeniedHandler jwtAccessDeniedHandler;
+    private final JWTAuthorizationFilter jwtAuthorizationFilter;
+    private final JWTAccessDeniedHandler jwtAccessDeniedHandler;
 
-    private JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JWTAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
-    private UserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @Autowired

@@ -29,13 +29,12 @@ public class Address {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Address{");
-        sb.append("country='").append(country).append('\'');
-        sb.append(", city='").append(city).append('\'');
-        sb.append(", street='").append(street).append('\'');
-        sb.append(", streetNumber='").append(streetNumber).append('\'');
-        sb.append(", postalCode='").append(postalCode).append('\'');
-        sb.append('}');
-        return sb.toString();
+        String sb = "Address{" + "country='" + country + '\'' +
+                ", city='" + city + '\'' +
+                ", street='" + street + '\'' +
+                ", streetNumber='" + streetNumber + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                '}';
+        return sb;
     }
 }

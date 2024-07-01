@@ -106,25 +106,24 @@ public class Vehicle {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Vehicle{");
-        sb.append("id=").append(id);
-        sb.append(", make='").append(make).append('\'');
-        sb.append(", model='").append(model).append('\'');
-        sb.append(", year=").append(year);
-        sb.append(", fuelType=").append(fuelType);
-        sb.append(", fuelCapacity=").append(fuelCapacity);
-        sb.append(", fuelConsumption=").append(fuelConsumption);
-        sb.append(", lastService=").append(lastService);
-        sb.append(", nextService=").append(nextService);
-        sb.append(", km=").append(km);
-        sb.append(", registrationNumber='").append(registrationNumber).append('\'');
-        sb.append(", capacity=").append(capacity);
-        sb.append(", width=").append(width);
-        sb.append(", height=").append(height);
-        sb.append(", length=").append(length);
-        sb.append(", weight=").append(weight);
-        sb.append(", isActive=").append(isActive);
-        sb.append('}');
-        return sb.toString();
+        String sb = "Vehicle{" + "id=" + id +
+                ", make='" + make + '\'' +
+                ", model='" + model + '\'' +
+                ", year=" + year +
+                ", fuelType=" + fuelType +
+                ", fuelCapacity=" + fuelCapacity +
+                ", fuelConsumption=" + fuelConsumption +
+                ", lastService=" + lastService +
+                ", nextService=" + nextService +
+                ", km=" + km +
+                ", registrationNumber='" + registrationNumber + '\'' +
+                ", capacity=" + capacity +
+                ", width=" + width +
+                ", height=" + height +
+                ", length=" + length +
+                ", weight=" + weight +
+                ", isActive=" + isActive +
+                '}';
+        return sb;
     }
 }

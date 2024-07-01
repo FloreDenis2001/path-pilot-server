@@ -76,18 +76,17 @@ public class Company extends AbstractAuditingEntity {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Company{");
-        sb.append(", users=").append(users);
-        sb.append(", vehicles=").append(vehicles);
-        sb.append(", address=").append(address);
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", registrationNumber='").append(registrationNumber).append('\'');
-        sb.append(", industry='").append(industry).append('\'');
-        sb.append(", income=").append(income);
-        sb.append(", phone='").append(phone).append('\'');
-        sb.append(", email='").append(email).append('\'');
-        sb.append(", website='").append(website).append('\'');
-        sb.append('}');
-        return sb.toString();
+        String sb = "Company{" + ", users=" + users +
+                ", vehicles=" + vehicles +
+                ", address=" + address +
+                ", name='" + name + '\'' +
+                ", registrationNumber='" + registrationNumber + '\'' +
+                ", industry='" + industry + '\'' +
+                ", income=" + income +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", website='" + website + '\'' +
+                '}';
+        return sb;
     }
 }

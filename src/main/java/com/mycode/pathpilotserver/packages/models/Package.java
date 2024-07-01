@@ -83,18 +83,17 @@ public class Package {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Package{");
-        sb.append("awb='").append(awb).append('\'');
-        sb.append(", weight=").append(weight);
-        sb.append(", height=").append(height);
-        sb.append(", width=").append(width);
-        sb.append(", length=").append(length);
-        sb.append(", status=").append(status);
-        sb.append(", deliveryDescription='").append(deliveryDescription).append('\'');
-        sb.append(", orderDate=").append(orderDate);
-        sb.append(", totalAmount=").append(totalAmount);
-        sb.append(", shipment=").append(shipment);
-        sb.append('}');
-        return sb.toString();
+        String sb = "Package{" + "awb='" + awb + '\'' +
+                ", weight=" + weight +
+                ", height=" + height +
+                ", width=" + width +
+                ", length=" + length +
+                ", status=" + status +
+                ", deliveryDescription='" + deliveryDescription + '\'' +
+                ", orderDate=" + orderDate +
+                ", totalAmount=" + totalAmount +
+                ", shipment=" + shipment +
+                '}';
+        return sb;
     }
 }

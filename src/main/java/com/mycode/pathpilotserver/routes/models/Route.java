@@ -76,15 +76,14 @@ public class Route {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Route{");
-        sb.append("id=").append(id);
-        sb.append(", orders=").append(orders);
-        sb.append(", vehicle=").append(vehicle);
-        sb.append(", driver=").append(driver);
-        sb.append(", departureDate=").append(departureDate);
-        sb.append(", arrivalTime=").append(arrivalTime);
-        sb.append('}');
-        return sb.toString();
+        String sb = "Route{" + "id=" + id +
+                ", orders=" + orders +
+                ", vehicle=" + vehicle +
+                ", driver=" + driver +
+                ", departureDate=" + departureDate +
+                ", arrivalTime=" + arrivalTime +
+                '}';
+        return sb;
     }
 
 

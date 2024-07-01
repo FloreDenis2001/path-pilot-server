@@ -81,16 +81,15 @@ public class Order  {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("Order{");
-        sb.append("awb='").append(awb).append('\'');
-        sb.append(", weight=").append(weight);
-        sb.append(", height=").append(height);
-        sb.append(", width=").append(width);
-        sb.append(", length=").append(length);
-        sb.append(", deliveryDescription='").append(deliveryDescription).append('\'');
-        sb.append(", orderDate=").append(orderDate);
-        sb.append(", totalAmount=").append(totalAmount);
-        sb.append('}');
-        return sb.toString();
+        String sb = "Order{" + "awb='" + awb + '\'' +
+                ", weight=" + weight +
+                ", height=" + height +
+                ", width=" + width +
+                ", length=" + length +
+                ", deliveryDescription='" + deliveryDescription + '\'' +
+                ", orderDate=" + orderDate +
+                ", totalAmount=" + totalAmount +
+                '}';
+        return sb;
     }
 }

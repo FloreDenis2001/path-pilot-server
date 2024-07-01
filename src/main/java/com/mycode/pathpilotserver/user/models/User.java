@@ -105,16 +105,15 @@ public abstract class User implements UserDetails {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder("User{");
-        sb.append("firstName='").append(firstName).append('\'');
-        sb.append(", lastName='").append(lastName).append('\'');
-        sb.append(", username='").append(username).append('\'');
-        sb.append(", email='").append(email).append('\'');
-        sb.append(", phone='").append(phone).append('\'');
-        sb.append(", role=").append(role);
-        sb.append(", address=").append(address);
-        sb.append('}');
-        return sb.toString();
+        String sb = "User{" + "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", role=" + role +
+                ", address=" + address +
+                '}';
+        return sb;
     }
 
     public void setImage(Image image) {

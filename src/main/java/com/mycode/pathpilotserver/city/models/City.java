@@ -23,15 +23,14 @@ public class City {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("City{");
-        sb.append("city='").append(city).append('\'');
-        sb.append(", country='").append(country).append('\'');
-        sb.append(", iso2='").append(iso2).append('\'');
-        sb.append(", admin_name='").append(admin_name).append('\'');
-        sb.append(", capital='").append(capital).append('\'');
-        sb.append(", population='").append(population).append('\'');
-        sb.append(", population_proper='").append(population_proper).append('\'');
-        sb.append('}');
-        return sb.toString();
+        String sb = "City{" + "city='" + city + '\'' +
+                ", country='" + country + '\'' +
+                ", iso2='" + iso2 + '\'' +
+                ", admin_name='" + admin_name + '\'' +
+                ", capital='" + capital + '\'' +
+                ", population='" + population + '\'' +
+                ", population_proper='" + population_proper + '\'' +
+                '}';
+        return sb;
     }
 }
