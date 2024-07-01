@@ -279,6 +279,12 @@ public class UserServiceCommandImpl implements UserServiceCommand {
     }
 
 
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (!encoder.matches(password, user.getPassword())) {
+            throw new WrongPasswordException("Invalid password for user: " + user.getEmail());
+        }
+    }
+
     private void applyNewDetailsToUser(User user, UpdateUserRequest request) {
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
