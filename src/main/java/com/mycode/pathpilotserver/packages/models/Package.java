@@ -56,8 +56,6 @@ public class Package {
     @Column(name = "order_date", nullable = false)
     private LocalDateTime orderDate;
 
-//    @Column(name = "delivery_date", nullable = false)
-//    private LocalDate deliveryDate;
 
     @Column(name = "total_amount", nullable = false)
     private double totalAmount;

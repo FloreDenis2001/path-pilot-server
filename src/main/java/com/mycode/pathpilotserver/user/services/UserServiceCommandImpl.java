@@ -1,5 +1,10 @@
 package com.mycode.pathpilotserver.user.services;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mycode.pathpilotserver.address.dto.AddressDTO;
+import com.mycode.pathpilotserver.address.models.Address;
+import com.mycode.pathpilotserver.city.models.City;
 import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.company.repository.CompanyRepo;
 import com.mycode.pathpilotserver.customers.models.Customer;
@@ -28,8 +33,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,13 +52,16 @@ public class UserServiceCommandImpl implements UserServiceCommand {
     private final JavaMailSender mailSender;
     private final JWTTokenProvider jwtTokenProvider;
 
+    private final ObjectMapper objectMapper;
 
-    public UserServiceCommandImpl(UserRepo userRepo, ImageRepo imageRepo, CompanyRepo companyRepo, JavaMailSender mailSender, JWTTokenProvider jwtTokenProvider) {
+
+    public UserServiceCommandImpl(UserRepo userRepo, ImageRepo imageRepo, CompanyRepo companyRepo, JavaMailSender mailSender, JWTTokenProvider jwtTokenProvider, ObjectMapper objectMapper) {
         this.userRepo = userRepo;
         this.imageRepo = imageRepo;
         this.companyRepo = companyRepo;
         this.mailSender = mailSender;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.objectMapper = objectMapper;
     }
 
 
@@ -122,19 +132,23 @@ public class UserServiceCommandImpl implements UserServiceCommand {
     }
 
     @Override
-    public void registerUser(RegisterDTO registerDTO) {
+    public void registerUser(RegisterDTO registerDTO)  {
         Optional<User> user = userRepo.findByEmail(registerDTO.user().email());
 
         if (user.isPresent()) {
             throw new UserNotFoundException("User with email: " + registerDTO.company().email() + " already exists");
         }
 
-        Company company = getCompany(registerDTO);
-        companyRepo.saveAndFlush(company);
+        try {
+            Company company = getCompany(registerDTO);
+            companyRepo.saveAndFlush(company);
 
-        Customer customer = getCustomer(registerDTO);
-        customer.setCompany(company);
-        userRepo.saveAndFlush(customer);
+            Customer customer = getCustomer(registerDTO);
+            customer.setCompany(company);
+            userRepo.saveAndFlush(customer);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -188,7 +202,7 @@ public class UserServiceCommandImpl implements UserServiceCommand {
     }
 
     @NotNull
-    private static Company getCompany(RegisterDTO registerDTO) {
+    private  Company getCompany(RegisterDTO registerDTO) throws IOException {
         Company company = new Company();
         company.setName(registerDTO.company().name());
         company.setRegistrationNumber(registerDTO.company().registrationNumber());
@@ -196,7 +210,12 @@ public class UserServiceCommandImpl implements UserServiceCommand {
         company.setPhone(registerDTO.company().phone());
         company.setEmail(registerDTO.company().email());
         company.setIncome(registerDTO.company().capital());
-        company.setAddress(registerDTO.company().address());
+
+        List<City> cities = readCitiesFromJsonFile();
+        City city = getCityByName(registerDTO.user().address().city(), cities);
+        Address fullAddress = buildAddress(city, registerDTO.user().address());
+
+        company.setAddress(fullAddress);
         company.setWebsite(registerDTO.company().website());
         company.setCreatedBy(registerDTO.user().username());
         company.setLastModifiedBy(registerDTO.user().username());
@@ -207,7 +226,7 @@ public class UserServiceCommandImpl implements UserServiceCommand {
 
 
     @NotNull
-    private static Customer getCustomer(RegisterDTO registerDTO) {
+    private  Customer getCustomer(RegisterDTO registerDTO) throws IOException {
         Customer customer = new Customer();
         customer.setFirstName(registerDTO.user().firstName());
         customer.setLastName(registerDTO.user().lastName());
@@ -217,14 +236,45 @@ public class UserServiceCommandImpl implements UserServiceCommand {
         customer.setPassword(registerDTO.user().password());
         customer.setUsername(registerDTO.user().username());
         customer.setSubscriptionType(SubscriptionType.BASIC);
-        customer.setAddress(registerDTO.user().address());
+
+        List<City> cities = readCitiesFromJsonFile();
+        City city = getCityByName(registerDTO.user().address().city(), cities);
+        Address fullAddress = buildAddress(city, registerDTO.user().address());
+
+        customer.setAddress(fullAddress);
 
         return customer;
     }
 
+    private Address buildAddress(City city, AddressDTO addressDTO) {
+        return Address.builder()
+                .city(city.getCity())
+                .country(addressDTO.country())
+                .street(addressDTO.street())
+                .postalCode(addressDTO.postalCode())
+                .streetNumber(addressDTO.streetNumber())
+                .lat(city.getLat())
+                .lng(city.getLng())
+                .admin_name(city.getAdmin_name())
+                .capital(city.getCapital())
+                .iso2(city.getIso2())
+                .population(city.getPopulation())
+                .population_proper(city.getPopulation_proper())
+                .build();
+    }
+    private  List<City> readCitiesFromJsonFile() throws IOException {
+        File jsonFile = new File("C:\\Users\\denis\\OneDrive\\Desktop\\LUCRARE LICENTA\\path-pilot-server\\src\\main\\java\\com\\mycode\\pathpilotserver\\resource\\ro.json");
+        return objectMapper.readValue(jsonFile, new TypeReference<List<City>>() {
+        });
+    }
+
+
+                .orElseThrow(() -> new IllegalArgumentException("City not found: " + cityName));
+        }
     private User findUserByEmail(String email) {
         return userRepo.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found for email: " + email));
     }
+
 
 
 

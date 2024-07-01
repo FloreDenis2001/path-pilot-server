@@ -21,6 +21,8 @@ public interface DriverRepo extends JpaRepository<Driver, Long> {
     Optional<List<Driver>> findAllByCompanyRegistrationNumberAndIsAvailableTrue(String registration);
 
 
+    @Query("SELECT d FROM Driver d WHERE d.company.registrationNumber = ?1 ORDER BY d.rating DESC")
+    Optional<List<Driver>> bestDriversByHighestRanking(String registrationNumber);
 
 
 }

@@ -1,8 +1,14 @@
 package com.mycode.pathpilotserver;
 
+import com.mycode.pathpilotserver.company.dto.CompanyDataDashboard;
 import com.mycode.pathpilotserver.company.repository.CompanyRepo;
+import com.mycode.pathpilotserver.company.services.CompanyQuerryService;
+import com.mycode.pathpilotserver.driver.dto.DriverDTO;
+import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.driver.repository.DriverRepo;
 import com.mycode.pathpilotserver.orders.repository.OrderRepo;
+import com.mycode.pathpilotserver.packages.dto.PackageDTO;
+import com.mycode.pathpilotserver.packages.models.Package;
 import com.mycode.pathpilotserver.routes.repository.RouteRepo;
 import com.mycode.pathpilotserver.routes.services.RouteServiceCommandImpl;
 import com.mycode.pathpilotserver.shipments.repository.ShipmentRepo;
@@ -24,6 +30,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 @SpringBootApplication
 @EnableFeignClients
@@ -37,7 +45,7 @@ public class PathPilotServerApplication {
 
     @Bean
     @Transactional
-    CommandLineRunner commandLineRunner(CompanyRepo companyRepo, UserRepo userRepo
+    CommandLineRunner commandLineRunner(CompanyRepo companyRepo, UserRepo userRepo , CompanyQuerryService companyQuerryService
             , DriverRepo driverRepo, VehicleRepo vehicleRepo, UserServiceCommandImpl userServiceCommandImpl
          , ShipmentRepo shipmentRepo, RouteRepo routeRepo, OrderRepo orderRepo , RouteServiceCommandImpl routeServiceCommandImpl) {
         return args -> {

@@ -6,12 +6,16 @@ import com.mycode.pathpilotserver.company.dto.UpdateCompanyRequest;
 import com.mycode.pathpilotserver.company.exceptions.CompanyNotFoundException;
 import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.company.repository.CompanyRepo;
+import com.mycode.pathpilotserver.driver.models.Driver;
+import com.mycode.pathpilotserver.driver.repository.DriverRepo;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
 import jakarta.transaction.Transactional;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,11 +25,16 @@ public class CompanyCommandServiceImpl implements CompanyCommandService {
     private final CompanyRepo companyRepo;
     private final UserRepo userRepo;
 
-    public CompanyCommandServiceImpl(CompanyRepo companyRepo, UserRepo userRepo) {
+    private final DriverRepo driverRepo;
+
+    public CompanyCommandServiceImpl(CompanyRepo companyRepo, UserRepo userRepo, DriverRepo driverRepo) {
 
         this.companyRepo = companyRepo;
         this.userRepo = userRepo;
+        this.driverRepo = driverRepo;
     }
+
+
 
 
     @Override
@@ -60,6 +69,17 @@ public class CompanyCommandServiceImpl implements CompanyCommandService {
         }
 
     }
+
+    @Scheduled(cron = "0 0 0 1 * ?")
+    public void resetDriversSalary() {
+            List<Driver> drivers = driverRepo.findAll();
+            for (Driver driver : drivers) {
+                driver.setSalary(0.0);
+            }
+            driverRepo.saveAll(drivers);
+    }
+
+
 
     private Company buildCompany(CompanyCreateRequest companyCreateRequest , String userEmail) {
 
