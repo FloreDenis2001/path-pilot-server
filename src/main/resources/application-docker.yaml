@@ -1,6 +1,11 @@
 spring:
- datasource:
+  datasource:
     url: jdbc:mysql://mysql:3306/pathpilot_db?useUnicode=true&characterEncoding=utf8&useSSL=false&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true
     username: root
     password: root
- 
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  profiles:
+    active: docker
