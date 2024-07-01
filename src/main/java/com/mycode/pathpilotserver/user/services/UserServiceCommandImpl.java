@@ -226,12 +226,7 @@ public class UserServiceCommandImpl implements UserServiceCommand {
         return userRepo.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found for email: " + email));
     }
 
-    private void validatePassword(User user, String password) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        if (!encoder.matches(password, user.getPassword())) {
-            throw new WrongPasswordException("Invalid password for user: " + user.getEmail());
-        }
-    }
+
 
     private void applyNewDetailsToUser(User user, UpdateUserRequest request) {
         user.setFirstName(request.firstName());
