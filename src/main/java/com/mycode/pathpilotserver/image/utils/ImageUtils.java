@@ -1,50 +1,42 @@
 package com.mycode.pathpilotserver.image.utils;
 
+import com.mycode.pathpilotserver.user.exceptions.UnauthorizedAccessException;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Base64;
-import java.util.zip.Deflater;
-import java.util.zip.Inflater;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class ImageUtils {
-    public static byte[] compressImage(byte[] data) {
-        Deflater deflater = new Deflater();
-        deflater.setLevel(Deflater.BEST_COMPRESSION);
-        deflater.setInput(data);
-        deflater.finish();
 
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] tmp = new byte[4*1024];
-        while (!deflater.finished()) {
-            int size = deflater.deflate(tmp);
-            outputStream.write(tmp, 0, size);
+    public static byte[] compressImage(byte[] data) throws IOException {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try (GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream)) {
+            gzipOutputStream.write(data);
+            gzipOutputStream.finish();
+        } catch (IOException e) {
+            throw new UnauthorizedAccessException("Failed to compress image");
         }
-        try {
-            outputStream.close();
-        } catch (Exception ignored) {
-        }
-        return outputStream.toByteArray();
+        return byteArrayOutputStream.toByteArray();
     }
 
 
-
-    public static byte[] decompressImage(byte[] data) {
-        Inflater inflater = new Inflater();
-        inflater.setInput(data);
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
-        byte[] tmp = new byte[4*1024];
-        try {
-            while (!inflater.finished()) {
-                int count = inflater.inflate(tmp);
-                outputStream.write(tmp, 0, count);
+    public static byte[] decompressImage(byte[] data) throws IOException {
+        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
+             GZIPInputStream gzipInputStream = new GZIPInputStream(byteArrayInputStream);
+             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = gzipInputStream.read(buffer)) != -1) {
+                byteArrayOutputStream.write(buffer, 0, len);
             }
-            outputStream.close();
-        } catch (Exception ignored) {
+            return byteArrayOutputStream.toByteArray();
         }
-        return outputStream.toByteArray();
     }
 
     public static String encodeToString(byte[] images) {
         return Base64.getEncoder().encodeToString(images);
     }
-
 }

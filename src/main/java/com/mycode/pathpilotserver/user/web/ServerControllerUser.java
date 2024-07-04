@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.user.web;
 
 import com.mycode.pathpilotserver.address.dto.AddressDTO;
+import com.mycode.pathpilotserver.image.services.ImageServiceQuerryImpl;
 import com.mycode.pathpilotserver.system.jwt.JWTTokenProvider;
 import com.mycode.pathpilotserver.user.dto.*;
 import com.mycode.pathpilotserver.user.models.User;
@@ -30,6 +31,8 @@ public class ServerControllerUser {
 
 
     private AuthenticationManager authentificateManager ;
+
+    private ImageServiceQuerryImpl imageServiceQuerryImpl;
 
     private JWTTokenProvider jwtTokenProvider;
 
@@ -78,8 +81,9 @@ public class ServerControllerUser {
 
     @PostMapping("/update/image")
     public ResponseEntity<String> changeImage(@RequestParam("email") String email, @RequestParam("file") MultipartFile file) {
-        String reply = userServiceCommand.uploadImage(file, email);
-        return new ResponseEntity<>(reply, HttpStatus.OK);
+        userServiceCommand.uploadImage(file, email);
+        String base64Image = imageServiceQuerryImpl.findImageByUserAfterEmail(email);
+        return ResponseEntity.ok(base64Image);
     }
 
     @PutMapping("/update" )

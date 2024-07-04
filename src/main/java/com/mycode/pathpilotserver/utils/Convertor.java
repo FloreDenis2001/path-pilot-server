@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.utils;
 
 import com.mycode.pathpilotserver.address.dto.AddressDTO;
+import com.mycode.pathpilotserver.address.models.Address;
 import com.mycode.pathpilotserver.company.dto.CompanyDTO;
 import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.driver.dto.DriverDTO;
@@ -24,8 +25,6 @@ import static com.mycode.pathpilotserver.city.utils.Utils.getCityByName;
 
 
 public class Convertor {
-
-
 
     public static ShipmentDTO convertToShipmentDTO(Shipment s) {
 
@@ -71,17 +70,6 @@ public class Convertor {
         return packageDTOS;
     }
 
-    public static Image convertMultipartFileToImage(MultipartFile file) {
-        Image image = new Image();
-        image.setName(file.getOriginalFilename());
-        image.setFileType(file.getContentType());
-        try {
-            image.setData(file.getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException("Could not convert MultipartFile to Image");
-        }
-        return image;
-    }
     public static CompanyDTO convertCompanyToCompanyDTO(Company company) {
         return CompanyDTO.builder()
                 .address(AddressDTO.from(company.getAddress()))
@@ -127,6 +115,15 @@ public class Convertor {
          }
 
          return Optional.of(routeDTOList);
+    }
+
+    public static Address convertAddressDTOToAddress(AddressDTO addressDTO) {
+        return Address.builder()
+                .cityDetails(getCityByName(addressDTO.city()))
+                .postalCode(addressDTO.postalCode())
+                .street(addressDTO.street())
+                .streetNumber(addressDTO.streetNumber())
+                .build();
     }
 
 

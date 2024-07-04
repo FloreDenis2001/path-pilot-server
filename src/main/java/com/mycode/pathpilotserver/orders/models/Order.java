@@ -16,10 +16,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@Data
 @SuperBuilder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Order  {
+public class Order {
 
     @Id
     @SequenceGenerator(name = "order_sequence", sequenceName = "order_sequence", allocationSize = 1)
@@ -31,7 +30,6 @@ public class Order  {
 
     @Column(name = "awb", nullable = false)
     private String awb;
-
 
     @Column(name = "weight", nullable = false)
     private double weight;
@@ -48,7 +46,6 @@ public class Order  {
     @Column(name = "delivery_description", nullable = false)
     private String deliveryDescription;
 
-
     @Column(name = "order_date", nullable = false)
     @EqualsAndHashCode.Include
     private LocalDateTime orderDate;
@@ -56,8 +53,8 @@ public class Order  {
     @Column(name = "total_amount", nullable = false)
     private double totalAmount;
 
-    @ManyToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
     @JsonBackReference
     private Customer customer;
 
@@ -71,16 +68,10 @@ public class Order  {
     @JsonBackReference
     private Route route;
 
-
-    public Order(LocalDateTime orderDate, double totalAmount, Customer customer) {
-        this.orderDate = orderDate;
-        this.totalAmount = totalAmount;
-        this.customer = customer;
-    }
-
     @Override
     public String toString() {
-        String sb = "Order{" + "awb='" + awb + '\'' +
+        return "Order{" +
+                "awb='" + awb + '\'' +
                 ", weight=" + weight +
                 ", height=" + height +
                 ", width=" + width +
@@ -89,6 +80,5 @@ public class Order  {
                 ", orderDate=" + orderDate +
                 ", totalAmount=" + totalAmount +
                 '}';
-        return sb;
     }
 }

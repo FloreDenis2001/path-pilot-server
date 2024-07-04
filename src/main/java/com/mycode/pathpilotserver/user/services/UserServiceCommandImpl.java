@@ -105,8 +105,7 @@ public class UserServiceCommandImpl implements UserServiceCommand {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new UnauthorizedAccessException("This file type is not supported");
         }
     }
 
@@ -116,13 +115,16 @@ public class UserServiceCommandImpl implements UserServiceCommand {
             Image imageData = Image.builder().name(file.getOriginalFilename()).fileType(file.getContentType()).data(compressedData).build();
 
             Image savedImage = imageRepo.save(imageData);
+
+            if (user.isEmpty()){
+                throw new UserNotFoundException("User not found");
+            }
             user.get().setImage(savedImage);
 
             userRepo.save(user.get());
             return "File created successfully: " + file.getOriginalFilename();
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new UnauthorizedAccessException("This file type is not supported");
         }
     }
 
@@ -134,16 +136,12 @@ public class UserServiceCommandImpl implements UserServiceCommand {
             throw new UserNotFoundException("User with email: " + registerDTO.company().email() + " already exists");
         }
 
-        try {
             Company company = getCompany(registerDTO);
             companyRepo.saveAndFlush(company);
 
             Customer customer = getCustomer(registerDTO);
             customer.setCompany(company);
             userRepo.saveAndFlush(customer);
-        }catch(IOException e){
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -197,7 +195,7 @@ public class UserServiceCommandImpl implements UserServiceCommand {
     }
 
     @NotNull
-    private  Company getCompany(RegisterDTO registerDTO) throws IOException {
+    private  Company getCompany(RegisterDTO registerDTO){
         Company company = new Company();
         company.setName(registerDTO.company().name());
         company.setRegistrationNumber(registerDTO.company().registrationNumber());
@@ -220,7 +218,7 @@ public class UserServiceCommandImpl implements UserServiceCommand {
 
 
     @NotNull
-    private  Customer getCustomer(RegisterDTO registerDTO) throws IOException {
+    private  Customer getCustomer(RegisterDTO registerDTO){
         Customer customer = new Customer();
         customer.setFirstName(registerDTO.user().firstName());
         customer.setLastName(registerDTO.user().lastName());
@@ -258,16 +256,13 @@ public class UserServiceCommandImpl implements UserServiceCommand {
 
 
     private void applyNewDetailsToUser(User user, UpdateUserRequest request) {
-
-
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
         user.setPhone(request.phone());
         user.getAddress().setStreet(request.street());
         user.getAddress().setStreetNumber(request.streetNumber());
         user.getAddress().setPostalCode(request.postalCode());
-        City city = getCityByName(request.city());
-        user.getAddress().setCityDetails(city);
+        user.getAddress().setCityDetails(getCityByName(request.city()));
     }
 
 }

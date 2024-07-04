@@ -1,8 +1,8 @@
 package com.mycode.pathpilotserver.customers.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mycode.pathpilotserver.orders.models.Order;
+import com.mycode.pathpilotserver.packages.models.Package;
 import com.mycode.pathpilotserver.user.models.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -18,7 +18,6 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@Data
 public class Customer extends User {
 
     @Id
@@ -27,17 +26,17 @@ public class Customer extends User {
     @Column(name = "id", updatable = false)
     private Long id;
 
-
-    @Setter
     @Column(name = "subscriptionType", nullable = false)
     @Enumerated(EnumType.STRING)
     private SubscriptionType subscriptionType;
 
-
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JsonManagedReference
     private Set<Order> orders;
 
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @JsonManagedReference
+    private Set<Package> packages;
 
 }

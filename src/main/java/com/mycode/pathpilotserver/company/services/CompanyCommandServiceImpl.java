@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.company.services;
 
 import com.mycode.pathpilotserver.company.dto.CompanyCreateRequest;
+import com.mycode.pathpilotserver.company.dto.CompanyDTO;
 import com.mycode.pathpilotserver.company.dto.UpdateCompanyRequest;
 import com.mycode.pathpilotserver.company.exceptions.CompanyAlreadyExistException;
 import com.mycode.pathpilotserver.company.exceptions.CompanyNotFoundException;
@@ -10,6 +11,7 @@ import com.mycode.pathpilotserver.driver.repository.DriverRepo;
 import com.mycode.pathpilotserver.user.exceptions.UserNotFoundException;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
+import com.mycode.pathpilotserver.utils.Convertor;
 import jakarta.transaction.Transactional;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -38,15 +40,14 @@ public class CompanyCommandServiceImpl implements CompanyCommandService {
             throw new CompanyAlreadyExistException("Company with registration number : " + companyCreateRequest.name() + " already exists");
         }
 
-        User user = userRepo.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException("User with email " + userEmail + " not found"));
-
-        Company newCompany = buildCompany(companyCreateRequest, user.getUsername());
+        userRepo.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException("User with email " + userEmail + " not found"));
+        Company newCompany = buildCompany(companyCreateRequest);
         companyRepo.save(newCompany);
     }
 
     @Override
     public void updateCompany(UpdateCompanyRequest updateCompanyRequest) {
-        Company company = companyRepo.findByRegistrationNumber(updateCompanyRequest.registrationNumber()).orElseThrow(() -> new CompanyNotFoundException("Company with registration number: " + updateCompanyRequest.registrationNumber() + " not found"));
+        Company company = companyRepo.findByRegistrationNumber(updateCompanyRequest.updatedCompany().registrationNumber()).orElseThrow(() -> new CompanyNotFoundException("Company with registration number: " + updateCompanyRequest.updatedCompany().registrationNumber() + " not found"));
 
         User user = userRepo.findByEmail(updateCompanyRequest.userEmail()).orElseThrow(() -> new UserNotFoundException("User with email " + updateCompanyRequest.userEmail() + " not found"));
 
@@ -56,7 +57,6 @@ public class CompanyCommandServiceImpl implements CompanyCommandService {
 
         companyRepo.save(company);
     }
-
     @Override
     public void deleteCompany(String registrationNumber) {
         Company company = companyRepo.findByRegistrationNumber(registrationNumber).orElseThrow(() -> new CompanyNotFoundException("Company with registration number: " + registrationNumber + " not found"));
@@ -64,24 +64,25 @@ public class CompanyCommandServiceImpl implements CompanyCommandService {
         companyRepo.delete(company);
     }
 
+
     @Scheduled(cron = "0 0 0 1 * ?")
     public void resetDriversSalary() {
         driverRepo.findAll().forEach(driver -> driver.setSalary(0.0));
         driverRepo.flush();
     }
 
-    private Company buildCompany(CompanyCreateRequest companyCreateRequest, String createdByUser) {
+    private Company buildCompany(CompanyCreateRequest companyCreateRequest) {
         return Company.builder().address(companyCreateRequest.address()).income(companyCreateRequest.capital()).email(companyCreateRequest.email()).name(companyCreateRequest.name()).phone(companyCreateRequest.phone()).registrationNumber(companyCreateRequest.registrationNumber()).industry(companyCreateRequest.industry()).website(companyCreateRequest.website()).build();
     }
 
-    private void applyCompanyUpdates(Company company, Company updatedCompany) {
-        updateIfNotNull(updatedCompany.getAddress(), company::setAddress);
-        updateIfNotNull(updatedCompany.getEmail(), company::setEmail);
-        updateIfNotNull(updatedCompany.getIndustry(), company::setIndustry);
-        updateIfNotNull(updatedCompany.getName(), company::setName);
-        updateIfNotNull(updatedCompany.getPhone(), company::setPhone);
-        updateIfNotNull(updatedCompany.getWebsite(), company::setWebsite);
-        updateIfPositive(updatedCompany.getIncome(), company::setIncome);
+    private void applyCompanyUpdates(Company company, CompanyDTO updatedCompany) {
+        updateIfNotNull(updatedCompany.address(), addressDTO -> company.setAddress(Convertor.convertAddressDTOToAddress(addressDTO)));
+        updateIfNotNull(updatedCompany.email(), company::setEmail);
+        updateIfPositive(updatedCompany.capital(), company::setIncome);
+        updateIfNotNull(updatedCompany.industry(), company::setIndustry);
+        updateIfNotNull(updatedCompany.name(), company::setName);
+        updateIfNotNull(updatedCompany.phone(), company::setPhone);
+        updateIfNotNull(updatedCompany.website(), company::setWebsite);
     }
 
     private <T> void updateIfNotNull(T value, Consumer<T> setter) {

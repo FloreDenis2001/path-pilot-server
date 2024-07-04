@@ -1,6 +1,5 @@
 package com.mycode.pathpilotserver.user.models;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mycode.pathpilotserver.address.models.Address;
@@ -8,16 +7,14 @@ import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.image.models.Image;
 import com.mycode.pathpilotserver.system.security.UserRole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Collection;
+import java.util.Objects;
 
 @Entity(name = "User")
 @Table(name = "users")
@@ -41,10 +38,8 @@ public abstract class User implements UserDetails {
     @Column(name = "lastName", nullable = false)
     private String lastName;
 
-
     @Column(name = "username", nullable = false)
     private String username;
-
 
     @Column(name = "password", nullable = false)
     @JsonIgnore
@@ -63,17 +58,15 @@ public abstract class User implements UserDetails {
     @Embedded
     private Address address;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     @JsonBackReference("user-company")
     private Company company;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "image_id")
     @JsonBackReference("user-image")
     private Image image;
-
 
     public User(String username, String password, String email, UserRole role) {
         this.username = username;
@@ -82,13 +75,28 @@ public abstract class User implements UserDetails {
         this.role = role;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return id != null && id.equals(user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+
     public void setPassword(String password) {
-        this.password =new BCryptPasswordEncoder().encode(password);
+        this.password = new BCryptPasswordEncoder().encode(password);
     }
 
     @Override
     public String toString() {
-        String sb = "User{" + "firstName='" + firstName + '\'' +
+        return "User{" +
+                "firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
@@ -96,14 +104,12 @@ public abstract class User implements UserDetails {
                 ", role=" + role +
                 ", address=" + address +
                 '}';
-        return sb;
     }
 
     public void setImage(Image image) {
         this.image = image;
         image.setUser(this);
     }
-
 
     @Override
     @JsonIgnore
@@ -134,6 +140,5 @@ public abstract class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 
 }
