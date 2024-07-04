@@ -1,5 +1,6 @@
 package com.mycode.pathpilotserver.utils;
 
+import com.mycode.pathpilotserver.address.dto.AddressDTO;
 import com.mycode.pathpilotserver.company.dto.CompanyDTO;
 import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.driver.dto.DriverDTO;
@@ -82,14 +83,13 @@ public class Convertor {
     }
     public static CompanyDTO convertCompanyToCompanyDTO(Company company) {
         return CompanyDTO.builder()
-                .address(company.getAddress())
+                .address(AddressDTO.from(company.getAddress()))
                 .capital(company.getIncome())
                 .email(company.getEmail())
                 .name(company.getName())
                 .phone(company.getPhone())
                 .registrationNumber(company.getRegistrationNumber())
                 .industry(company.getIndustry())
-                .address(company.getAddress())
                 .website(company.getWebsite())
                 .build();
     }
