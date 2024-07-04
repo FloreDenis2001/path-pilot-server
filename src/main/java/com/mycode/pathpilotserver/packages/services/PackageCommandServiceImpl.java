@@ -1,6 +1,5 @@
 package com.mycode.pathpilotserver.packages.services;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycode.pathpilotserver.address.dto.AddressDTO;
 import com.mycode.pathpilotserver.address.models.Address;
@@ -8,6 +7,7 @@ import com.mycode.pathpilotserver.city.models.City;
 import com.mycode.pathpilotserver.customers.exceptions.CustomerNotFoundException;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.packages.dto.PackageRequest;
+import com.mycode.pathpilotserver.packages.exceptions.PackageNotFoundException;
 import com.mycode.pathpilotserver.packages.models.Package;
 import com.mycode.pathpilotserver.packages.models.PackageStatus;
 import com.mycode.pathpilotserver.packages.repository.PackageRepo;
@@ -19,10 +19,8 @@ import com.mycode.pathpilotserver.user.repository.UserRepo;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -69,7 +67,6 @@ PackageCommandServiceImpl implements PackageCommandService {
         try {
             Shipment shipment = buildShipment(packageRequest);
             Package pack = buildPackage(packageRequest, customer.get(), shipment);
-
             shipmentRepo.saveAndFlush(shipment);
             packRepo.saveAndFlush(pack);
         } catch (IOException e) {
@@ -81,7 +78,7 @@ PackageCommandServiceImpl implements PackageCommandService {
     public void deletePackage(String awb) {
         Optional<Package> pack = packRepo.getPackageByAwb(awb);
         if (pack.isEmpty()) {
-            throw new CustomerNotFoundException("Package with awb: " + awb + " not found");
+            throw new PackageNotFoundException("Package with awb: " + awb + " not found");
         }
         packRepo.delete(pack.get());
     }
@@ -90,7 +87,7 @@ PackageCommandServiceImpl implements PackageCommandService {
     public void editPackage(String awb, PackageRequest packageRequest) {
         Optional<Package> pack = packRepo.getPackageByAwb(awb);
         if (pack.isEmpty()) {
-            throw new CustomerNotFoundException("Package with awb: " + awb + " not found");
+            throw new PackageNotFoundException("Package with awb: " + awb + " not found");
         }
 
         try {
