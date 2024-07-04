@@ -1,6 +1,5 @@
 package com.mycode.pathpilotserver.user.services;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycode.pathpilotserver.address.dto.AddressDTO;
 import com.mycode.pathpilotserver.address.models.Address;
@@ -13,7 +12,6 @@ import com.mycode.pathpilotserver.email.services.EmailServiceCommandImpl;
 import com.mycode.pathpilotserver.image.models.Image;
 import com.mycode.pathpilotserver.image.repository.ImageRepo;
 import com.mycode.pathpilotserver.image.utils.ImageUtils;
-import com.mycode.pathpilotserver.packages.services.PackageCommandServiceImpl;
 import com.mycode.pathpilotserver.system.jwt.JWTTokenProvider;
 import com.mycode.pathpilotserver.system.security.UserRole;
 import com.mycode.pathpilotserver.user.dto.DeleteUserRequest;
@@ -22,7 +20,6 @@ import com.mycode.pathpilotserver.user.dto.ResetPasswordRequest;
 import com.mycode.pathpilotserver.user.dto.UpdateUserRequest;
 import com.mycode.pathpilotserver.user.exceptions.UnauthorizedAccessException;
 import com.mycode.pathpilotserver.user.exceptions.UserNotFoundException;
-import com.mycode.pathpilotserver.user.exceptions.WrongPasswordException;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
 import jakarta.transaction.Transactional;
@@ -30,19 +27,14 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 
-import static com.mycode.pathpilotserver.city.utils.Utils.readCitiesFromJsonFile;
+import static com.mycode.pathpilotserver.city.utils.Utils.getCityByName;
 
 @Service
 @Transactional
@@ -214,8 +206,7 @@ public class UserServiceCommandImpl implements UserServiceCommand {
         company.setEmail(registerDTO.company().email());
         company.setIncome(registerDTO.company().capital());
 
-        List<City> cities = readCitiesFromJsonFile();
-        City city = getCityByName(registerDTO.user().address().city(), cities);
+        City city = getCityByName(registerDTO.user().address().city());
         Address fullAddress = buildAddress(city, registerDTO.user().address());
 
         company.setAddress(fullAddress);
@@ -240,8 +231,7 @@ public class UserServiceCommandImpl implements UserServiceCommand {
         customer.setUsername(registerDTO.user().username());
         customer.setSubscriptionType(SubscriptionType.BASIC);
 
-        List<City> cities = readCitiesFromJsonFile();
-        City city = getCityByName(registerDTO.user().address().city(), cities);
+        City city = getCityByName(registerDTO.user().address().city());
         Address fullAddress = buildAddress(city, registerDTO.user().address());
 
         customer.setAddress(fullAddress);
@@ -259,12 +249,7 @@ public class UserServiceCommandImpl implements UserServiceCommand {
     }
 
 
-    private City getCityByName(String cityName, List<City> cities) {
-        return cities.stream()
-                .filter(city -> city.getCity().equals(cityName))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("City not found: " + cityName));
-    }
+
     private User findUserByEmail(String email) {
         return userRepo.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found for email: " + email));
     }
@@ -281,13 +266,8 @@ public class UserServiceCommandImpl implements UserServiceCommand {
         user.getAddress().setStreet(request.street());
         user.getAddress().setStreetNumber(request.streetNumber());
         user.getAddress().setPostalCode(request.postalCode());
-        try {
-            List<City> cities = readCitiesFromJsonFile();
-            City city = getCityByName(request.city(), cities);
-            user.getAddress().setCityDetails(city);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        City city = getCityByName(request.city());
+        user.getAddress().setCityDetails(city);
     }
 
 }

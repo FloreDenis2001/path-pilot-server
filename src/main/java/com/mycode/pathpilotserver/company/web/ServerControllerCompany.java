@@ -9,9 +9,7 @@ import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.company.services.CompanyCommandServiceImpl;
 import com.mycode.pathpilotserver.company.services.CompanyQuerryServiceImpl;
 import com.mycode.pathpilotserver.driver.dto.DriverDTO;
-import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.packages.dto.PackageDTO;
-import com.mycode.pathpilotserver.packages.models.Package;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,9 +35,10 @@ public class ServerControllerCompany {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/findByName={name}")
-    public ResponseEntity<Company> findByName(@PathVariable String  name) {
+    public ResponseEntity<Company> findByName(@PathVariable String name) {
         return ResponseEntity.ok(companyQuerryService.findByName(name).get());
     }
+
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/findByEmail={email}")
     public ResponseEntity<Optional<Company>> findByEmail(@PathVariable String email) {
@@ -66,7 +65,7 @@ public class ServerControllerCompany {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/create/{userEmail}")
-    public ResponseEntity<String> createCompany(@RequestBody CompanyCreateRequest company ,@PathVariable String userEmail) {
+    public ResponseEntity<String> createCompany(@RequestBody CompanyCreateRequest company, @PathVariable String userEmail) {
         companyCommandService.createCompany(company, userEmail);
         return ResponseEntity.ok("Company created successfully");
     }
@@ -90,8 +89,8 @@ public class ServerControllerCompany {
     public ResponseEntity<CompanyDataDashboard> getCompany(@PathVariable String registrationNumber) {
         double totalSumLastMonthPackages = companyQuerryService.getTotalSumLastMonthPackages(registrationNumber);
         int totalNumberOfPackagesLastMonth = companyQuerryService.getTotalNumberOfPackagesLastMonth(registrationNumber);
-        double totalSumLastMonthOfSalary= companyQuerryService.getTotalSumLastMonthOfSalary(registrationNumber);
-        double totalSumLastMonthProfit= companyQuerryService.getTotalSumLastMonthProfit(registrationNumber);
+        double totalSumLastMonthOfSalary = companyQuerryService.getTotalSumLastMonthOfSalary(registrationNumber);
+        double totalSumLastMonthProfit = companyQuerryService.getTotalSumLastMonthProfit(registrationNumber);
         Optional<List<DriverDTO>> bestFiveDriversByRanking = companyQuerryService.getBestFiveDriversByRanking(registrationNumber);
         Optional<List<PackageDTO>> lastFivePackagesAdded = companyQuerryService.lastFivePackagesAdded(registrationNumber);
         CompanyDataDashboard companyDataDashboard = CompanyDataDashboard.builder().

@@ -1,6 +1,5 @@
 package com.mycode.pathpilotserver.driver.services;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycode.pathpilotserver.address.dto.AddressDTO;
 import com.mycode.pathpilotserver.address.models.Address;
@@ -23,7 +22,6 @@ import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -47,14 +45,14 @@ public class DriverCommandServiceImpl implements DriverCommandService {
 
     @Override
     public void create(DriverCreateRequest driverCreateRequest) {
-        Optional<Driver> user= driverRepo.findByLicenseNumber(driverCreateRequest.licenseNumber());
-        Optional<Company> company=companyRepo.findByRegistrationNumber(driverCreateRequest.companyRegistrationNumber());
+        Optional<Driver> user = driverRepo.findByLicenseNumber(driverCreateRequest.licenseNumber());
+        Optional<Company> company = companyRepo.findByRegistrationNumber(driverCreateRequest.companyRegistrationNumber());
         if (user.isPresent()) {
             throw new DriverAlreadyExistException("Driver with license number: " + driverCreateRequest.licenseNumber() + " already exist");
         }
 
-        if(company.isEmpty()){
-            throw new CompanyNotFoundException("Company with registration number: "+driverCreateRequest.companyRegistrationNumber()+" dosen't exist !");
+        if (company.isEmpty()) {
+            throw new CompanyNotFoundException("Company with registration number: " + driverCreateRequest.companyRegistrationNumber() + " dosen't exist !");
         }
 
         Driver newDriver = getDriver(driverCreateRequest, company);
@@ -62,7 +60,7 @@ public class DriverCommandServiceImpl implements DriverCommandService {
     }
 
     @NotNull
-    private  Driver getDriver(DriverCreateRequest driverCreateRequest, Optional<Company> company) {
+    private Driver getDriver(DriverCreateRequest driverCreateRequest, Optional<Company> company) {
         Driver newDriver = new Driver();
         newDriver.setLicenseNumber(driverCreateRequest.licenseNumber());
         newDriver.setPhone(driverCreateRequest.phone());
@@ -76,13 +74,13 @@ public class DriverCommandServiceImpl implements DriverCommandService {
         newDriver.setSalary(0);
         newDriver.setRole(UserRole.DRIVER);
         newDriver.setCompany(company.get());
-        try{
+        try {
             List<City> cities = readCitiesFromJsonFile();
             City city = getCityByName(driverCreateRequest.address().city(), cities);
             Address fullAddress = buildAddress(city, driverCreateRequest.address());
             newDriver.setAddress(fullAddress);
 
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -109,7 +107,11 @@ public class DriverCommandServiceImpl implements DriverCommandService {
 
     @Override
     public void update(DriverUpdateRequest driverUpdateRequest) {
-        Optional<Driver> driver = driverRepo.findByLicenseNumber(driverUpdateRequest.licenseNumber());
+        Optional<Company> company = companyRepo.findByRegistrationNumber(driverUpdateRequest.companyRegistrationNumber());
+        if (company.isEmpty()) {
+            throw new CompanyNotFoundException("Company with registration number: " + driverUpdateRequest.companyRegistrationNumber() + " dosen't exist !");
+        }
+        Optional<Driver> driver = driverRepo.findByLicenseNumberAndCompany(driverUpdateRequest.licenseNumber(),company.get());
         if (driver.isPresent()) {
             driver.get().setLicenseNumber(driverUpdateRequest.licenseNumber());
             driver.get().setPhone(driverUpdateRequest.phone());
@@ -128,23 +130,27 @@ public class DriverCommandServiceImpl implements DriverCommandService {
     }
 
     @Override
-    public void removeByLicenseNumber(String email, String licenseNumber) {
-        Optional<Driver> driver = driverRepo.findByLicenseNumber(licenseNumber);
-        Optional<User> user = userRepo.findByEmail(email);
-        if(driver.isEmpty()) {
+    public void removeByLicenseNumber(String email, String licenseNumber,String companyRegistrationNumber) {
+        Optional<Company> company = companyRepo.findByRegistrationNumber(companyRegistrationNumber);
+        if (company.isEmpty()) {
+            throw new CompanyNotFoundException("Company with registration number: " + companyRegistrationNumber + " dosen't exist !");
+        }
+        Optional<Driver> driver = driverRepo.findByLicenseNumberAndCompany(licenseNumber,company.get());
+
+        if (driver.isEmpty()) {
             throw new DriverNotFoundException("Driver with license number: " + licenseNumber + " not found");
         }
 
-        if(user.isEmpty()){
+        Optional<User> user = userRepo.findByEmail(email);
+        if (user.isEmpty()) {
             throw new UserNotFoundException("User with email: " + email + " not found");
         }
 
-        if(user.get().getRole()==UserRole.CUSTOMER || user.get().equals(driver.get())){
+        if (user.get().getRole() == UserRole.CUSTOMER || user.get().equals(driver.get())) {
             driver.ifPresentOrElse(driverRepo::delete, () -> {
                 throw new DriverNotFoundException("Driver not found for license number: " + licenseNumber);
             });
-        }
-        else{
+        } else {
             throw new WrongPasswordException("Invalid password for user: " + user.get().getEmail());
         }
     }

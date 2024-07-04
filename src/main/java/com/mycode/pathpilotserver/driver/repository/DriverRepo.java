@@ -1,5 +1,6 @@
 package com.mycode.pathpilotserver.driver.repository;
 
+import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.driver.models.Driver;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface DriverRepo extends JpaRepository<Driver, Long> {
 
-    
+
     Optional<Driver> findByLicenseNumber(String licenseNumber);
 
 
@@ -23,6 +24,8 @@ public interface DriverRepo extends JpaRepository<Driver, Long> {
 
     @Query("SELECT d FROM Driver d WHERE d.company.registrationNumber = ?1 ORDER BY d.rating DESC")
     Optional<List<Driver>> bestDriversByHighestRanking(String registrationNumber);
+
+    Optional<Driver> findByLicenseNumberAndCompany(String licenseNumber, Company company);
 
 
 }

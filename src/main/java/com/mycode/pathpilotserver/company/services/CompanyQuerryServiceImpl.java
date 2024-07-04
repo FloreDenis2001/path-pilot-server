@@ -24,16 +24,13 @@ public class CompanyQuerryServiceImpl implements CompanyQuerryService {
 
     private final CompanyRepo companyRepo;
     private final PackageRepo packageRepo;
-
     private final DriverRepo driverRepo;
-
 
     public CompanyQuerryServiceImpl(CompanyRepo companyRepo, PackageRepo packageRepo, DriverRepo driverRepo) {
         this.companyRepo = companyRepo;
         this.packageRepo = packageRepo;
         this.driverRepo = driverRepo;
     }
-
 
     @Override
     public Optional<Company> findByName(String name) {
@@ -66,40 +63,33 @@ public class CompanyQuerryServiceImpl implements CompanyQuerryService {
         }
     }
 
-
-
     @Override
     public Optional<CompanyDTO> findByRegistrationNumber(String registrationNumber) {
-        Optional<Company> company = companyRepo.findByRegistrationNumber(registrationNumber);
-        if (company.isPresent()) {
-            return Optional.of(Convertor.convertCompanyToCompanyDTO(company.get()));
-        } else {
-            throw new CompanyNotFoundException("Company with registration number: " + registrationNumber + " not found");
-        }
+        return companyRepo.findByRegistrationNumber(registrationNumber)
+                .map(Convertor::convertCompanyToCompanyDTO)
+                .or(() -> {
+                    throw new CompanyNotFoundException("Company with registration number: " + registrationNumber + " not found");
+                });
     }
-
 
     @Override
     public Optional<List<Company>> findCompaniesByIndustry(String industry) {
-        Optional<List<Company>> companies = companyRepo.findCompaniesByIndustry(industry);
-        if (companies.isPresent()) {
-            return companies;
-        } else {
-            throw new CompanyNotFoundException("Company with industry: " + industry + " not found");
-        }
+        return companyRepo.findCompaniesByIndustry(industry)
+                .or(() -> {
+                    throw new CompanyNotFoundException("Companies in industry: " + industry + " not found");
+                });
     }
 
     @Override
     public double getTotalSumLastMonthPackages(String registerCompany) {
-
         LocalDate lastMonth = LocalDate.now().minusMonths(1);
         List<Package> packages = packageRepo.getAllByRegisterCompany(registerCompany)
                 .orElseThrow(() -> new PackageNotFoundException("Packages for company with registration number: " + registerCompany + " not found"));
-        double totalSum = packages.stream()
+
+        return packages.stream()
                 .filter(pack -> pack.getOrderDate().isAfter(lastMonth.atStartOfDay()))
                 .mapToDouble(Package::getTotalAmount)
                 .sum();
-        return Double.parseDouble(String.format("%.2f", totalSum));
     }
 
     @Override
@@ -118,60 +108,42 @@ public class CompanyQuerryServiceImpl implements CompanyQuerryService {
         List<Driver> drivers = driverRepo.findAllByCompanyRegistrationNumber(registerCompany)
                 .orElseThrow(() -> new CompanyNotFoundException("Drivers for company with registration number: " + registerCompany + " not found"));
 
-        double totalSalary = drivers.stream()
+        return drivers.stream()
                 .mapToDouble(Driver::getSalary)
                 .sum();
-
-        return Double.parseDouble(String.format("%.2f", totalSalary));
     }
-
 
     @Override
     public double getTotalSumLastMonthProfit(String registerCompany) {
-        LocalDate lastMonth = LocalDate.now().minusMonths(1);
-        List<Package> packages = packageRepo.getAllByRegisterCompany(registerCompany)
-                .orElseThrow(() -> new PackageNotFoundException(
-                        "Packages for company with registration number: " + registerCompany + " not found"
-                ));
-        double totalRevenue = packages.stream()
-                .filter(pack -> pack.getOrderDate().isAfter(lastMonth.atStartOfDay()))
-                .mapToDouble(Package::getTotalAmount)
-                .sum();
+        double totalRevenue = getTotalSumLastMonthPackages(registerCompany);
         double totalExpenses = getTotalSumLastMonthOfSalary(registerCompany);
-        double profit = totalRevenue - totalExpenses;
-        return Double.parseDouble(String.format("%.2f", profit));
+        return totalRevenue - totalExpenses;
     }
-
 
     @Override
     public Optional<List<DriverDTO>> getBestFiveDriversByRanking(String registerCompany) {
-        Optional<List<Driver>> optionalDrivers = driverRepo.bestDriversByHighestRanking(registerCompany);
+        List<Driver> drivers = driverRepo.bestDriversByHighestRanking(registerCompany)
+                .orElseThrow(() -> new CompanyNotFoundException("Drivers for company with registration number: " + registerCompany + " not found"));
 
-        if (optionalDrivers.isEmpty()) {
-            throw new CompanyNotFoundException("Drivers for company with registration number: " + registerCompany + " not found");
-        }
+        List<DriverDTO> bestDrivers = drivers.stream()
+                .sorted((d1, d2) -> Double.compare(d2.getRating(), d1.getRating()))
+                .limit(5)
+                .map(DriverDTO::fromDriver)
+                .collect(Collectors.toList());
 
-        List<Driver> drivers = optionalDrivers.get();
-
-        List<Driver> bestDrivers = drivers.size() > 5 ? drivers.subList(0, 5) : drivers;
-
-        return Optional.of(DriverDTO.fromList(bestDrivers));
+        return Optional.of(bestDrivers);
     }
 
     @Override
     public Optional<List<PackageDTO>> lastFivePackagesAdded(String registerCompany) {
-        Optional<List<Package>> packages = packageRepo.getAllByRegisterCompany(registerCompany);
-        if (packages.isEmpty()) {
-            throw new PackageNotFoundException("Packages for company with registration number: " + registerCompany + " not found");
-        }
+        List<Package> packages = packageRepo.getAllByRegisterCompany(registerCompany)
+                .orElseThrow(() -> new PackageNotFoundException("Packages for company with registration number: " + registerCompany + " not found"));
 
-        List<Package> sortedPackages = packages.get().stream()
-                .sorted((p1, p2) ->p2.getOrderDate().compareTo(p1.getOrderDate()))
+        List<Package> sortedPackages = packages.stream()
+                .sorted((p1, p2) -> p2.getOrderDate().compareTo(p1.getOrderDate()))
                 .limit(5)
                 .collect(Collectors.toList());
 
         return Optional.of(Convertor.convertToPackageDTO(sortedPackages));
     }
-
-
 }

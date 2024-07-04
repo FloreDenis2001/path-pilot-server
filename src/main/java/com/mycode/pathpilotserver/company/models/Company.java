@@ -1,7 +1,6 @@
 package com.mycode.pathpilotserver.company.models;
 
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -43,9 +42,6 @@ public class Company extends AbstractAuditingEntity {
 
     @Embedded
     @AttributeOverrides({
-            @AttributeOverride(name = "country", column = @Column(name = "country")),
-            @AttributeOverride(name = "city", column = @Column(name = "city")),
-            @AttributeOverride(name = "street", column = @Column(name = "street")),
             @AttributeOverride(name = "streetNumber", column = @Column(name = "number")),
             @AttributeOverride(name = "postalCode", column = @Column(name = "postal_code"))
     })
@@ -76,7 +72,7 @@ public class Company extends AbstractAuditingEntity {
 
     @Override
     public String toString() {
-        String sb = "Company{" + ", users=" + users +
+        return "Company{" + ", users=" + users +
                 ", vehicles=" + vehicles +
                 ", address=" + address +
                 ", name='" + name + '\'' +
@@ -87,6 +83,5 @@ public class Company extends AbstractAuditingEntity {
                 ", email='" + email + '\'' +
                 ", website='" + website + '\'' +
                 '}';
-        return sb;
     }
 }

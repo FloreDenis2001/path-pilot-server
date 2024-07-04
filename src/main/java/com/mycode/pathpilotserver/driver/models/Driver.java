@@ -1,7 +1,5 @@
 package com.mycode.pathpilotserver.driver.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mycode.pathpilotserver.routes.models.Route;
 import com.mycode.pathpilotserver.user.models.User;
@@ -20,7 +18,7 @@ import java.util.Set;
 @Data
 @SuperBuilder
 @AllArgsConstructor
-public class Driver extends User{
+public class Driver extends User {
 
     @Id
     @SequenceGenerator(name = "driver_sequence", sequenceName = "driver_sequence", allocationSize = 1)
@@ -36,19 +34,20 @@ public class Driver extends User{
     private double salary;
 
 
-    @Column(name="is_available", nullable = false)
+    @Column(name = "is_available", nullable = false)
     private boolean isAvailable;
 
-    @Column(name="rating", nullable = false)
+    @Column(name = "rating", nullable = false)
     private double rating;
 
-    @Column(name="experience", nullable = false)
+    @Column(name = "experience", nullable = false)
     private int experience;
 
 
     @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private Set<Route> routes;
+
     public void increaseSalaryByKilometers(double kilometers) {
         double increaseAmount = kilometers * 0.08;
         this.salary += increaseAmount;

@@ -2,14 +2,13 @@ package com.mycode.pathpilotserver.packages.web;
 
 import com.mycode.pathpilotserver.packages.dto.PackageDTO;
 import com.mycode.pathpilotserver.packages.dto.PackageRequest;
+import com.mycode.pathpilotserver.packages.models.Package;
 import com.mycode.pathpilotserver.packages.services.PackageCommandServiceImpl;
 import com.mycode.pathpilotserver.packages.services.PackageQuerryServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import com.mycode.pathpilotserver.packages.models.Package;
 
 import java.util.List;
 

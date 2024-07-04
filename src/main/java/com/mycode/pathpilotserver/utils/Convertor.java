@@ -13,13 +13,14 @@ import com.mycode.pathpilotserver.routes.dto.RouteDTO;
 import com.mycode.pathpilotserver.routes.models.Route;
 import com.mycode.pathpilotserver.shipments.dto.ShipmentDTO;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
-import com.mycode.pathpilotserver.vehicles.models.Vehicle;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.mycode.pathpilotserver.city.utils.Utils.getCityByName;
 
 
 public class Convertor {
@@ -33,8 +34,8 @@ public class Convertor {
                 .destinationName(s.getDestinationName())
                 .originPhone(s.getOriginPhone())
                 .destinationPhone(s.getDestinationPhone())
-                .origin(s.getOriginAddress())
-                .destination(s.getDestinationAddress())
+                .origin(AddressDTO.from(s.getOriginAddress()))
+                .destination(AddressDTO.from(s.getDestinationAddress()))
                 .status(s.getStatus().toString())
                 .totalDistance(s.getTotalDistance())
                 .build();
@@ -114,7 +115,7 @@ public class Convertor {
     public static Optional<List<RouteDTO>> convertRouteToRouteDTO(List<Route> routes){
          List<RouteDTO> routeDTOList=new ArrayList<>();
          for(Route r: routes){
-             DriverDTO driverDTO = DriverDTO.from(r.getDriver());
+             DriverDTO driverDTO = DriverDTO.fromDriver(r.getDriver());
              RouteDTO routeDTO=RouteDTO.builder()
                      .driver(driverDTO)
                      .vehicle(r.getVehicle())
@@ -127,4 +128,6 @@ public class Convertor {
 
          return Optional.of(routeDTOList);
     }
+
+
 }

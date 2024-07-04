@@ -1,37 +1,19 @@
 package com.mycode.pathpilotserver;
 
-import com.mycode.pathpilotserver.company.dto.CompanyDataDashboard;
-import com.mycode.pathpilotserver.company.repository.CompanyRepo;
-import com.mycode.pathpilotserver.company.services.CompanyQuerryService;
-import com.mycode.pathpilotserver.driver.dto.DriverDTO;
-import com.mycode.pathpilotserver.driver.models.Driver;
-import com.mycode.pathpilotserver.driver.repository.DriverRepo;
-import com.mycode.pathpilotserver.orders.repository.OrderRepo;
-import com.mycode.pathpilotserver.packages.dto.PackageDTO;
-import com.mycode.pathpilotserver.packages.models.Package;
-import com.mycode.pathpilotserver.routes.repository.RouteRepo;
-import com.mycode.pathpilotserver.routes.services.RouteServiceCommandImpl;
-import com.mycode.pathpilotserver.shipments.repository.ShipmentRepo;
-import com.mycode.pathpilotserver.user.repository.UserRepo;
-import com.mycode.pathpilotserver.user.services.UserServiceCommandImpl;
-import com.mycode.pathpilotserver.vehicles.repository.VehicleRepo;
 import jakarta.transaction.Transactional;
-import org.json.JSONException;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 @SpringBootApplication
 @EnableFeignClients

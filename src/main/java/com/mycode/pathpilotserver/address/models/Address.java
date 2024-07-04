@@ -4,7 +4,6 @@ import com.mycode.pathpilotserver.city.models.City;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Embedded;
 import lombok.*;
-import org.jetbrains.annotations.NotNull;
 
 @Embeddable
 @AllArgsConstructor
@@ -12,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 @Setter
 @Getter
 @Builder
-public class Address{
+public class Address {
 
     @Embedded
     private City cityDetails;

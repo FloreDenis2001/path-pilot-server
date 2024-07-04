@@ -49,15 +49,15 @@ public class ServerControllerDriver {
 
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteDriver(@RequestParam("email") String email, @RequestParam("licenseNumber") String licenseNumber) {
-        driverCommandService.removeByLicenseNumber(email, licenseNumber);
+    public ResponseEntity<String> deleteDriver(@RequestParam("email") String email, @RequestParam("licenseNumber") String licenseNumber , @RequestParam("companyRegistrationNumber") String companyRegistrationNumber) {
+        driverCommandService.removeByLicenseNumber(email, licenseNumber, companyRegistrationNumber);
         return new ResponseEntity<>("Driver with license number: " + licenseNumber + " deleted successfully", HttpStatus.OK);
     }
 
 
     @GetMapping("/allByCompany")
-    public ResponseEntity<Optional<List<DriverDTO>>> getDriversByCompany(@RequestParam String registrationNumber){
-        return new ResponseEntity<>(driverServiceQuerry.getAllDriversByCompany(registrationNumber),HttpStatus.OK);
+    public ResponseEntity<Optional<List<DriverDTO>>> getDriversByCompany(@RequestParam String registrationNumber) {
+        return new ResponseEntity<>(driverServiceQuerry.getAllDriversByCompany(registrationNumber), HttpStatus.OK);
     }
 
 

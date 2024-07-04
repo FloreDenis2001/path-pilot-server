@@ -13,7 +13,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
 
+import static com.mycode.pathpilotserver.city.utils.Utils.getCityByName;
 
 @Service
 @Transactional
@@ -29,66 +32,86 @@ public class VehicleServiceCommandImpl implements VehicleServiceCommand {
 
     @Override
     public void create(CreateVehicleRequest createVehicleRequest) {
-        Optional<Vehicle> vehicle = vehicleRepo.findByRegistrationNumber(createVehicleRequest.registrationNumber());
-        Optional<Company> company = companyRepo.findByRegistrationNumber(createVehicleRequest.companyRegistrationNumber());
-
-        if (vehicle.isPresent()) {
-            throw new VehicleAlreadyExistException("Vehicle with registration number " + createVehicleRequest.registrationNumber() + " already exist");
+        if (vehicleRepo.findByRegistrationNumber(createVehicleRequest.registrationNumber()).isPresent()) {
+            throw new VehicleAlreadyExistException("Vehicle with registration number " + createVehicleRequest.registrationNumber() + " already exists");
         }
 
-        if (company.isEmpty()) {
-            throw new CompanyNotFoundException("Company with registration number " + createVehicleRequest.companyRegistrationNumber() + " not found");
-        }
+        Company company = companyRepo.findByRegistrationNumber(createVehicleRequest.companyRegistrationNumber())
+                .orElseThrow(() -> new CompanyNotFoundException("Company with registration number " + createVehicleRequest.companyRegistrationNumber() + " not found"));
 
-        Vehicle vehicleCreated = createVehicle(createVehicleRequest, company.get());
-        vehicleRepo.save(vehicleCreated);
+        Vehicle vehicle = Vehicle.builder()
+                .currentLocation(getCityByName(createVehicleRequest.currentLocation()))
+                .registrationNumber(createVehicleRequest.registrationNumber())
+                .fuelType(createVehicleRequest.fuelType())
+                .make(createVehicleRequest.make())
+                .model(createVehicleRequest.model())
+                .year(createVehicleRequest.year())
+                .km(createVehicleRequest.km())
+                .fuelCapacity(createVehicleRequest.fuelCapacity())
+                .fuelConsumption(createVehicleRequest.fuelConsumption())
+                .lastService(createVehicleRequest.lastService())
+                .nextService(createVehicleRequest.nextService())
+                .capacity(createVehicleRequest.capacity())
+                .weight(createVehicleRequest.weight())
+                .width(createVehicleRequest.width())
+                .height(createVehicleRequest.height())
+                .length(createVehicleRequest.length())
+                .isActive(false)
+                .company(company)
+                .build();
+
+        vehicleRepo.save(vehicle);
     }
 
     @Override
     public void update(UpdatedVehicleRequest updatedVehicleRequest) {
-        Optional<Vehicle> vehicle = vehicleRepo.findByRegistrationNumber(updatedVehicleRequest.registrationNumber());
-        if (vehicle.isPresent()) {
-            Vehicle existingVehicle = vehicle.get();
-            updateVehicleAttributes(existingVehicle, updatedVehicleRequest);
-            vehicleRepo.save(existingVehicle);
-        } else {
-            throw new VehicleNotFoundException("Vehicle with registration number " + updatedVehicleRequest.registrationNumber() + " not found");
+        Vehicle vehicle = vehicleRepo.findByRegistrationNumber(updatedVehicleRequest.registrationNumber())
+                .orElseThrow(() -> new VehicleNotFoundException("Vehicle with registration number " + updatedVehicleRequest.registrationNumber() + " not found"));
+
+        boolean isUpdated = false;
+
+        updateIfNotNull(updatedVehicleRequest.fuelType(), vehicle::setFuelType);
+        updateIfNotNull(updatedVehicleRequest.make(), vehicle::setMake);
+        updateIfNotNull(updatedVehicleRequest.model(), vehicle::setModel);
+        updateIfNotNull(updatedVehicleRequest.year(), vehicle::setYear);
+        updateIfNotNull(updatedVehicleRequest.km(), vehicle::setKm);
+        updateIfPositive(updatedVehicleRequest.fuelCapacity(), vehicle::setFuelCapacity);
+        updateIfPositive(updatedVehicleRequest.fuelConsumption(), vehicle::setFuelConsumption);
+        updateIfNotNull(updatedVehicleRequest.lastService(), vehicle::setLastService);
+        updateIfNotNull(updatedVehicleRequest.nextService(), vehicle::setNextService);
+        updateIfNotNull(updatedVehicleRequest.capacity(), vehicle::setCapacity);
+        updateIfPositive(updatedVehicleRequest.width(), vehicle::setWidth);
+        updateIfPositive(updatedVehicleRequest.height(), vehicle::setHeight);
+        updateIfPositive(updatedVehicleRequest.length(), vehicle::setLength);
+        updateIfPositive(updatedVehicleRequest.weight(), vehicle::setWeight);
+
+        if (updatedVehicleRequest.active() != vehicle.isActive()) {
+            vehicle.setActive(updatedVehicleRequest.active());
+            isUpdated = true;
+        }
+
+        if (isUpdated) {
+            vehicleRepo.save(vehicle);
         }
     }
 
-    private void updateVehicleAttributes(Vehicle vehicle, UpdatedVehicleRequest updatedVehicleRequest) {
-        vehicle.setRegistrationNumber(updatedVehicleRequest.registrationNumber());
-        vehicle.setFuelType(updatedVehicleRequest.fuelType());
-        vehicle.setMake(updatedVehicleRequest.make());
-        vehicle.setModel(updatedVehicleRequest.model());
-        vehicle.setYear(updatedVehicleRequest.year());
-        vehicle.setKm(updatedVehicleRequest.km());
-        vehicle.setFuelCapacity(updatedVehicleRequest.fuelCapacity());
-        vehicle.setFuelConsumption(updatedVehicleRequest.fuelConsumption());
-        vehicle.setLastService(updatedVehicleRequest.lastService());
-        vehicle.setNextService(updatedVehicleRequest.nextService());
-        vehicle.setCapacity(updatedVehicleRequest.capacity());
-        vehicle.setWidth(updatedVehicleRequest.width());
-        vehicle.setHeight(updatedVehicleRequest.height());
-        vehicle.setLength(updatedVehicleRequest.length());
-        vehicle.setWeight(updatedVehicleRequest.weight());
-        vehicle.setActive(updatedVehicleRequest.active());
+    private <T> void updateIfNotNull(T value, Consumer<T> setter) {
+        if (value != null) {
+            setter.accept(value);
+        }
+    }
+
+    private void updateIfPositive(double value, DoubleConsumer setter) {
+        if (value > 0) {
+            setter.accept(value);
+        }
     }
 
     @Override
     public void delete(String registrationNumber) {
-        Optional<Vehicle> vehicle = vehicleRepo.findByRegistrationNumber(registrationNumber);
-        if (vehicle.isPresent()) {
-            vehicleRepo.delete(vehicle.get());
-        } else {
-            throw new VehicleNotFoundException("Vehicle with registration number " + registrationNumber + " not found");
-        }
+        Vehicle vehicle = vehicleRepo.findByRegistrationNumber(registrationNumber)
+                .orElseThrow(() -> new VehicleNotFoundException("Vehicle with registration number " + registrationNumber + " not found"));
+
+        vehicleRepo.delete(vehicle);
     }
-
-
-    private static Vehicle createVehicle(CreateVehicleRequest createVehicleRequest, Company company) {
-        return Vehicle.builder().registrationNumber(createVehicleRequest.registrationNumber()).fuelType(createVehicleRequest.fuelType()).make(createVehicleRequest.make()).model(createVehicleRequest.model()).year(createVehicleRequest.year()).km(createVehicleRequest.km()).fuelCapacity(createVehicleRequest.fuelCapacity()).fuelConsumption(createVehicleRequest.fuelConsumption()).lastService(createVehicleRequest.lastService()).nextService(createVehicleRequest.nextService()).capacity(createVehicleRequest.capacity()).weight(createVehicleRequest.weight()).width(createVehicleRequest.width()).height(createVehicleRequest.height()).length(createVehicleRequest.length()).isActive(false).company(company).build();
-    }
-
-
 }

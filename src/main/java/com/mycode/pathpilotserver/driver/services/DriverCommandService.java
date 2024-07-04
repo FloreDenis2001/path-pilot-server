@@ -9,7 +9,7 @@ public interface DriverCommandService {
 
     void update(DriverUpdateRequest driverUpdateRequest);
 
-    void removeByLicenseNumber(String email, String licenseNumber);
+    void removeByLicenseNumber(String email, String licenseNumber,String companyRegistrationNumber);
 
 
 }

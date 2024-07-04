@@ -1,7 +1,6 @@
 package com.mycode.pathpilotserver.packages.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
 import jakarta.persistence.*;
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 @Entity(name = "Package")
 @Table(name = "package")
@@ -76,10 +74,6 @@ public class Package {
     public boolean equals(Object obj) {
         Package pack = (Package) obj;
         return this.awb.equals(pack.getAwb());
-    }
-
-    public double getVolume() {
-        return this.height * this.width * this.length;
     }
 
     @Override

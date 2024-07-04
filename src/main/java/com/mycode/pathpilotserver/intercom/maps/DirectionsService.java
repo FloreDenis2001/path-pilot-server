@@ -1,10 +1,10 @@
 package com.mycode.pathpilotserver.intercom.maps;
 
 import com.google.maps.DirectionsApi;
-import com.google.maps.DistanceMatrixApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.errors.ApiException;
-import com.google.maps.model.*;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.TravelMode;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;

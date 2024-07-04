@@ -1,9 +1,10 @@
 package com.mycode.pathpilotserver.vehicles.models;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mycode.pathpilotserver.city.models.City;
 import com.mycode.pathpilotserver.company.models.Company;
-import com.mycode.pathpilotserver.packages.models.Package;
 import com.mycode.pathpilotserver.routes.models.Route;
 import jakarta.persistence.*;
 import lombok.*;
@@ -11,7 +12,6 @@ import lombok.experimental.SuperBuilder;
 import org.checkerframework.common.aliasing.qual.Unique;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 @Entity(name = "Vehicle")
