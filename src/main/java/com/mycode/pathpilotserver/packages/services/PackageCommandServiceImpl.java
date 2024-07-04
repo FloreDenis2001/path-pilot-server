@@ -1,6 +1,5 @@
 package com.mycode.pathpilotserver.packages.services;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycode.pathpilotserver.address.dto.AddressDTO;
 import com.mycode.pathpilotserver.address.models.Address;
@@ -8,6 +7,7 @@ import com.mycode.pathpilotserver.city.models.City;
 import com.mycode.pathpilotserver.customers.exceptions.CustomerNotFoundException;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.packages.dto.PackageRequest;
+import com.mycode.pathpilotserver.packages.exceptions.PackageNotFoundException;
 import com.mycode.pathpilotserver.packages.models.Package;
 import com.mycode.pathpilotserver.packages.models.PackageStatus;
 import com.mycode.pathpilotserver.packages.repository.PackageRepo;
@@ -19,13 +19,13 @@ import com.mycode.pathpilotserver.user.repository.UserRepo;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import static com.mycode.pathpilotserver.city.utils.Utils.readCitiesFromJsonFile;
 
 @Service
 public class
@@ -34,7 +34,6 @@ PackageCommandServiceImpl implements PackageCommandService {
     private final PackageRepo packRepo;
     private final UserRepo customerRepo;
     private final ShipmentRepo shipmentRepo;
-    private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final double DISTANCE_RATE = 1.2;
     private static final double WEIGHT_RATE = 0.9;
     private static final double VOLUME_RATE = 0.8;
@@ -67,7 +66,6 @@ PackageCommandServiceImpl implements PackageCommandService {
         try {
             Shipment shipment = buildShipment(packageRequest);
             Package pack = buildPackage(packageRequest, customer.get(), shipment);
-
             shipmentRepo.saveAndFlush(shipment);
             packRepo.saveAndFlush(pack);
         } catch (IOException e) {
@@ -79,7 +77,7 @@ PackageCommandServiceImpl implements PackageCommandService {
     public void deletePackage(String awb) {
         Optional<Package> pack = packRepo.getPackageByAwb(awb);
         if (pack.isEmpty()) {
-            throw new CustomerNotFoundException("Package with awb: " + awb + " not found");
+            throw new PackageNotFoundException("Package with awb: " + awb + " not found");
         }
         packRepo.delete(pack.get());
     }
@@ -88,7 +86,7 @@ PackageCommandServiceImpl implements PackageCommandService {
     public void editPackage(String awb, PackageRequest packageRequest) {
         Optional<Package> pack = packRepo.getPackageByAwb(awb);
         if (pack.isEmpty()) {
-            throw new CustomerNotFoundException("Package with awb: " + awb + " not found");
+            throw new PackageNotFoundException("Package with awb: " + awb + " not found");
         }
 
         try {
@@ -117,7 +115,7 @@ PackageCommandServiceImpl implements PackageCommandService {
                 .destinationAddress(fullDestinationAddress)
                 .originAddress(fullOriginAddress)
                 .status(StatusType.PICKED)
-                .estimatedDeliveryDate(LocalDateTime.now().plusDays(3))
+                .estimatedDeliveryDate(LocalDateTime.now().plusDays(7))
                 .totalDistance(calculateTotalDistance(origin, destination))
                 .build();
     }
@@ -128,19 +126,12 @@ PackageCommandServiceImpl implements PackageCommandService {
     }
 
     private Address buildAddress(City city, AddressDTO addressDTO) {
+
         return Address.builder()
-                .city(city.getCity())
-                .country(addressDTO.country())
+                .cityDetails(city)
                 .street(addressDTO.street())
                 .postalCode(addressDTO.postalCode())
                 .streetNumber(addressDTO.streetNumber())
-                .lat(city.getLat())
-                .lng(city.getLng())
-                .admin_name(city.getAdmin_name())
-                .capital(city.getCapital())
-                .iso2(city.getIso2())
-                .population(city.getPopulation())
-                .population_proper(city.getPopulation_proper())
                 .build();
     }
 
@@ -201,7 +192,7 @@ PackageCommandServiceImpl implements PackageCommandService {
         shipment.setOriginPhone(packageRequest.origin().phone());
         shipment.setDestinationAddress(fullDestinationAddress);
         shipment.setOriginAddress(fullOriginAddress);
-        shipment.setEstimatedDeliveryDate(LocalDateTime.now().plusDays(3));
+        shipment.setEstimatedDeliveryDate(LocalDateTime.now().plusDays(7));
         shipment.setTotalDistance(calculateTotalDistance(origin, destination));
     }
 
@@ -218,15 +209,6 @@ PackageCommandServiceImpl implements PackageCommandService {
         packRepo.saveAndFlush(existingPackage);
     }
 
-    private static List<City> readCitiesFromJsonFile() throws IOException {
-        ClassLoader classLoader = PackageCommandServiceImpl.class.getClassLoader();
-        try (InputStream inputStream = classLoader.getResourceAsStream("ro.json")) {
-            if (inputStream == null) {
-                throw new FileNotFoundException("ro.json file not found in resources");
-            }
-            return objectMapper.readValue(inputStream, new TypeReference<List<City>>() {});
-        }
-    }
 
     private City getCityByName(String cityName) {
         return cities.stream()

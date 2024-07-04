@@ -1,6 +1,8 @@
 package com.mycode.pathpilotserver.address.models;
 
+import com.mycode.pathpilotserver.city.models.City;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,31 +12,30 @@ import org.jetbrains.annotations.NotNull;
 @Setter
 @Getter
 @Builder
-public class Address {
+public class Address{
 
-    private String country;
-    private String city;
-    private double lat;
-    private double lng;
-    private String iso2;
-    private String admin_name;
-    private String capital;
-    private String population;
-    private String population_proper;
+    @Embedded
+    private City cityDetails;
     private String street;
     private String streetNumber;
     private String postalCode;
 
 
-
     @Override
     public String toString() {
-        String sb = "Address{" + "country='" + country + '\'' +
-                ", city='" + city + '\'' +
+        return "Address{" +
+                "city='" + cityDetails.getCity() + '\'' +
+                ", lat=" + cityDetails.getLat() +
+                ", lng=" + cityDetails.getLng() +
+                ", country='" + cityDetails.getCountry() + '\'' +
+                ", iso2='" + cityDetails.getIso2() + '\'' +
+                ", admin_name='" + cityDetails.getAdmin_name() + '\'' +
+                ", capital='" + cityDetails.getCapital() + '\'' +
+                ", population='" + cityDetails.getPopulation() + '\'' +
+                ", population_proper='" + cityDetails.getPopulation_proper() + '\'' +
                 ", street='" + street + '\'' +
                 ", streetNumber='" + streetNumber + '\'' +
                 ", postalCode='" + postalCode + '\'' +
                 '}';
-        return sb;
     }
 }

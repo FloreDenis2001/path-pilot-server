@@ -13,6 +13,7 @@ import com.mycode.pathpilotserver.email.services.EmailServiceCommandImpl;
 import com.mycode.pathpilotserver.image.models.Image;
 import com.mycode.pathpilotserver.image.repository.ImageRepo;
 import com.mycode.pathpilotserver.image.utils.ImageUtils;
+import com.mycode.pathpilotserver.packages.services.PackageCommandServiceImpl;
 import com.mycode.pathpilotserver.system.jwt.JWTTokenProvider;
 import com.mycode.pathpilotserver.system.security.UserRole;
 import com.mycode.pathpilotserver.user.dto.DeleteUserRequest;
@@ -34,10 +35,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import static com.mycode.pathpilotserver.city.utils.Utils.readCitiesFromJsonFile;
 
 @Service
 @Transactional
@@ -52,7 +57,6 @@ public class UserServiceCommandImpl implements UserServiceCommand {
     private final JavaMailSender mailSender;
     private final JWTTokenProvider jwtTokenProvider;
 
-    private final ObjectMapper objectMapper;
 
 
     public UserServiceCommandImpl(UserRepo userRepo, ImageRepo imageRepo, CompanyRepo companyRepo, JavaMailSender mailSender, JWTTokenProvider jwtTokenProvider, ObjectMapper objectMapper) {
@@ -61,7 +65,6 @@ public class UserServiceCommandImpl implements UserServiceCommand {
         this.companyRepo = companyRepo;
         this.mailSender = mailSender;
         this.jwtTokenProvider = jwtTokenProvider;
-        this.objectMapper = objectMapper;
     }
 
 
@@ -248,25 +251,13 @@ public class UserServiceCommandImpl implements UserServiceCommand {
 
     private Address buildAddress(City city, AddressDTO addressDTO) {
         return Address.builder()
-                .city(city.getCity())
-                .country(addressDTO.country())
+                .cityDetails(city)
                 .street(addressDTO.street())
                 .postalCode(addressDTO.postalCode())
                 .streetNumber(addressDTO.streetNumber())
-                .lat(city.getLat())
-                .lng(city.getLng())
-                .admin_name(city.getAdmin_name())
-                .capital(city.getCapital())
-                .iso2(city.getIso2())
-                .population(city.getPopulation())
-                .population_proper(city.getPopulation_proper())
                 .build();
     }
-    private  List<City> readCitiesFromJsonFile() throws IOException {
-        File jsonFile = new File("C:\\Users\\denis\\OneDrive\\Desktop\\LUCRARE LICENTA\\path-pilot-server\\src\\main\\java\\com\\mycode\\pathpilotserver\\resource\\ro.json");
-        return objectMapper.readValue(jsonFile, new TypeReference<List<City>>() {
-        });
-    }
+
 
     private City getCityByName(String cityName, List<City> cities) {
         return cities.stream()
@@ -282,14 +273,21 @@ public class UserServiceCommandImpl implements UserServiceCommand {
 
 
     private void applyNewDetailsToUser(User user, UpdateUserRequest request) {
+
+
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
         user.setPhone(request.phone());
-        user.getAddress().setCity(request.city());
         user.getAddress().setStreet(request.street());
-        user.getAddress().setCountry(request.country());
         user.getAddress().setStreetNumber(request.streetNumber());
         user.getAddress().setPostalCode(request.postalCode());
+        try {
+            List<City> cities = readCitiesFromJsonFile();
+            City city = getCityByName(request.city(), cities);
+            user.getAddress().setCityDetails(city);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

@@ -23,7 +23,8 @@ public class City {
 
     @Override
     public String toString() {
-        String sb = "City{" + "city='" + city + '\'' +
+        return "City{" +
+                "city='" + city + '\'' +
                 ", country='" + country + '\'' +
                 ", iso2='" + iso2 + '\'' +
                 ", admin_name='" + admin_name + '\'' +
@@ -31,6 +32,5 @@ public class City {
                 ", population='" + population + '\'' +
                 ", population_proper='" + population_proper + '\'' +
                 '}';
-        return sb;
     }
 }

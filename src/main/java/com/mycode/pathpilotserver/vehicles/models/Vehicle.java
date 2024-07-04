@@ -1,6 +1,7 @@
 package com.mycode.pathpilotserver.vehicles.models;
 
 import com.fasterxml.jackson.annotation.*;
+import com.mycode.pathpilotserver.city.models.City;
 import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.packages.models.Package;
 import com.mycode.pathpilotserver.routes.models.Route;
@@ -83,6 +84,9 @@ public class Vehicle {
 
     @Column(name = "isActive", nullable = false)
     private boolean isActive;
+
+    @Embedded
+    private City currentLocation;
 
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

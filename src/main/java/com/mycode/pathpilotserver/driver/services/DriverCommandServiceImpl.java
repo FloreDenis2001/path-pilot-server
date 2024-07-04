@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+import static com.mycode.pathpilotserver.city.utils.Utils.readCitiesFromJsonFile;
+
 
 @Service
 @Transactional
@@ -36,13 +38,11 @@ public class DriverCommandServiceImpl implements DriverCommandService {
     private final DriverRepo driverRepo;
     private final UserRepo userRepo;
     private final CompanyRepo companyRepo;
-    private final ObjectMapper objectMapper ;
 
     public DriverCommandServiceImpl(DriverRepo driverRepo, UserRepo userRepo, CompanyRepo companyRepo, ObjectMapper objectMapper) {
         this.driverRepo = driverRepo;
         this.userRepo = userRepo;
         this.companyRepo = companyRepo;
-        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -92,24 +92,13 @@ public class DriverCommandServiceImpl implements DriverCommandService {
 
     private Address buildAddress(City city, AddressDTO addressDTO) {
         return Address.builder()
-                .city(city.getCity())
-                .country(addressDTO.country())
+                .cityDetails(city)
                 .street(addressDTO.street())
                 .postalCode(addressDTO.postalCode())
                 .streetNumber(addressDTO.streetNumber())
-                .lat(city.getLat())
-                .lng(city.getLng())
-                .admin_name(city.getAdmin_name())
-                .capital(city.getCapital())
-                .iso2(city.getIso2())
-                .population(city.getPopulation())
-                .population_proper(city.getPopulation_proper())
                 .build();
     }
-    private  List<City> readCitiesFromJsonFile() throws IOException {
-        File jsonFile = new File("C:\\Users\\denis\\OneDrive\\Desktop\\LUCRARE LICENTA\\path-pilot-server\\src\\main\\java\\com\\mycode\\pathpilotserver\\resource\\ro.json");
-        return objectMapper.readValue(jsonFile, new TypeReference<List<City>>() {});
-    }
+
 
     private City getCityByName(String cityName, List<City> cities) {
         return cities.stream()
