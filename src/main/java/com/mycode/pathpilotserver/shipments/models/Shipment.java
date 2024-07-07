@@ -1,5 +1,6 @@
 package com.mycode.pathpilotserver.shipments.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mycode.pathpilotserver.address.models.Address;
 import com.mycode.pathpilotserver.orders.models.Order;
 import jakarta.persistence.*;
@@ -86,13 +87,23 @@ public class Shipment {
 
 
     @OneToOne(mappedBy = "shipment", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonBackReference
     private Order order;
 
 
     @Override
     public String toString() {
-        String text = " Status :"+status+" Estimated Delivery Date :"+estimatedDeliveryDate;
-        return text;
+        return "Shipment{" +
+                "originName='" + originName + '\'' +
+                ", destinationName='" + destinationName + '\'' +
+                ", originPhone='" + originPhone + '\'' +
+                ", destinationPhone='" + destinationPhone + '\'' +
+                ", originAddress=" + originAddress +
+                ", destinationAddress=" + destinationAddress +
+                ", status=" + status +
+                ", estimatedDeliveryDate=" + estimatedDeliveryDate +
+                ", totalDistance=" + totalDistance +
+                '}';
     }
 
 

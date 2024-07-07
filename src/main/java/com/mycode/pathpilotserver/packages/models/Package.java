@@ -78,7 +78,7 @@ public class Package {
 
     @Override
     public String toString() {
-        String sb = "Package{" + "awb='" + awb + '\'' +
+        return "Package{" + "awb='" + awb + '\'' +
                 ", weight=" + weight +
                 ", height=" + height +
                 ", width=" + width +
@@ -89,6 +89,9 @@ public class Package {
                 ", totalAmount=" + totalAmount +
                 ", shipment=" + shipment +
                 '}';
-        return sb;
+    }
+
+    public double getVolume() {
+        return this.height * this.width * this.length;
     }
 }

@@ -1,6 +1,5 @@
 package com.mycode.pathpilotserver.driver.services;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycode.pathpilotserver.address.dto.AddressDTO;
 import com.mycode.pathpilotserver.address.models.Address;
 import com.mycode.pathpilotserver.city.models.City;
@@ -15,18 +14,15 @@ import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.driver.repository.DriverRepo;
 import com.mycode.pathpilotserver.system.security.UserRole;
 import com.mycode.pathpilotserver.user.exceptions.UserNotFoundException;
-import com.mycode.pathpilotserver.user.exceptions.WrongPasswordException;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
 import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
-import static com.mycode.pathpilotserver.city.utils.Utils.readCitiesFromJsonFile;
+import static com.mycode.pathpilotserver.city.utils.Utils.getCityByName;
 
 
 @Service
@@ -37,7 +33,7 @@ public class DriverCommandServiceImpl implements DriverCommandService {
     private final UserRepo userRepo;
     private final CompanyRepo companyRepo;
 
-    public DriverCommandServiceImpl(DriverRepo driverRepo, UserRepo userRepo, CompanyRepo companyRepo, ObjectMapper objectMapper) {
+    public DriverCommandServiceImpl(DriverRepo driverRepo, UserRepo userRepo, CompanyRepo companyRepo) {
         this.driverRepo = driverRepo;
         this.userRepo = userRepo;
         this.companyRepo = companyRepo;
@@ -61,6 +57,11 @@ public class DriverCommandServiceImpl implements DriverCommandService {
 
     @NotNull
     private Driver getDriver(DriverCreateRequest driverCreateRequest, Optional<Company> company) {
+
+        if (company.isEmpty()) {
+            throw new CompanyNotFoundException("Company with registration number: " + driverCreateRequest.companyRegistrationNumber() + " dosen't exist !");
+        }
+
         Driver newDriver = new Driver();
         newDriver.setLicenseNumber(driverCreateRequest.licenseNumber());
         newDriver.setPhone(driverCreateRequest.phone());
@@ -74,15 +75,11 @@ public class DriverCommandServiceImpl implements DriverCommandService {
         newDriver.setSalary(0);
         newDriver.setRole(UserRole.DRIVER);
         newDriver.setCompany(company.get());
-        try {
-            List<City> cities = readCitiesFromJsonFile();
-            City city = getCityByName(driverCreateRequest.address().city(), cities);
-            Address fullAddress = buildAddress(city, driverCreateRequest.address());
-            newDriver.setAddress(fullAddress);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        City city = getCityByName(driverCreateRequest.address().city());
+        Address fullAddress = buildAddress(city, driverCreateRequest.address());
+        newDriver.setAddress(fullAddress);
+
 
         newDriver.setAvailable(true);
         return newDriver;
@@ -98,20 +95,13 @@ public class DriverCommandServiceImpl implements DriverCommandService {
     }
 
 
-    private City getCityByName(String cityName, List<City> cities) {
-        return cities.stream()
-                .filter(city -> city.getCity().equals(cityName))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("City not found: " + cityName));
-    }
-
     @Override
     public void update(DriverUpdateRequest driverUpdateRequest) {
         Optional<Company> company = companyRepo.findByRegistrationNumber(driverUpdateRequest.companyRegistrationNumber());
         if (company.isEmpty()) {
             throw new CompanyNotFoundException("Company with registration number: " + driverUpdateRequest.companyRegistrationNumber() + " dosen't exist !");
         }
-        Optional<Driver> driver = driverRepo.findByLicenseNumberAndCompany(driverUpdateRequest.licenseNumber(),company.get());
+        Optional<Driver> driver = driverRepo.findByLicenseNumberAndCompany(driverUpdateRequest.licenseNumber(), company.get());
         if (driver.isPresent()) {
             driver.get().setLicenseNumber(driverUpdateRequest.licenseNumber());
             driver.get().setPhone(driverUpdateRequest.phone());
@@ -130,12 +120,12 @@ public class DriverCommandServiceImpl implements DriverCommandService {
     }
 
     @Override
-    public void removeByLicenseNumber(String email, String licenseNumber,String companyRegistrationNumber) {
+    public void removeByLicenseNumber(String email, String licenseNumber, String companyRegistrationNumber) {
         Optional<Company> company = companyRepo.findByRegistrationNumber(companyRegistrationNumber);
         if (company.isEmpty()) {
             throw new CompanyNotFoundException("Company with registration number: " + companyRegistrationNumber + " dosen't exist !");
         }
-        Optional<Driver> driver = driverRepo.findByLicenseNumberAndCompany(licenseNumber,company.get());
+        Optional<Driver> driver = driverRepo.findByLicenseNumberAndCompany(licenseNumber, company.get());
 
         if (driver.isEmpty()) {
             throw new DriverNotFoundException("Driver with license number: " + licenseNumber + " not found");
@@ -146,13 +136,13 @@ public class DriverCommandServiceImpl implements DriverCommandService {
             throw new UserNotFoundException("User with email: " + email + " not found");
         }
 
-        if (user.get().getRole() == UserRole.CUSTOMER || user.get().equals(driver.get())) {
-            driver.ifPresentOrElse(driverRepo::delete, () -> {
-                throw new DriverNotFoundException("Driver not found for license number: " + licenseNumber);
-            });
-        } else {
-            throw new WrongPasswordException("Invalid password for user: " + user.get().getEmail());
-        }
+//        if (user.get().getRole() == UserRole.CUSTOMER || user.get().equals(driver.get())) {
+//            driver.ifPresentOrElse(driverRepo::delete, () -> {
+//                throw new DriverNotFoundException("Driver not found for license number: " + licenseNumber);
+//            });
+//        } else {
+//            throw new WrongPasswordException("Invalid password for user: " + user.get().getEmail());
+//        }
     }
 
 

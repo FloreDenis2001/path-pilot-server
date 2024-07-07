@@ -1,5 +1,7 @@
 package com.mycode.pathpilotserver;
 
+import com.google.ortools.Loader;
+import com.google.ortools.constraintsolver.*;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,6 +23,7 @@ import java.util.Arrays;
 public class PathPilotServerApplication {
 
     public static void main(String[] args) {
+        Loader.loadNativeLibraries();
         SpringApplication.run(PathPilotServerApplication.class, args);
     }
 
@@ -29,6 +32,7 @@ public class PathPilotServerApplication {
     @Transactional
     CommandLineRunner commandLineRunner() {
         return args -> {
+
         };
     }
 

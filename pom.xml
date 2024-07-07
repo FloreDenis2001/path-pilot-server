@@ -17,6 +17,7 @@
         <java.version>17</java.version>
     </properties>
 
+
     <dependencies>
 
 
@@ -32,7 +33,11 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-
+        <dependency>
+            <groupId>com.google.ortools</groupId>
+            <artifactId>ortools-java</artifactId>
+            <version>9.10.4067</version>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -51,6 +56,8 @@
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>2.5.0</version>
         </dependency>
+
+
 
 
         <dependency>

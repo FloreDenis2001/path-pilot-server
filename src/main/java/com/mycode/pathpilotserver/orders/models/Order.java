@@ -60,7 +60,6 @@ public class Order {
 
     @OneToOne
     @JoinColumn(name = "shipment_id", referencedColumnName = "id", nullable = false)
-    @JsonBackReference
     private Shipment shipment;
 
     @ManyToOne
@@ -79,6 +78,7 @@ public class Order {
                 ", deliveryDescription='" + deliveryDescription + '\'' +
                 ", orderDate=" + orderDate +
                 ", totalAmount=" + totalAmount +
+                ", shipment=" + shipment +
                 '}';
     }
 }
