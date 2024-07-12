@@ -36,7 +36,7 @@
         <dependency>
             <groupId>com.google.ortools</groupId>
             <artifactId>ortools-java</artifactId>
-            <version>9.10.4067</version>
+            <version> 9.10.4067</version>
         </dependency>
 
         <dependency>
@@ -50,7 +50,11 @@
             <artifactId>spring-security-core</artifactId>
             <version>6.1.4</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.6.1</version>
+        </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>

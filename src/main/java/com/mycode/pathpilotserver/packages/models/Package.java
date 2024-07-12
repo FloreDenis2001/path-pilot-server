@@ -69,7 +69,6 @@ public class Package {
     @JsonBackReference
     private Shipment shipment;
 
-
     @Override
     public boolean equals(Object obj) {
         Package pack = (Package) obj;

@@ -2,6 +2,8 @@ package com.mycode.pathpilotserver.routes.services;
 
 import com.google.ortools.Loader;
 import com.google.ortools.constraintsolver.*;
+import com.google.ortools.util.OptionalBoolean;
+import com.google.protobuf.Duration;
 import com.mycode.pathpilotserver.city.models.City;
 import com.mycode.pathpilotserver.driver.exceptions.DriverNotFoundException;
 import com.mycode.pathpilotserver.driver.models.Driver;
@@ -20,13 +22,13 @@ import com.mycode.pathpilotserver.vehicles.repository.VehicleRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import static com.mycode.pathpilotserver.city.utils.Utils.getCityByName;
 
 @Service
 public class RouteServiceCommandImpl implements RouteServiceCommand {
@@ -55,8 +57,8 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
 
     @Override
     @Transactional
-    public void generateRoute(String companyRegistrationNumber, String city) throws IOException {
-        // Retrieve necessary data
+    public void generateRoute(String companyRegistrationNumber, String city) {
+        // Recuperați datele necesare
         List<Package> unassignedPackages = getUnassignedPackagesByCity(companyRegistrationNumber, city);
         if (unassignedPackages.isEmpty()) {
             throw new PackageNotFoundException("No unassigned packages found for company with registration number " + companyRegistrationNumber);
@@ -67,7 +69,6 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
         if (inactiveVehicles.isEmpty()) {
             throw new VehicleNotFoundException("No vehicles found for company with registration number " + companyRegistrationNumber);
         }
-
         List<Driver> availableDrivers = getAvailableDrivers(companyRegistrationNumber);
         if (availableDrivers.isEmpty()) {
             throw new DriverNotFoundException("No available drivers found for the company");
@@ -76,24 +77,38 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
         int numPackages = unassignedPackages.size();
         int numVehicles = inactiveVehicles.size();
 
-        // Create a RoutingIndexManager for CVRP
+        // Crearea unui RoutingIndexManager pentru CVRP
         RoutingIndexManager manager = new RoutingIndexManager(numPackages, numVehicles, 0);
         this.routing = new RoutingModel(manager);
 
-        // Create the distance matrix
-        long[][] distanceMatrix = new long[numPackages][numPackages];
-        for (int i = 0; i < numPackages; i++) {
-            for (int j = 0; j < numPackages; j++) {
-                if (i == j) {
-                    distanceMatrix[i][j] = 0;
+
+        City startCity = getCityByName(city);
+        int numNodes = numPackages + 1;
+        long[][] distanceMatrix = new long[numNodes][numNodes];
+        for (int i = 0; i < numNodes; i++) {
+            for (int j = 0; j < numNodes; j++) {
+                if (i != j) {
+                    double distance;
+                    if (i == 0) {
+                        distance = calculateDistance(startCity.getLat(), startCity.getLng(),
+                                unassignedPackages.get(j - 1).getShipment().getDestinationAddress().getCityDetails().getLat(),
+                                unassignedPackages.get(j - 1).getShipment().getDestinationAddress().getCityDetails().getLng());
+                    } else if (j == 0) {
+                        distance = calculateDistance(unassignedPackages.get(i - 1).getShipment().getDestinationAddress().getCityDetails().getLat(),
+                                unassignedPackages.get(i - 1).getShipment().getDestinationAddress().getCityDetails().getLng()
+                                , startCity.getLat(), startCity.getLng());
+                    } else {
+                        distance = calculateDistance(unassignedPackages.get(i - 1).getShipment().getDestinationAddress().getCityDetails().getLat(),
+                                unassignedPackages.get(i - 1).getShipment().getDestinationAddress().getCityDetails().getLng(),
+                                unassignedPackages.get(j - 1).getShipment().getDestinationAddress().getCityDetails().getLat(),
+                                unassignedPackages.get(j - 1).getShipment().getDestinationAddress().getCityDetails().getLng());
+                    }
+                    distanceMatrix[i][j] = (long) (distance * 1000);
                 } else {
-                    double distance = calculateDistance(unassignedPackages.get(i), unassignedPackages.get(j));
-                    distanceMatrix[i][j] = (long) (distance * 1000);  // Convert to meters
+                    distanceMatrix[i][j] = 0;
                 }
             }
         }
-
-        // Register transit callback to use the distance matrix
         final int transitCallbackIndex = routing.registerTransitCallback((long fromIndex, long toIndex) -> {
             int fromNode = manager.indexToNode((int) fromIndex);
             int toNode = manager.indexToNode((int) toIndex);
@@ -101,107 +116,131 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
         });
         routing.setArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
 
-        // Define demand callback
         final int[] demands = new int[numPackages];
         for (int i = 0; i < numPackages; i++) {
             Package pack = unassignedPackages.get(i);
-            demands[i] = (int) (pack.getVolume());  // Use volume as the demand for each package
+            demands[i] = (int) (pack.getVolume());
         }
         final int demandCallbackIndex = routing.registerUnaryTransitCallback((long fromIndex) -> {
             int fromNode = manager.indexToNode((int) fromIndex);
             return demands[fromNode];
         });
 
-        // Get vehicle capacities from the inactive vehicles
         final long[] vehicleCapacities = new long[numVehicles];
         for (int i = 0; i < numVehicles; i++) {
-            vehicleCapacities[i] = (long) inactiveVehicles.get(i).getVolume();  // Get capacity from each vehicle
+            vehicleCapacities[i] = (long) inactiveVehicles.get(i).getVolume();
         }
 
-        // Add dimension for capacity constraints
+
+        routing.setArcCostEvaluatorOfAllVehicles(transitCallbackIndex);
+        routing.setFixedCostOfAllVehicles(0);
+
         routing.addDimensionWithVehicleCapacity(
-                demandCallbackIndex,  // Demand callback index
-                0,  // No slack
-                vehicleCapacities,  // Vehicle capacities
-                true,  // Start cumul to zero
+                demandCallbackIndex,
+                0,
+                vehicleCapacities,
+                true,
                 "Capacity"
         );
 
-        // Removed the soft upper bound constraint for capacity
-        // RoutingDimension capacityDimension = routing.getMutableDimension("Capacity");
-        // for (int i = 0; i < numVehicles; i++) {
-        //     capacityDimension.setCumulVarSoftUpperBound(
-        //         manager.nodeToIndex(0),
-        //         (long) (0.5 * vehicleCapacities[i]),  // 50% of the vehicle's capacity
-        //         1000000  // Penalty cost for exceeding the 50% capacity
-        //     );
-        // }
+        routing.getMutableDimension("Capacity");
 
-        // Add distance constraint with a relaxed maximum distance
         routing.addDimension(
-                transitCallbackIndex,  // Transit callback index for distance
-                0,  // Slack maximum
-                10000, // Increased maximum distance to 10 kilometers or more
-                true,  // Start cumul to zero
+                transitCallbackIndex,
+                0,
+                950000,
+                true,
                 "Distance"
         );
         RoutingDimension distanceDimension = routing.getMutableDimension("Distance");
-        distanceDimension.setGlobalSpanCostCoefficient(100);  // Set cost coefficient for distance dimension
+        distanceDimension.setGlobalSpanCostCoefficient(1);
+        distanceDimension.setCumulVarSoftUpperBound(0, 950000, 1000000);
 
-        // Define search parameters
+
+//        SET DISTANCE BETWEEN TWO LOCATIONS
+
         RoutingSearchParameters searchParameters =
-               main.defaultRoutingSearchParameters()
+                main.defaultRoutingSearchParameters()
                         .toBuilder()
                         .setFirstSolutionStrategy(FirstSolutionStrategy.Value.PATH_CHEAPEST_ARC)
                         .setLocalSearchMetaheuristic(LocalSearchMetaheuristic.Value.GUIDED_LOCAL_SEARCH)
+                        .mergeLocalSearchOperators(RoutingSearchParameters.LocalSearchNeighborhoodOperators.newBuilder()
+                                .setUseCross(OptionalBoolean.BOOL_TRUE)
+                                .setUsePathLns(OptionalBoolean.BOOL_TRUE)
+                                .setUseMakeActive(OptionalBoolean.BOOL_TRUE)
+                                .setUseRelocate(OptionalBoolean.BOOL_TRUE)
+                                .setUseExchange(OptionalBoolean.BOOL_TRUE)
+                                .build())
+                        .setLsOperatorNeighborsRatio(0.2)
+                        .setTimeLimit(Duration.newBuilder().setSeconds(60).build())
                         .build();
 
-        // Solve the problem
         Assignment solution = routing.solveWithParameters(searchParameters);
 
         if (solution != null) {
+            double totalDistance = 0;
+
             for (int i = 0; i < numVehicles; i++) {
                 System.out.println("Route for Vehicle " + i + ":");
                 long index = routing.start(i);
-                List<Integer> routeNodes = new ArrayList<>();
-                while (!routing.isEnd(index)) {
-                    routeNodes.add(manager.indexToNode((int) index));
-                    index = solution.value(routing.nextVar(index));
-                }
-                routeNodes.add(manager.indexToNode((int) index));
+                List<Long> routeNodes = new ArrayList<>();
+                double vehicleDistance = 0;
 
-                System.out.println(routeNodes);
+                while (!routing.isEnd(index)) {
+                    routeNodes.add(index);
+                    long nextIndex = solution.value(routing.nextVar(index));
+                    int fromNode = manager.indexToNode((int) index);
+                    int toNode = manager.indexToNode((int) nextIndex);
+
+                    // Calculați distanța dintre puncte
+                    double distance = distanceMatrix[fromNode][toNode];
+                    vehicleDistance += distance;
+
+                    // Afiseaza punctele si distanta
+                    if (fromNode == 0) {
+                        System.out.print("Start -> ");
+                    } else {
+                        System.out.print("Location " + fromNode + " -> ");
+                    }
+                    index = nextIndex;
+                }
+                // Ultimul punct
+                System.out.println("End");
+                System.out.println("Total distance for Vehicle " + i + ": " + String.format("%.2f", vehicleDistance / 1000) + " KM");
+                totalDistance += vehicleDistance;
             }
+            double totalDistanceInKm = totalDistance / 1000;
+            System.out.println("Total distance for all vehicles: " + String.format("%.2f", totalDistanceInKm) + " KM");
 
             saveRoutes(solution, manager, unassignedPackages, inactiveVehicles, availableDrivers);
         } else {
             throw new RuntimeException("No solution found for the vehicle routing problem");
         }
+
     }
 
-    private double calculateDistance(Package p1, Package p2) {
-        double lat1 = p1.getShipment().getDestinationAddress().getCityDetails().getLat();
-        double lon1 = p1.getShipment().getDestinationAddress().getCityDetails().getLng();
-        double lat2 = p2.getShipment().getDestinationAddress().getCityDetails().getLat();
-        double lon2 = p2.getShipment().getDestinationAddress().getCityDetails().getLng();
 
-        final int R = 6371; // Radius of the Earth in kilometers
+    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+
+        System.out.println("Calculating distance from (" + lat1 + ", " + lon1 + ") to (" + lat2 + ", " + lon2 + ")");
+        int R = 6371;
         double latDistance = Math.toRadians(lat2 - lat1);
         double lonDistance = Math.toRadians(lon2 - lon1);
         double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2) +
                 Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
                         Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double distance = R * c;  // Convert to kilometers
+        double distance = R * c;
+
+        System.out.println("Distance calculated: " + distance + "KM");
 
         return distance;
     }
 
 
-
     private void saveRoutes(Assignment solution, RoutingIndexManager manager, List<Package> unassignedPackages, List<Vehicle> inactiveVehicles, List<Driver> availableDrivers) {
         int numVehicles = inactiveVehicles.size();
-        Set<String> existingAWBs = new HashSet<>(); // Set pentru a urmări AWB-urile deja adăugate
+        Set<String> existingAWBs = new HashSet<>();
 
         for (int i = 0; i < numVehicles; i++) {
             Vehicle vehicle = inactiveVehicles.get(i);
@@ -217,37 +256,42 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
 
             long index = routing.start(i);
             List<Order> orders = new ArrayList<>();
+            double routeDistance = 0;
 
             while (!routing.isEnd(index)) {
-                int nodeIndex = manager.indexToNode((int) index);
-                Package pack = unassignedPackages.get(nodeIndex);
+                int fromNode = manager.indexToNode((int) index);
+                long nextIndex = solution.value(routing.nextVar(index));
+                int toNode = manager.indexToNode((int) nextIndex);
+                Package pack = unassignedPackages.get(fromNode);
+                double distance = calculateDistance(unassignedPackages.get(fromNode).getShipment().getDestinationAddress().getCityDetails().getLat(),
+                        unassignedPackages.get(fromNode).getShipment().getDestinationAddress().getCityDetails().getLng(),
+                        unassignedPackages.get(toNode).getShipment().getDestinationAddress().getCityDetails().getLat(),
+                        unassignedPackages.get(toNode).getShipment().getDestinationAddress().getCityDetails().getLng());
+                routeDistance += distance;
 
-                if (!existingAWBs.contains(pack.getAwb())) { // Verifică dacă AWB-ul a fost deja adăugat
+                if (!existingAWBs.contains(pack.getAwb())) {
                     Order order = Convertor.convertPackageToOrder(pack);
                     orders.add(order);
-                    existingAWBs.add(pack.getAwb()); // Adaugă AWB-ul în set
+                    existingAWBs.add(pack.getAwb());
 
                     pack.getShipment().setEstimatedDeliveryDate(arrivalTime);
                     arrivalTime = arrivalTime.plusMinutes(10);
 
-                    index = solution.value(routing.nextVar(index));
-                } else {
-                    index = solution.value(routing.nextVar(index)); // Treci la următorul nod
                 }
+                index = solution.value(routing.nextVar(index));
             }
 
-            // Verificăm dacă ruta conține comenzi înainte de a o salva
+            route.setTotalDistance(Double.parseDouble(String.format("%.2f", routeDistance)));
             if (!orders.isEmpty()) {
                 route.setArrivalTime(arrivalTime);
-                double totalDistance = solution.objectiveValue();
-                route.setTotalDistance(Double.parseDouble(String.format("%.2f", totalDistance / 1000)));
+
 
                 for (Order order : orders) {
                     route.addOrder(order);
                 }
 
                 routeRepo.saveAndFlush(route);
-                System.out.println("Route generated: " + route.toString());
+                System.out.println("Route generated: " + route);
 
                 for (Order order : orders) {
                     Package p = unassignedPackages.stream()
