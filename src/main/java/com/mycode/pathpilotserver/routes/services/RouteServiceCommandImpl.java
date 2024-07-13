@@ -23,10 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.mycode.pathpilotserver.city.utils.Utils.getCityByName;
 
@@ -210,34 +207,32 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
     }
 
     private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
-        int R = 6371; // Radius of the earth in KM
+        int R = 6371;
         double latDistance = Math.toRadians(lat2 - lat1);
         double lonDistance = Math.toRadians(lon2 - lon1);
         double a = Math.sin(latDistance / 2) * Math.sin(latDistance / 2)
                 + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
                 * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        return R * c; // Convert to distance in KM
+        return R * c;
     }
 
     private void saveRoutes(Assignment solution, RoutingIndexManager manager, List<Package> unassignedPackages, List<Vehicle> inactiveVehicles, List<Driver> availableDrivers, String city , long[][] distanceMatrix) {
         int numVehicles = inactiveVehicles.size();
         Set<String> existingAWBs = new HashSet<>();
-
+        Random random = new Random();
         for (int i = 0; i < numVehicles; i++) {
             Vehicle vehicle = inactiveVehicles.get(i);
-            Driver driver = availableDrivers.get(i);
+            Driver driver = availableDrivers.isEmpty() ? null : availableDrivers.get(random.nextInt(availableDrivers.size()));
 
             Route route = new Route();
             route.setVehicle(vehicle);
-            route.setDriver(driver);
             route.setCompany(vehicle.getCompany());
             route.setDepartureDate(LocalDateTime.now());
             route.setStartPoint(city);
-            route.setEndPoint(city);
-
+            String endPoint = city;
             LocalDateTime arrivalTime = LocalDateTime.now().plusHours(1);
-
+            int deliverySequence = 1;
             long index = routing.start(i);
             List<Order> orders = new ArrayList<>();
             double routeDistance = 0;
@@ -250,11 +245,13 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
 
                 if (pack != null && !existingAWBs.contains(pack.getAwb())) {
                     Order order = Convertor.convertPackageToOrder(pack);
+                    order.setDeliverySequence(deliverySequence++);
                     orders.add(order);
                     existingAWBs.add(pack.getAwb());
-
                     pack.getShipment().setEstimatedDeliveryDate(arrivalTime);
                     arrivalTime = arrivalTime.plusMinutes(10);
+                    endPoint = pack.getShipment().getDestinationAddress().getCityDetails().getCity();
+
                 }
 
                 double distance = distanceMatrix[fromNode][toNode];
@@ -262,8 +259,15 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
                 index = nextIndex;
             }
 
-            route.setTotalDistance(Double.parseDouble(String.format("%.2f", routeDistance)));
+            route.setTotalDistance(Double.parseDouble(String.format("%.2f", routeDistance/1000)));
+            route.setEndPoint(endPoint);
             if (!orders.isEmpty()) {
+
+
+
+
+                route.setDriver(driver);
+
                 route.setArrivalTime(arrivalTime);
 
                 for (Order order : orders) {
@@ -282,6 +286,19 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
                         p.setStatus(PackageStatus.ASSIGNED);
                         packageRepo.saveAndFlush(p);
                     }
+
+                    if (driver == null) {
+                        throw new DriverNotFoundException("No available drivers found for the company");
+                    }
+
+                    driver.increaseSalaryByKilometers(routeDistance/1000);
+                    driver.setAvailable(false);
+                    driverRepo.saveAndFlush(driver);
+
+
+                    vehicle.increaseKilometers(routeDistance/1000);
+                    vehicle.setActive(true);
+                    vehicleRepo.saveAndFlush(vehicle);
                 }
             } else {
                 System.out.println("No orders to save for Vehicle " + i);

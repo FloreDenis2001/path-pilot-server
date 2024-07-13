@@ -62,6 +62,9 @@ public class Order {
     @JoinColumn(name = "shipment_id", referencedColumnName = "id", nullable = false)
     private Shipment shipment;
 
+    @Column(name = "delivery_sequence", nullable = false)
+    private int deliverySequence;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "route_id", referencedColumnName = "id")
     @JsonBackReference
@@ -76,6 +79,7 @@ public class Order {
                 ", width=" + width +
                 ", length=" + length +
                 ", deliveryDescription='" + deliveryDescription + '\'' +
+                ", deliverySequence=" + deliverySequence +
                 ", orderDate=" + orderDate +
                 ", totalAmount=" + totalAmount +
                 ", shipment=" + shipment +

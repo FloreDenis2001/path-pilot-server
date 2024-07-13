@@ -71,6 +71,7 @@ public class Route {
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
+    @OrderBy("deliverySequence ASC")
     private Set<Order> orders = new HashSet<>();
     public void addOrder(Order order) {
         orders.add(order);
