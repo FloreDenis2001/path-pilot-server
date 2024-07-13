@@ -58,7 +58,7 @@ public abstract class User implements UserDetails {
     @Embedded
     private Address address;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     @JsonBackReference("user-company")
     private Company company;

@@ -3,6 +3,8 @@ package com.mycode.pathpilotserver.vehicles.services;
 import com.mycode.pathpilotserver.company.exceptions.CompanyNotFoundException;
 import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.company.repository.CompanyRepo;
+import com.mycode.pathpilotserver.routes.models.Route;
+import com.mycode.pathpilotserver.routes.repository.RouteRepo;
 import com.mycode.pathpilotserver.vehicles.dto.CreateVehicleRequest;
 import com.mycode.pathpilotserver.vehicles.dto.UpdatedVehicleRequest;
 import com.mycode.pathpilotserver.vehicles.exceptions.VehicleAlreadyExistException;
@@ -12,7 +14,6 @@ import com.mycode.pathpilotserver.vehicles.repository.VehicleRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 
@@ -25,9 +26,12 @@ public class VehicleServiceCommandImpl implements VehicleServiceCommand {
     private final VehicleRepo vehicleRepo;
     private final CompanyRepo companyRepo;
 
-    public VehicleServiceCommandImpl(VehicleRepo vehicleRepo, CompanyRepo companyRepo) {
+    private final RouteRepo routeRepo;
+
+    public VehicleServiceCommandImpl(VehicleRepo vehicleRepo, CompanyRepo companyRepo, RouteRepo routeRepo) {
         this.vehicleRepo = vehicleRepo;
         this.companyRepo = companyRepo;
+        this.routeRepo = routeRepo;
     }
 
     @Override
@@ -112,6 +116,14 @@ public class VehicleServiceCommandImpl implements VehicleServiceCommand {
         Vehicle vehicle = vehicleRepo.findByRegistrationNumber(registrationNumber)
                 .orElseThrow(() -> new VehicleNotFoundException("Vehicle with registration number " + registrationNumber + " not found"));
 
+        // Set the vehicle reference to null in all associated routes
+        for (Route route : vehicle.getRoutes()) {
+
+            route.setVehicle(null);
+            routeRepo.save(route);
+        }
+
+        // Delete the vehicle entity
         vehicleRepo.delete(vehicle);
     }
 }

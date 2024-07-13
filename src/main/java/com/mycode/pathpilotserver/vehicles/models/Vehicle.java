@@ -12,6 +12,7 @@ import lombok.experimental.SuperBuilder;
 import org.checkerframework.common.aliasing.qual.Unique;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity(name = "Vehicle")
@@ -22,7 +23,6 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @SuperBuilder
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Vehicle {
 
     @Id
@@ -89,9 +89,9 @@ public class Vehicle {
     private City currentLocation;
 
 
-    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private Set<Route> routes;
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonBackReference
+    private Set<Route> routes = new HashSet<>();
 
 
     @ManyToOne(fetch = FetchType.LAZY)

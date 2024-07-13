@@ -28,7 +28,7 @@ public class Order {
     @JsonIgnore
     private Long id;
 
-    @Column(name = "awb", nullable = false)
+    @Column(name = "awb", nullable = false , unique = true)
     private String awb;
 
     @Column(name = "weight", nullable = false)
@@ -62,7 +62,7 @@ public class Order {
     @JoinColumn(name = "shipment_id", referencedColumnName = "id", nullable = false)
     private Shipment shipment;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "route_id", referencedColumnName = "id")
     @JsonBackReference
     private Route route;

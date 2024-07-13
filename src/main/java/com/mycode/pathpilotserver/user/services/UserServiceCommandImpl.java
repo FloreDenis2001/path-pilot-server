@@ -50,7 +50,6 @@ public class UserServiceCommandImpl implements UserServiceCommand {
     private final JWTTokenProvider jwtTokenProvider;
 
 
-
     public UserServiceCommandImpl(UserRepo userRepo, ImageRepo imageRepo, CompanyRepo companyRepo, JavaMailSender mailSender, JWTTokenProvider jwtTokenProvider, ObjectMapper objectMapper) {
         this.userRepo = userRepo;
         this.imageRepo = imageRepo;
@@ -66,10 +65,16 @@ public class UserServiceCommandImpl implements UserServiceCommand {
             Optional<User> userOptional = userRepo.findByEmail(deleteUserRequest.email());
             if (userOptional.isPresent()) {
                 User user = userOptional.get();
-                userRepo.delete(user);
+                if (user.getRole().equals(UserRole.CUSTOMER)) {
+                    companyRepo.delete(user.getCompany());
+                    userRepo.delete(user);
+                } else {
+                    userRepo.delete(user);
+                }
             } else {
                 throw new UserNotFoundException("User not found for email: " + deleteUserRequest.email());
             }
+
         } else {
             throw new UnauthorizedAccessException("Unauthorized access: Invalid token");
         }
@@ -116,7 +121,7 @@ public class UserServiceCommandImpl implements UserServiceCommand {
 
             Image savedImage = imageRepo.save(imageData);
 
-            if (user.isEmpty()){
+            if (user.isEmpty()) {
                 throw new UserNotFoundException("User not found");
             }
             user.get().setImage(savedImage);
@@ -129,19 +134,19 @@ public class UserServiceCommandImpl implements UserServiceCommand {
     }
 
     @Override
-    public void registerUser(RegisterDTO registerDTO)  {
+    public void registerUser(RegisterDTO registerDTO) {
         Optional<User> user = userRepo.findByEmail(registerDTO.user().email());
 
         if (user.isPresent()) {
             throw new UserNotFoundException("User with email: " + registerDTO.company().email() + " already exists");
         }
 
-            Company company = getCompany(registerDTO);
-            companyRepo.saveAndFlush(company);
+        Company company = getCompany(registerDTO);
+        companyRepo.saveAndFlush(company);
 
-            Customer customer = getCustomer(registerDTO);
-            customer.setCompany(company);
-            userRepo.saveAndFlush(customer);
+        Customer customer = getCustomer(registerDTO);
+        customer.setCompany(company);
+        userRepo.saveAndFlush(customer);
     }
 
     @Override
@@ -195,7 +200,7 @@ public class UserServiceCommandImpl implements UserServiceCommand {
     }
 
     @NotNull
-    private  Company getCompany(RegisterDTO registerDTO){
+    private Company getCompany(RegisterDTO registerDTO) {
         Company company = new Company();
         company.setName(registerDTO.company().name());
         company.setRegistrationNumber(registerDTO.company().registrationNumber());
@@ -218,7 +223,7 @@ public class UserServiceCommandImpl implements UserServiceCommand {
 
 
     @NotNull
-    private  Customer getCustomer(RegisterDTO registerDTO){
+    private Customer getCustomer(RegisterDTO registerDTO) {
         Customer customer = new Customer();
         customer.setFirstName(registerDTO.user().firstName());
         customer.setLastName(registerDTO.user().lastName());
@@ -247,12 +252,9 @@ public class UserServiceCommandImpl implements UserServiceCommand {
     }
 
 
-
     private User findUserByEmail(String email) {
         return userRepo.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found for email: " + email));
     }
-
-
 
 
     private void applyNewDetailsToUser(User user, UpdateUserRequest request) {

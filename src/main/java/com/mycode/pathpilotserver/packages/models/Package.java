@@ -27,7 +27,7 @@ public class Package {
     private Long id;
 
 
-    @Column(name = "awb", nullable = false)
+    @Column(name = "awb", nullable =  false , unique = true)
     private String awb;
 
     @Column(name = "weight", nullable = false)

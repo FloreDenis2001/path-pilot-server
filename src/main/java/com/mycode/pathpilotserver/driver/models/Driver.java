@@ -1,5 +1,6 @@
 package com.mycode.pathpilotserver.driver.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mycode.pathpilotserver.routes.models.Route;
 import com.mycode.pathpilotserver.user.models.User;
@@ -44,8 +45,8 @@ public class Driver extends User {
     private int experience;
 
 
-    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY)
+    @JsonBackReference
     private Set<Route> routes;
 
     public void increaseSalaryByKilometers(double kilometers) {

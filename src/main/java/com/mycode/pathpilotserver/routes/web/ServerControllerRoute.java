@@ -25,6 +25,7 @@ public class ServerControllerRoute {
     private final RouteServiceQuerryImpl routeServiceQuerry;
 
 
+
     @PostMapping("/generateRoute")
     public ResponseEntity<String> generateRoute(@RequestParam String companyRegistrationNumber, @RequestParam String city) throws IOException {
         routeServiceCommand.generateRoute(companyRegistrationNumber,city);

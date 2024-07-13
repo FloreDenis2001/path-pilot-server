@@ -6,6 +6,7 @@ import com.mycode.pathpilotserver.city.models.City;
 import com.mycode.pathpilotserver.customers.exceptions.CustomerNotFoundException;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.packages.dto.PackageRequest;
+import com.mycode.pathpilotserver.packages.exceptions.PackageAlreadyAssigned;
 import com.mycode.pathpilotserver.packages.exceptions.PackageNotFoundException;
 import com.mycode.pathpilotserver.packages.models.Package;
 import com.mycode.pathpilotserver.packages.models.PackageStatus;
@@ -69,7 +70,9 @@ public class PackageCommandServiceImpl implements PackageCommandService {
     public void editPackage(String awb, PackageRequest packageRequest) {
         Package pack = packRepo.getPackageByAwb(awb)
                 .orElseThrow(() -> new PackageNotFoundException("Package with awb: " + awb + " not found"));
-
+        if (pack.getStatus() == PackageStatus.ASSIGNED) {
+            throw new PackageAlreadyAssigned("Package with awb: " + awb + " is already assigned");
+        }
         try {
             Shipment shipment = buildShipment(packageRequest);
             updateShipment(shipment, packageRequest);

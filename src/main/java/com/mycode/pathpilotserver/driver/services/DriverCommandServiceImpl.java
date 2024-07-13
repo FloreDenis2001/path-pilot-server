@@ -136,13 +136,12 @@ public class DriverCommandServiceImpl implements DriverCommandService {
             throw new UserNotFoundException("User with email: " + email + " not found");
         }
 
-//        if (user.get().getRole() == UserRole.CUSTOMER || user.get().equals(driver.get())) {
-//            driver.ifPresentOrElse(driverRepo::delete, () -> {
-//                throw new DriverNotFoundException("Driver not found for license number: " + licenseNumber);
-//            });
-//        } else {
-//            throw new WrongPasswordException("Invalid password for user: " + user.get().getEmail());
-//        }
+        if (user.get().getRole() == UserRole.DRIVER) {
+            driver.get().getRoutes().forEach(route -> route.setDriver(null));
+            driverRepo.delete(driver.get());
+        } else {
+            throw new UserNotFoundException("User with email: " + email + " dosen't have permission to delete driver");
+        }
     }
 
 

@@ -76,14 +76,14 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
 
         int numPackages = unassignedPackages.size();
         int numVehicles = inactiveVehicles.size();
+        int numNodes = numPackages + 1;
 
-        // Crearea unui RoutingIndexManager pentru CVRP
         RoutingIndexManager manager = new RoutingIndexManager(numPackages, numVehicles, 0);
         this.routing = new RoutingModel(manager);
 
 
         City startCity = getCityByName(city);
-        int numNodes = numPackages + 1;
+
         long[][] distanceMatrix = new long[numNodes][numNodes];
         for (int i = 0; i < numNodes; i++) {
             for (int j = 0; j < numNodes; j++) {
@@ -148,16 +148,14 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
         routing.addDimension(
                 transitCallbackIndex,
                 0,
-                950000,
+                1800000,
                 true,
                 "Distance"
         );
         RoutingDimension distanceDimension = routing.getMutableDimension("Distance");
         distanceDimension.setGlobalSpanCostCoefficient(1);
-        distanceDimension.setCumulVarSoftUpperBound(0, 950000, 1000000);
 
 
-//        SET DISTANCE BETWEEN TWO LOCATIONS
 
         RoutingSearchParameters searchParameters =
                 main.defaultRoutingSearchParameters()
@@ -172,7 +170,7 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
                                 .setUseExchange(OptionalBoolean.BOOL_TRUE)
                                 .build())
                         .setLsOperatorNeighborsRatio(0.2)
-                        .setTimeLimit(Duration.newBuilder().setSeconds(60).build())
+                        .setTimeLimit(Duration.newBuilder().setSeconds(6).build())
                         .build();
 
         Assignment solution = routing.solveWithParameters(searchParameters);
@@ -212,7 +210,7 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
             double totalDistanceInKm = totalDistance / 1000;
             System.out.println("Total distance for all vehicles: " + String.format("%.2f", totalDistanceInKm) + " KM");
 
-            saveRoutes(solution, manager, unassignedPackages, inactiveVehicles, availableDrivers);
+            saveRoutes(solution, manager, unassignedPackages, inactiveVehicles, availableDrivers,city);
         } else {
             throw new RuntimeException("No solution found for the vehicle routing problem");
         }
@@ -238,7 +236,7 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
     }
 
 
-    private void saveRoutes(Assignment solution, RoutingIndexManager manager, List<Package> unassignedPackages, List<Vehicle> inactiveVehicles, List<Driver> availableDrivers) {
+    private void saveRoutes(Assignment solution, RoutingIndexManager manager, List<Package> unassignedPackages, List<Vehicle> inactiveVehicles, List<Driver> availableDrivers,String city) {
         int numVehicles = inactiveVehicles.size();
         Set<String> existingAWBs = new HashSet<>();
 
@@ -251,6 +249,9 @@ public class RouteServiceCommandImpl implements RouteServiceCommand {
             route.setDriver(driver);
             route.setCompany(vehicle.getCompany());
             route.setDepartureDate(LocalDateTime.now());
+            route.setStartPoint(city);
+            route.setEndPoint(city);
+
 
             LocalDateTime arrivalTime = LocalDateTime.now().plusHours(1);
 

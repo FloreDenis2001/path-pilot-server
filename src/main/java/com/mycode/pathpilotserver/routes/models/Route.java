@@ -3,6 +3,7 @@ package com.mycode.pathpilotserver.routes.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.mycode.pathpilotserver.company.models.Company;
+import com.mycode.pathpilotserver.packages.models.Package;
 import com.mycode.pathpilotserver.driver.models.Driver;
 import com.mycode.pathpilotserver.orders.models.Order;
 import com.mycode.pathpilotserver.vehicles.models.Vehicle;
@@ -11,7 +12,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +23,6 @@ import java.util.Set;
 @SuperBuilder
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-
 public class Route {
 
     @Id
@@ -34,14 +33,15 @@ public class Route {
     private Long id;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vehicle_id", referencedColumnName = "id", nullable = false)
-    @JsonBackReference
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
+    @JsonManagedReference
     private Vehicle vehicle;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "driver_id", referencedColumnName = "id", nullable = false)
-    @JsonBackReference
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "driver_id", referencedColumnName = "id")
+    @JsonManagedReference
     private Driver driver;
 
 
@@ -59,21 +59,25 @@ public class Route {
     private LocalDateTime arrivalTime;
 
 
-    @Column(name="total_distance", nullable = false)
+    @Column(name = "total_distance", nullable = false)
     private double totalDistance;
 
+    @Column(name="start_point", nullable = false)
+    private String startPoint;
+
+    @Column(name="end_point", nullable = false)
+    private String endPoint;
 
 
-    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @Builder.Default
+    @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     private Set<Order> orders = new HashSet<>();
-
     public void addOrder(Order order) {
-
         orders.add(order);
         order.setRoute(this);
     }
+
+
 
     @Override
     public String toString() {
