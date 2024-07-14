@@ -50,7 +50,7 @@ public class Driver extends User {
     private Set<Route> routes;
 
     public void increaseSalaryByKilometers(double kilometers) {
-        double increaseAmount = kilometers * 0.08;
+        double increaseAmount = kilometers * 0.02;
         this.salary += increaseAmount;
         this.salary = Math.round(this.salary * 100.0) / 100.0;
     }

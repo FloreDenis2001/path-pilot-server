@@ -33,7 +33,6 @@ public class Route {
     private Long id;
 
 
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
     @JsonManagedReference
@@ -62,22 +61,27 @@ public class Route {
     @Column(name = "total_distance", nullable = false)
     private double totalDistance;
 
-    @Column(name="start_point", nullable = false)
+    @Column(name = "start_point", nullable = false)
     private String startPoint;
 
-    @Column(name="end_point", nullable = false)
+    @Column(name = "end_point", nullable = false)
     private String endPoint;
+
+
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RouteStatus status;
 
 
     @OneToMany(mappedBy = "route", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
     @OrderBy("deliverySequence ASC")
     private Set<Order> orders = new HashSet<>();
+
     public void addOrder(Order order) {
         orders.add(order);
         order.setRoute(this);
     }
-
 
 
     @Override
@@ -87,6 +91,7 @@ public class Route {
                 ", vehicle=" + vehicle +
                 ", driver=" + driver +
                 ", departureDate=" + departureDate +
+                ",status=" + status +
                 ", arrivalTime=" + arrivalTime +
                 '}';
         return sb;

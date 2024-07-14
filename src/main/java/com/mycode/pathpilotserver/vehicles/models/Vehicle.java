@@ -105,7 +105,7 @@ public class Vehicle {
     }
 
     public void increaseKilometers(double kilometers) {
-        this.km += kilometers;
+        this.km += (int) kilometers;
     }
 
     @Override
