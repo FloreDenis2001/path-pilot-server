@@ -86,7 +86,7 @@ public class EmailServiceCommandImpl implements EmailServiceCommand{
             path = "/reset-password";
         }
 
-        return "http://3.253.99.13/" + path + "?code=" + uniqueCode + "&expires=" + expirationTimestamp + "&identifier=" + identifier;
+        return "http://3.253.99.13" + path + "?code=" + uniqueCode + "&expires=" + expirationTimestamp + "&identifier=" + identifier;
     }
 
     public static void removeLinkAfterCreation(String code) {
