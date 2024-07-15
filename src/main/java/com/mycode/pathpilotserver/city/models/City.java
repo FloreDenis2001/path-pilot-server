@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 public class City {
     private String city;
     private double lat;

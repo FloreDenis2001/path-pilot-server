@@ -1,4 +1,4 @@
-package com.mycode.pathpilotserver.routes.models;
+package com.mycode.pathpilotserver.system.enums;
 
 public enum RouteStatus {
     PLANNED,

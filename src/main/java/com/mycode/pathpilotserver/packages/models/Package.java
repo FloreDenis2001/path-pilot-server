@@ -3,6 +3,7 @@ package com.mycode.pathpilotserver.packages.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.mycode.pathpilotserver.customers.models.Customer;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
+import com.mycode.pathpilotserver.system.enums.PackageStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;

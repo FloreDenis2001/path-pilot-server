@@ -62,8 +62,8 @@ public class Vehicle {
     private double km;
 
 
-    @Column(name = "registration_number", nullable = false)
-    @Unique
+    @Column(name = "registration_number", nullable = false , unique = true)
+
     private String registrationNumber;
 
     @Column(name = "capacity", nullable = false)

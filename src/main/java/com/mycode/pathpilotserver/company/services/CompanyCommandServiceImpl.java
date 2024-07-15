@@ -5,6 +5,7 @@ import com.mycode.pathpilotserver.company.dto.CompanyDTO;
 import com.mycode.pathpilotserver.company.dto.UpdateCompanyRequest;
 import com.mycode.pathpilotserver.company.exceptions.CompanyAlreadyExistException;
 import com.mycode.pathpilotserver.company.exceptions.CompanyNotFoundException;
+import com.mycode.pathpilotserver.company.exceptions.CompanyValidationException;
 import com.mycode.pathpilotserver.company.models.Company;
 import com.mycode.pathpilotserver.company.repository.CompanyRepo;
 import com.mycode.pathpilotserver.driver.repository.DriverRepo;
@@ -17,6 +18,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.DoubleConsumer;
 
@@ -36,8 +38,10 @@ public class CompanyCommandServiceImpl implements CompanyCommandService {
 
     @Override
     public void createCompany(CompanyCreateRequest companyCreateRequest, String userEmail) {
+        validateCompanyCreateRequest(companyCreateRequest);
+
         if (companyRepo.findByRegistrationNumber(companyCreateRequest.registrationNumber()).isPresent()) {
-            throw new CompanyAlreadyExistException("Company with registration number : " + companyCreateRequest.name() + " already exists");
+            throw new CompanyAlreadyExistException("Company with registration number : " + companyCreateRequest.registrationNumber() + " already exists");
         }
 
         userRepo.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException("User with email " + userEmail + " not found"));
@@ -47,9 +51,13 @@ public class CompanyCommandServiceImpl implements CompanyCommandService {
 
     @Override
     public void updateCompany(UpdateCompanyRequest updateCompanyRequest) {
-        Company company = companyRepo.findByRegistrationNumber(updateCompanyRequest.updatedCompany().registrationNumber()).orElseThrow(() -> new CompanyNotFoundException("Company with registration number: " + updateCompanyRequest.updatedCompany().registrationNumber() + " not found"));
+        Company company = companyRepo.findByRegistrationNumber(updateCompanyRequest.updatedCompany().registrationNumber())
+                .orElseThrow(() -> new CompanyNotFoundException("Company with registration number: " + updateCompanyRequest.updatedCompany().registrationNumber() + " not found"));
 
-        User user = userRepo.findByEmail(updateCompanyRequest.userEmail()).orElseThrow(() -> new UserNotFoundException("User with email " + updateCompanyRequest.userEmail() + " not found"));
+        User user = userRepo.findByEmail(updateCompanyRequest.userEmail())
+                .orElseThrow(() -> new UserNotFoundException("User with email " + updateCompanyRequest.userEmail() + " not found"));
+
+        validateUpdateCompanyRequest(updateCompanyRequest, company);
 
         applyCompanyUpdates(company, updateCompanyRequest.updatedCompany());
         company.setLastModifiedBy(user.getUsername());
@@ -57,13 +65,14 @@ public class CompanyCommandServiceImpl implements CompanyCommandService {
 
         companyRepo.save(company);
     }
+
     @Override
     public void deleteCompany(String registrationNumber) {
-        Company company = companyRepo.findByRegistrationNumber(registrationNumber).orElseThrow(() -> new CompanyNotFoundException("Company with registration number: " + registrationNumber + " not found"));
+        Company company = companyRepo.findByRegistrationNumber(registrationNumber)
+                .orElseThrow(() -> new CompanyNotFoundException("Company with registration number: " + registrationNumber + " not found"));
 
         companyRepo.delete(company);
     }
-
 
     @Scheduled(cron = "0 0 0 1 * ?")
     public void resetDriversSalary() {
@@ -72,7 +81,16 @@ public class CompanyCommandServiceImpl implements CompanyCommandService {
     }
 
     private Company buildCompany(CompanyCreateRequest companyCreateRequest) {
-        return Company.builder().address(companyCreateRequest.address()).income(companyCreateRequest.capital()).email(companyCreateRequest.email()).name(companyCreateRequest.name()).phone(companyCreateRequest.phone()).registrationNumber(companyCreateRequest.registrationNumber()).industry(companyCreateRequest.industry()).website(companyCreateRequest.website()).build();
+        return Company.builder()
+                .address(companyCreateRequest.address())
+                .income(companyCreateRequest.capital())
+                .email(companyCreateRequest.email())
+                .name(companyCreateRequest.name())
+                .phone(companyCreateRequest.phone())
+                .registrationNumber(companyCreateRequest.registrationNumber())
+                .industry(companyCreateRequest.industry())
+                .website(companyCreateRequest.website())
+                .build();
     }
 
     private void applyCompanyUpdates(Company company, CompanyDTO updatedCompany) {
@@ -97,4 +115,45 @@ public class CompanyCommandServiceImpl implements CompanyCommandService {
         }
     }
 
+    private void validateCompanyCreateRequest(CompanyCreateRequest request) {
+        if (request.name() == null || request.name().trim().isEmpty()) {
+            throw new CompanyValidationException("Company name cannot be null or empty.");
+        }
+        if (request.email() == null || request.email().trim().isEmpty()) {
+            throw new CompanyValidationException("Company email cannot be null or empty.");
+        }
+        if (request.capital() <= 0) {
+            throw new CompanyValidationException("Company capital must be greater than zero.");
+        }
+        if (request.registrationNumber() == null || request.registrationNumber().trim().isEmpty()) {
+            throw new CompanyValidationException("Company registration number cannot be null or empty.");
+        }
+        if (request.website() == null || request.website().trim().isEmpty()) {
+            throw new CompanyValidationException("Company website cannot be null or empty.");
+        }
+        if (request.address() == null) {
+            throw new CompanyValidationException("Company address cannot be null.");
+        }
+        if (request.phone() == null || request.phone().trim().isEmpty()) {
+            throw new CompanyValidationException("Company phone cannot be null or empty.");
+        }
+    }
+
+    private void validateUpdateCompanyRequest(UpdateCompanyRequest request, Company existingCompany) {
+        if (request.userEmail() == null || request.userEmail().trim().isEmpty()) {
+            throw new CompanyValidationException("User email cannot be null or empty.");
+        }
+
+        if (request.updatedCompany().registrationNumber() == null || request.updatedCompany().registrationNumber().trim().isEmpty()) {
+            throw new CompanyValidationException("Company registration number cannot be null or empty.");
+        }
+
+        if (!existingCompany.getRegistrationNumber().equals(request.updatedCompany().registrationNumber())) {
+            throw new CompanyValidationException("Registration number cannot be changed.");
+        }
+
+        if (request.updatedCompany().capital() <= 0) {
+            throw new CompanyValidationException("Updated company capital must be greater than zero.");
+        }
+    }
 }

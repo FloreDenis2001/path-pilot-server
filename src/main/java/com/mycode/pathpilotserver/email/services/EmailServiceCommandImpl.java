@@ -24,7 +24,7 @@ public class EmailServiceCommandImpl implements EmailServiceCommand{
 
     private final UserRepo userRepo;
 
-    private static final Map<String, LocalDateTime> linkExpirationMap = new HashMap<>();
+    static final Map<String, LocalDateTime> linkExpirationMap = new HashMap<>();
 
 
     public EmailServiceCommandImpl(JavaMailSender mailSender, UserRepo userRepo) {
@@ -73,7 +73,7 @@ public class EmailServiceCommandImpl implements EmailServiceCommand{
         linkExpirationMap.entrySet().removeIf(entry -> entry.getValue().isBefore(LocalDateTime.now()));
     }
 
-    private String generateUniqueLink(String linkType, String identifier) {
+    String generateUniqueLink(String linkType, String identifier) {
         String uniqueCode = UUID.randomUUID().toString();
         LocalDateTime expirationTime = LocalDateTime.now().plusDays(1);
         long expirationTimestamp = expirationTime.toEpochSecond(ZoneOffset.UTC);

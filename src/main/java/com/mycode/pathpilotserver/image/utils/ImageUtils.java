@@ -22,7 +22,6 @@ public class ImageUtils {
         return byteArrayOutputStream.toByteArray();
     }
 
-
     public static byte[] decompressImage(byte[] data) throws IOException {
         try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
              GZIPInputStream gzipInputStream = new GZIPInputStream(byteArrayInputStream);
@@ -33,6 +32,8 @@ public class ImageUtils {
                 byteArrayOutputStream.write(buffer, 0, len);
             }
             return byteArrayOutputStream.toByteArray();
+        } catch (IOException e) {
+            throw new UnauthorizedAccessException("Failed to decompress image: " + e.getMessage());
         }
     }
 

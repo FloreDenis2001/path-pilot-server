@@ -1,6 +1,6 @@
 package com.mycode.pathpilotserver.packages.dto;
 
-import com.mycode.pathpilotserver.packages.models.PackageStatus;
+import com.mycode.pathpilotserver.system.enums.PackageStatus;
 import com.mycode.pathpilotserver.shipments.dto.ShipmentDTO;
 import lombok.Builder;
 

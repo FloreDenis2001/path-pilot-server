@@ -1,5 +1,6 @@
 package com.mycode.pathpilotserver.image.services;
 
+import com.mycode.pathpilotserver.image.exceptions.ImageNotFoundException;
 import com.mycode.pathpilotserver.image.models.Image;
 import com.mycode.pathpilotserver.image.repository.ImageRepo;
 import com.mycode.pathpilotserver.image.utils.ImageUtils;
@@ -21,14 +22,12 @@ public class ImageServiceQuerryImpl implements ImageServiceQuerry {
     public String findImageByUserAfterEmail(String email) {
         Optional<Image> dbImageData = imageRepo.findImageByUserEmail(email);
         if (dbImageData.isEmpty()) {
-            System.out.println("No image found for user with email: " + email);
-            return null;
+            throw new ImageNotFoundException("Image not found");
         }
 
         byte[] data = dbImageData.get().getData();
         if (data == null) {
-            System.out.println("Image data is null for user with email: " + email);
-            return null;
+            throw new ImageNotFoundException("Image data is null");
         }
 
         try {

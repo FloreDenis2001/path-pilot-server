@@ -9,11 +9,11 @@ import com.mycode.pathpilotserver.packages.dto.PackageRequest;
 import com.mycode.pathpilotserver.packages.exceptions.PackageAlreadyAssigned;
 import com.mycode.pathpilotserver.packages.exceptions.PackageNotFoundException;
 import com.mycode.pathpilotserver.packages.models.Package;
-import com.mycode.pathpilotserver.packages.models.PackageStatus;
+import com.mycode.pathpilotserver.shipments.repository.ShipmentRepo;
+import com.mycode.pathpilotserver.system.enums.PackageStatus;
 import com.mycode.pathpilotserver.packages.repository.PackageRepo;
 import com.mycode.pathpilotserver.shipments.models.Shipment;
 import com.mycode.pathpilotserver.shipments.models.StatusType;
-import com.mycode.pathpilotserver.shipments.repository.ShipmentRepo;
 import com.mycode.pathpilotserver.user.models.User;
 import com.mycode.pathpilotserver.user.repository.UserRepo;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static com.mycode.pathpilotserver.city.utils.Utils.getCityByName;
 
@@ -30,6 +29,7 @@ public class PackageCommandServiceImpl implements PackageCommandService {
 
     private final PackageRepo packRepo;
     private final UserRepo customerRepo;
+
     private final ShipmentRepo shipmentRepo;
 
     private static final double DISTANCE_RATE = 1.2;

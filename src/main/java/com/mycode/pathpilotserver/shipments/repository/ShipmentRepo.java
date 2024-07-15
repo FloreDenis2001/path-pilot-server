@@ -12,12 +12,4 @@ import java.util.Optional;
 @Repository
 public interface ShipmentRepo extends JpaRepository<Shipment, Long> {
 
-
-    @EntityGraph(attributePaths = {"orders","shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
-    Optional<Shipment> findShipmentByOriginAddress(Address originAddress);
-
-    @EntityGraph(attributePaths = {"orders","shipmentDetails"}, type = EntityGraph.EntityGraphType.LOAD)
-    Optional<Shipment> findShipmentByDestinationAddress(Address destinationAddress);
-
-
 }

@@ -46,7 +46,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
         shipmentRepo.saveAndFlush(shipment.get());
         orderRepo.saveAndFlush(order);
     }
-    private static Optional<Shipment> getShipments(OrderDTO orderDTO) {
+    static Optional<Shipment> getShipments(OrderDTO orderDTO) {
         Shipment shipment = new Shipment();
         shipment.setOriginName(orderDTO.originName());
         shipment.setDestinationName(orderDTO.destinationName());
@@ -59,7 +59,7 @@ public class OrderCommandServiceImpl implements OrderCommandService {
         return Optional.of(shipment);
     }
 
-    private static Order getOrder(OrderDTO orderDTO, Optional<User> customer, Optional<Shipment> shipment) {
+    static Order getOrder(OrderDTO orderDTO, Optional<User> customer, Optional<Shipment> shipment) {
         Order order = new Order();
         order.setCustomer((Customer) customer.get());
         order.setRoute(null);
